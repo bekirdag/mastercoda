@@ -21,13 +21,44 @@ export const MOCK_TASKS: Task[] = [
     startDate: formatDate(-14),
     dueDate: formatDate(14),
     projectedEnd: formatDate(18), // Delayed by 4 days
-    progress: 45
+    progress: 45,
+    description: "Refactor the monolith into a modular, event-driven architecture to support the new agentic workflows."
   },
-  { id: 'MC-1001', title: 'Design System Migration', status: 'completed', priority: 'medium', type: 'story', parentId: 'MC-1000', points: 5, assignee: 'Sarah', updatedAt: '1 day ago' },
+  { 
+    id: 'MC-1001', 
+    title: 'Design System Migration', 
+    status: 'completed', 
+    priority: 'medium', 
+    type: 'story', 
+    parentId: 'MC-1000', 
+    points: 5, 
+    assignee: 'Sarah', 
+    updatedAt: '1 day ago',
+    description: "Migrate all legacy CSS components to the new Tailwind-based design system."
+  },
   { id: 'MC-1021', title: 'Typography Audit', status: 'completed', priority: 'low', type: 'task', parentId: 'MC-1001', points: 2, updatedAt: '1 day ago', dependencies: ['MC-1027'] },
   { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'completed', priority: 'low', type: 'bug', parentId: 'MC-1001', points: 1, updatedAt: '2 hours ago' },
   
-  { id: 'MC-1002', title: 'Authentication Middleware', status: 'in-progress', priority: 'high', type: 'story', parentId: 'MC-1000', points: 8, assignee: 'Alex', updatedAt: '4 hours ago', dependencies: ['MC-1001'] },
+  { 
+    id: 'MC-1002', 
+    title: 'Authentication Middleware', 
+    status: 'in-progress', 
+    priority: 'high', 
+    type: 'story', 
+    parentId: 'MC-1000', 
+    points: 8, 
+    assignee: 'Alex', 
+    updatedAt: '4 hours ago', 
+    dependencies: ['MC-1001'],
+    description: "Implement a robust JWT-based authentication middleware that supports role-based access control (RBAC) and integrates with the new User Service.",
+    acceptanceCriteria: [
+      { id: 'ac1', label: 'Validate JWT signature using RSA-256', checked: true },
+      { id: 'ac2', label: 'Check token expiration and issuer', checked: true },
+      { id: 'ac3', label: 'Inject user context into request object', checked: false },
+      { id: 'ac4', label: 'Handle 401/403 errors with standard JSON response', checked: false },
+      { id: 'ac5', label: 'Unit tests covering valid/invalid/expired tokens', checked: false }
+    ]
+  },
   { id: 'MC-1024', title: 'Refactor JWT validation', status: 'in-progress', priority: 'high', type: 'task', parentId: 'MC-1002', points: 3, assignee: 'Alex', updatedAt: '10:42 AM' },
   { id: 'MC-1023', title: 'Security Patch Dependencies', status: 'review', priority: 'high', type: 'task', parentId: 'MC-1002', points: 2, assignee: 'Sarah', updatedAt: '09:15 AM' },
   
@@ -44,7 +75,24 @@ export const MOCK_TASKS: Task[] = [
     dueDate: formatDate(45),
     progress: 10
   },
-  { id: 'MC-2001', title: 'Gemini API Streaming', status: 'failed', priority: 'high', type: 'story', parentId: 'MC-2000', points: 13, assignee: 'Alex', updatedAt: 'Yesterday', dependencies: ['MC-1002'] },
+  { 
+    id: 'MC-2001', 
+    title: 'Gemini API Streaming', 
+    status: 'failed', 
+    priority: 'high', 
+    type: 'story', 
+    parentId: 'MC-2000', 
+    points: 13, 
+    assignee: 'Alex', 
+    updatedAt: 'Yesterday', 
+    dependencies: ['MC-1002'],
+    description: "Integrate the Google Gemini API with streaming support to allow real-time token generation in the UI.",
+    acceptanceCriteria: [
+      { id: 'ac1', label: 'Connect to Vertex AI / Gemini API', checked: true },
+      { id: 'ac2', label: 'Implement Server-Sent Events (SSE) for stream', checked: false },
+      { id: 'ac3', label: 'Handle rate limiting and backoff', checked: false }
+    ]
+  },
   { id: 'MC-1022', title: 'Implement stream handler', status: 'failed', priority: 'high', type: 'task', parentId: 'MC-2001', points: 5, assignee: 'Alex', updatedAt: 'Yesterday' },
   
   { id: 'MC-2002', title: 'Agent Context Window', status: 'pending', priority: 'medium', type: 'story', parentId: 'MC-2000', points: 8, updatedAt: '2 days ago', dependencies: ['MC-2001'] },

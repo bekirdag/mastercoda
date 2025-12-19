@@ -10,13 +10,15 @@ import {
   ChevronDownIcon,
   CornerDownRightIcon,
   UserIcon,
-  ArrowUpIcon
+  ArrowUpIcon,
+  PlayIcon
 } from './Icons';
 
 interface BacklogListProps {
   tasks: Task[];
   selectedIds: Set<string>;
   onSelectionChange: (ids: Set<string>) => void;
+  onExecuteTask?: (taskId: string) => void;
 }
 
 interface TreeNode {
@@ -25,7 +27,7 @@ interface TreeNode {
   depth: number;
 }
 
-const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelectionChange }) => {
+const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelectionChange, onExecuteTask }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(['MC-1000', 'MC-1002'])); // Default expand top epics for demo
 
   // --- Hierarchy Builders ---
@@ -101,6 +103,7 @@ const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelecti
         <div className="w-32 shrink-0">Assignee</div>
         <div className="w-24 shrink-0">Priority</div>
         <div className="w-16 shrink-0 text-right">Pts</div>
+        <div className="w-10 shrink-0" />
       </div>
 
       {/* Grid Body */}
@@ -113,6 +116,7 @@ const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelecti
             isExpanded={expandedIds.has(node.data.id)}
             onExpand={() => toggleExpand(node.data.id)}
             onSelect={(multi) => toggleSelection(node.data.id, multi)}
+            onExecute={() => onExecuteTask && onExecuteTask(node.data.id)}
           />
         ))}
 
@@ -144,7 +148,8 @@ const Row: React.FC<{
   isExpanded: boolean; 
   onExpand: () => void;
   onSelect: (multi: boolean) => void;
-}> = ({ node, isSelected, isExpanded, onExpand, onSelect }) => {
+  onExecute: () => void;
+}> = ({ node, isSelected, isExpanded, onExpand, onSelect, onExecute }) => {
   const { data, children, depth } = node;
   const hasChildren = children.length > 0;
 
@@ -233,6 +238,17 @@ const Row: React.FC<{
       {/* Points */}
       <div className="w-16 shrink-0 text-right font-mono text-xs text-slate-500">
          {data.points || '-'}
+      </div>
+
+      {/* Actions */}
+      <div className="w-10 shrink-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+         <button 
+           onClick={(e) => { e.stopPropagation(); onExecute(); }}
+           className="p-1 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 rounded"
+           title="Start Execution"
+         >
+           <PlayIcon size={12} fill="currentColor" />
+         </button>
       </div>
     </div>
   );

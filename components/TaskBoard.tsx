@@ -7,11 +7,13 @@ import {
   CrownIcon,
   BookmarkIcon,
   CheckCircleIcon,
-  AlertCircleIcon
+  AlertCircleIcon,
+  PlayIcon
 } from './Icons';
 
 interface TaskBoardProps {
   tasks: Task[];
+  onExecuteTask?: (taskId: string) => void;
 }
 
 const COLUMN_CONFIG = [
@@ -22,7 +24,7 @@ const COLUMN_CONFIG = [
   { id: 'completed', title: 'Done', color: 'border-emerald-500' }
 ];
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ tasks }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onExecuteTask }) => {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
   const getTasksByStatus = (status: string) => {
@@ -81,7 +83,8 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks }) => {
                        <TaskCard 
                          key={task.id} 
                          task={task} 
-                         onDragStart={(e) => handleDragStart(e, task.id)} 
+                         onDragStart={(e) => handleDragStart(e, task.id)}
+                         onExecute={() => onExecuteTask && onExecuteTask(task.id)}
                        />
                      ))
                    )}
@@ -94,12 +97,23 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks }) => {
   );
 };
 
-const TaskCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent) => void }> = ({ task, onDragStart }) => (
+const TaskCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent) => void; onExecute: () => void }> = ({ task, onDragStart, onExecute }) => (
   <div 
     draggable
     onDragStart={onDragStart}
-    className="bg-slate-800 p-3 rounded-md border border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-slate-600 transition-all cursor-move group select-none"
+    className="bg-slate-800 p-3 rounded-md border border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-slate-600 transition-all cursor-move group select-none relative"
   >
+    {/* Action Overlay for Execution */}
+    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+       <button 
+         onClick={(e) => { e.stopPropagation(); onExecute(); }}
+         className="p-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded shadow-md"
+         title="Start Work"
+       >
+         <PlayIcon size={12} fill="currentColor" />
+       </button>
+    </div>
+
     {/* Top Row */}
     <div className="flex items-start justify-between mb-2">
        <div className="flex items-center space-x-2">
@@ -115,7 +129,7 @@ const TaskCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent) => void
     </div>
 
     {/* Title */}
-    <h4 className="text-sm font-medium text-slate-200 leading-snug mb-3 line-clamp-3">
+    <h4 className="text-sm font-medium text-slate-200 leading-snug mb-3 line-clamp-3 group-hover:text-white transition-colors">
       {task.title}
     </h4>
 

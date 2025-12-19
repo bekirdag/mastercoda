@@ -20,9 +20,10 @@ import {
 
 interface PlanProps {
   onCreateTask?: () => void;
+  onExecuteTask?: (taskId: string) => void;
 }
 
-const Plan: React.FC<PlanProps> = ({ onCreateTask }) => {
+const Plan: React.FC<PlanProps> = ({ onCreateTask, onExecuteTask }) => {
   const [view, setView] = useState<PlanViewType>('list');
   const [tasks] = useState<Task[]>(MOCK_TASKS);
   const [searchQuery, setSearchQuery] = useState('');
@@ -163,7 +164,7 @@ const Plan: React.FC<PlanProps> = ({ onCreateTask }) => {
       {/* Main Content Area */}
       <div className="flex-1 overflow-hidden relative">
          {view === 'board' ? (
-           <TaskBoard tasks={filteredTasks} />
+           <TaskBoard tasks={filteredTasks} onExecuteTask={onExecuteTask} />
          ) : view === 'graph' ? (
            <DependencyGraph tasks={tasks} /> 
          ) : view === 'roadmap' ? (
@@ -173,6 +174,7 @@ const Plan: React.FC<PlanProps> = ({ onCreateTask }) => {
               tasks={filteredTasks} 
               selectedIds={selectedTaskIds}
               onSelectionChange={handleSelectionChange}
+              onExecuteTask={onExecuteTask}
            />
          )}
       </div>

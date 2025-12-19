@@ -34,6 +34,10 @@ export interface Task {
   dueDate?: string;   // ISO Date YYYY-MM-DD
   projectedEnd?: string; // ISO Date YYYY-MM-DD (AI prediction)
   progress?: number; // 0-100 percentage
+
+  // Execution Context
+  description?: string;
+  acceptanceCriteria?: { id: string; label: string; checked: boolean }[];
 }
 
 export interface LogEntry {

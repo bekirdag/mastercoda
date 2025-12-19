@@ -3,7 +3,8 @@ import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
 import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
-import Plan from './components/Plan'; // Updated import
+import Plan from './components/Plan';
+import Execution from './components/Execution';
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
 import CliConfig from './components/CliConfig';
@@ -34,6 +35,9 @@ function App() {
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   
+  // Execution Context
+  const [executionTaskId, setExecutionTaskId] = useState<string | null>(null);
+
   // Validation Error State for ON-16
   const [validationError, setValidationError] = useState<{ type: WorkspaceErrorType; path: string } | null>(null);
 
@@ -78,6 +82,11 @@ function App() {
     // We could trigger a refresh or toast here.
   };
 
+  const handleExecuteTask = (taskId: string) => {
+    setExecutionTaskId(taskId);
+    setActivePath('/exec');
+  };
+
   if (currentStep === 'intro') {
     return (
       <IntroCarousel 
@@ -87,51 +96,13 @@ function App() {
     );
   }
 
-  if (currentStep === 'system-check') {
-    return (
-      <SystemCheck 
-        onBack={() => setCurrentStep('intro')} 
-        onNext={() => setCurrentStep('cli-config')} 
-      />
-    );
-  }
-
-  if (currentStep === 'cli-config') {
-    return (
-      <CliConfig
-        onBack={() => setCurrentStep('system-check')}
-        onNext={() => setCurrentStep('secure-storage')}
-      />
-    );
-  }
-
-  if (currentStep === 'secure-storage') {
-    return (
-      <SecureStorage
-        onBack={() => setCurrentStep('cli-config')}
-        onNext={() => setCurrentStep('connect-agent')}
-      />
-    );
-  }
-
-  if (currentStep === 'connect-agent') {
-    return (
-      <ConnectAgent
-        onBack={() => setCurrentStep('secure-storage')}
-        onNext={() => setCurrentStep('privacy-settings')}
-      />
-    );
-  }
-
-  if (currentStep === 'privacy-settings') {
-    return (
-      <PrivacySettings
-        onBack={() => setCurrentStep('connect-agent')}
-        onNext={() => setCurrentStep('recent-projects')}
-      />
-    );
-  }
-
+  // ... (Other wizard steps omitted for brevity, they remain unchanged in logic) ...
+  if (currentStep === 'system-check') { return <SystemCheck onBack={() => setCurrentStep('intro')} onNext={() => setCurrentStep('cli-config')} />; }
+  if (currentStep === 'cli-config') { return <CliConfig onBack={() => setCurrentStep('system-check')} onNext={() => setCurrentStep('secure-storage')} />; }
+  if (currentStep === 'secure-storage') { return <SecureStorage onBack={() => setCurrentStep('cli-config')} onNext={() => setCurrentStep('connect-agent')} />; }
+  if (currentStep === 'connect-agent') { return <ConnectAgent onBack={() => setCurrentStep('secure-storage')} onNext={() => setCurrentStep('privacy-settings')} />; }
+  if (currentStep === 'privacy-settings') { return <PrivacySettings onBack={() => setCurrentStep('connect-agent')} onNext={() => setCurrentStep('recent-projects')} />; }
+  
   if (currentStep === 'recent-projects') {
     return (
       <RecentProjects 
@@ -166,95 +137,22 @@ function App() {
         errorType={validationError?.type || 'not_workspace'}
         path={validationError?.path || ''}
         onBack={() => setCurrentStep('recent-projects')}
-        onRemoveFromRecent={() => {
-            setCurrentStep('recent-projects');
-        }}
-        onInitialize={() => {
-            setCurrentStep('create-project-location');
-        }}
+        onRemoveFromRecent={() => { setCurrentStep('recent-projects'); }}
+        onInitialize={() => { setCurrentStep('create-project-location'); }}
         onRetry={() => setCurrentStep('validating-workspace')}
-        onBrowse={() => {
-            setCurrentStep('recent-projects');
-        }}
-        onOpenConfig={() => {
-            alert('Simulated: Opening config.json in default editor');
-        }}
+        onBrowse={() => { setCurrentStep('recent-projects'); }}
+        onOpenConfig={() => { alert('Simulated: Opening config.json in default editor'); }}
       />
     );
   }
 
-  if (currentStep === 'database-migration') {
-    return (
-      <DatabaseMigration 
-        onComplete={() => setCurrentStep('dashboard')}
-        onCancel={() => setCurrentStep('recent-projects')}
-      />
-    );
-  }
-
-  if (currentStep === 'update-required') {
-    return (
-      <UpdateRequired 
-        onFixed={() => setCurrentStep('recent-projects')} 
-      />
-    );
-  }
-
-  if (currentStep === 'create-project-location') {
-    return (
-      <CreateWorkspaceLocation
-        onBack={() => setCurrentStep('recent-projects')}
-        onNext={(path) => {
-          setNewProjectData(prev => ({ ...prev, path }));
-          setCurrentStep('create-project-details');
-        }}
-      />
-    );
-  }
-
-  if (currentStep === 'create-project-details') {
-    return (
-      <CreateWorkspaceDetails
-        onBack={() => setCurrentStep('create-project-location')}
-        onNext={(details) => {
-          setNewProjectData(prev => ({ ...prev, ...details }));
-          setCurrentStep('create-project-defaults');
-        }}
-      />
-    );
-  }
-
-  if (currentStep === 'create-project-defaults') {
-    return (
-      <CreateWorkspaceDefaults
-        onBack={() => setCurrentStep('create-project-details')}
-        onNext={(defaults) => {
-          setNewProjectData(prev => ({ ...prev, ...defaults }));
-          setCurrentStep('initializing-workspace');
-        }}
-        projectSummary={newProjectData}
-      />
-    );
-  }
-
-  if (currentStep === 'initializing-workspace') {
-    return (
-      <InitializingWorkspace
-        config={newProjectData}
-        onNext={() => setCurrentStep('workspace-ready')}
-        onCancel={() => setCurrentStep('create-project-defaults')}
-      />
-    );
-  }
-
-  if (currentStep === 'workspace-ready') {
-    return (
-      <WorkspaceReady
-        workspacePath={newProjectData.path}
-        onNext={() => setCurrentStep('dashboard')}
-      />
-    );
-  }
+  if (currentStep === 'database-migration') { return <DatabaseMigration onComplete={() => setCurrentStep('dashboard')} onCancel={() => setCurrentStep('recent-projects')} />; }
+  if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
+  if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
+  if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
+  if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
+  if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
+  if (currentStep === 'workspace-ready') { return <WorkspaceReady workspacePath={newProjectData.path} onNext={() => setCurrentStep('dashboard')} />; }
 
   // Calculate padding based on drawer state
   const contentPaddingClass = drawerState === 'peek' 
@@ -265,7 +163,8 @@ function App() {
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
-    if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} />;
+    if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} />;
+    if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     
     // Placeholder for other routes
     return (
@@ -278,15 +177,17 @@ function App() {
   const getBreadcrumb = () => {
     if (activePath === '/') return 'Workspace / Dashboard';
     if (activePath === '/plan') return 'Workspace / Plan';
+    if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     return `Workspace ${activePath}`;
   };
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
-      {/* Sidebar */}
+      {/* Sidebar - Hide in Execution Mode if desired, but specification says Shell Context: Focus Shell. We'll keep it simple for now or collapse it. */}
+      {/* For WS-06 Focus Mode, we might want to collapse sidebar automatically. Let's do that via effect if activePath is /exec */}
       <Sidebar 
-        isExpanded={isSidebarExpanded} 
+        isExpanded={activePath !== '/exec' && isSidebarExpanded} 
         setIsExpanded={setIsSidebarExpanded}
         activePath={activePath}
         setActivePath={setActivePath}
@@ -296,41 +197,42 @@ function App() {
       <main className="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
         
         {/* Top Breadcrumbs / App Header */}
-        <header className="h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
-          <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
-             <span className="hover:text-slate-300 cursor-pointer transition-colors">Master Coda</span>
-             <span>/</span>
-             <span className="text-slate-200">{getBreadcrumb()}</span>
-          </div>
-          <div className="ml-auto flex items-center space-x-2">
-             {/* New Task Hint */}
-             <button 
-               onClick={() => setIsCreateTaskOpen(true)}
-               className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
-               title="Create new task"
-             >
-                <span className="font-bold">+</span>
-                <span className="ml-1 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘N</span>
-             </button>
+        {activePath !== '/exec' && ( // Hide standard header in execution mode as it has its own
+          <header className="h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
+            <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
+               <span className="hover:text-slate-300 cursor-pointer transition-colors">Master Coda</span>
+               <span>/</span>
+               <span className="text-slate-200">{getBreadcrumb()}</span>
+            </div>
+            <div className="ml-auto flex items-center space-x-2">
+               <button 
+                 onClick={() => setIsCreateTaskOpen(true)}
+                 className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
+                 title="Create new task"
+               >
+                  <span className="font-bold">+</span>
+                  <span className="ml-1 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘N</span>
+               </button>
 
-             {/* Command Palette Hint */}
-             <button 
-               onClick={() => setIsCmdKOpen(true)}
-               className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
-             >
-                <CommandIcon size={10} />
-                <span>Search</span>
-                <span className="ml-2 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘K</span>
-             </button>
-          </div>
-        </header>
+               <button 
+                 onClick={() => setIsCmdKOpen(true)}
+                 className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
+               >
+                  <CommandIcon size={10} />
+                  <span>Search</span>
+                  <span className="ml-2 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘K</span>
+               </button>
+            </div>
+          </header>
+        )}
 
         {/* Scrollable Content */}
-        <div className={`flex-1 overflow-auto custom-scrollbar ${contentPaddingClass} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${activePath !== '/exec' ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            {renderContent()}
         </div>
 
         {/* Omni Drawer - Bottom Layer */}
+        {/* We might hide drawer or change its mode in execution view, but requirement says it's persistent. */}
         <OmniDrawer state={drawerState} onStateChange={setDrawerState} />
 
       </main>
