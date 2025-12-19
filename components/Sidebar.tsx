@@ -1,0 +1,89 @@
+import React from 'react';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon } from './Icons';
+
+interface SidebarProps {
+  isExpanded: boolean;
+  setIsExpanded: (val: boolean) => void;
+  activePath: string;
+  setActivePath: (path: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath, setActivePath }) => {
+  const navItems = [
+    { id: 'workspace', label: 'Workspace', icon: <LayoutGridIcon size={20} />, path: '/' },
+    { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
+    { id: 'agents', label: 'Agents', icon: <SparklesIcon size={20} />, path: '/agents' },
+    { id: 'source', label: 'Source Control', icon: <GitBranchIcon size={20} />, path: '/source' },
+    { id: 'docs', label: 'Documentation', icon: <FileTextIcon size={20} />, path: '/docs' },
+  ];
+
+  return (
+    <aside 
+      className={`relative flex flex-col h-screen bg-slate-800 border-r border-slate-700 transition-all duration-300 ease-in-out z-20 ${
+        isExpanded ? 'w-60' : 'w-16'
+      }`}
+    >
+      {/* Logo Area */}
+      <div className="flex items-center h-14 px-4 border-b border-slate-700">
+        <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center shrink-0">
+          <span className="text-white font-bold font-mono">M</span>
+        </div>
+        <div className={`ml-3 overflow-hidden transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+          <span className="font-semibold text-slate-100 whitespace-nowrap">Master Coda</span>
+        </div>
+      </div>
+
+      {/* Nav Items */}
+      <nav className="flex-1 py-4 space-y-1 px-2">
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setActivePath(item.path)}
+            className={`group flex items-center w-full px-2 py-2 rounded-md transition-all ${
+              activePath === item.path 
+                ? 'bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500' 
+                : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100 border-l-2 border-transparent'
+            }`}
+            title={!isExpanded ? item.label : undefined}
+          >
+            <span className="shrink-0">{item.icon}</span>
+            <span 
+              className={`ml-3 text-sm font-medium transition-all duration-300 whitespace-nowrap overflow-hidden ${
+                isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+              }`}
+            >
+              {item.label}
+            </span>
+          </button>
+        ))}
+      </nav>
+
+      {/* Toggle Button */}
+      <button 
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="absolute -right-3 top-20 bg-slate-700 border border-slate-600 rounded-full p-1 text-slate-400 hover:text-white hover:bg-indigo-600 transition-colors"
+      >
+        <ChevronRightIcon size={12} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Bottom Actions */}
+      <div className="p-2 border-t border-slate-700">
+        <button className="flex items-center w-full px-2 py-2 text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 rounded-md transition-colors">
+          <SettingsIcon size={20} />
+          <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+            Settings
+          </span>
+        </button>
+        <div className="mt-2 flex items-center px-2 py-2">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 shrink-0 border border-slate-500" />
+          <div className={`ml-3 overflow-hidden transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+            <p className="text-xs font-medium text-slate-200">Alex Dev</p>
+            <p className="text-[10px] text-slate-500">Senior Architect</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;
