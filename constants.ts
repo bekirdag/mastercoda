@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -441,6 +441,17 @@ export const MOCK_DOC_PAGES: DocPage[] = [
     id: 'p-auth-flow',
     title: 'Authentication Flow',
     folderId: 'f-specs',
+    author: 'Sarah Chen',
+    sourceType: 'github',
+    aiSummary: [
+      'Uses JWT-based authentication with RS256 asymmetric signing.',
+      'Implements automatic token rotation and refresh handling.',
+      'RBAC levels are enforced at the service gateway layer.'
+    ],
+    relatedDocs: [
+      { id: 'p-api-v1', title: 'API Reference v1' },
+      { id: 'p-design-system', title: 'Design System Guidelines' }
+    ],
     content: `# Authentication Flow
 
 This document describes how users are authenticated in Master Coda.
@@ -464,7 +475,22 @@ sequenceDiagram
 
 ## Security Notes
 - Tokens expire in 1 hour.
-- Refresh tokens are stored in HttpOnly cookies.`,
+- Refresh tokens are stored in HttpOnly cookies.
+
+## Code Implementation
+Here is the core logic for the verification hook:
+
+\`\`\`typescript
+export const useAuth = () => {
+  const { token } = useSession();
+  
+  const verify = async (id: string) => {
+    return await authProvider.verify(token, id);
+  };
+
+  return { verify };
+};
+\`\`\``,
     updatedAt: '10m ago',
     tags: ['auth', 'backend', 'security'],
     linkedTasks: ['MC-1002', 'MC-1024'],
@@ -477,6 +503,13 @@ sequenceDiagram
     id: 'p-design-system',
     title: 'Design System Guidelines',
     folderId: 'f-specs',
+    author: 'Alex Dev',
+    sourceType: 'local',
+    aiSummary: [
+      'Transitioning to Tailwind CSS for all core UI components.',
+      'Strict adherence to the Slate-900 cyberpunk color palette.',
+      'Emphasis on high-density data visualization and sub-millisecond response times.'
+    ],
     content: `# Design System Migration
 
 We are currently moving all components to the new Tailwind-based system.
@@ -501,6 +534,8 @@ We are currently moving all components to the new Tailwind-based system.
     id: 'p-agent-config',
     title: 'Agent Memory Profile',
     folderId: 'f-memory',
+    author: 'Architect Prime',
+    sourceType: 'github',
     content: `# Agent Context: Project Brain
 
 This file serves as long-term memory for the Agent.
@@ -527,6 +562,8 @@ Master Coda is an orchestrator for software engineering.
     id: 'p-api-v1',
     title: 'API Reference v1',
     folderId: 'f-api',
+    author: 'Bot',
+    sourceType: 'web',
     content: `# API v1 Reference
 
 Automatically generated from OpenAPI specs.
@@ -550,6 +587,31 @@ Stream agent reasoning.
     lastViewedAt: '2h ago'
   }
 ];
+
+export const MOCK_DOC_COMMENTS: Record<string, DocComment[]> = {
+  'p-auth-flow': [
+    {
+      id: 'c1',
+      author: 'Sarah Chen',
+      timestamp: '2h ago',
+      text: 'Do we need to worry about token bloat if we add more claims to the JWT?',
+      replies: [
+        {
+          id: 'c2',
+          author: 'Alex Dev',
+          timestamp: '1h ago',
+          text: 'We should keep it under 4KB to avoid issues with older proxies, but currently we are at 1.2KB.'
+        }
+      ]
+    },
+    {
+      id: 'c3',
+      author: 'Audit Zero',
+      timestamp: 'Yesterday',
+      text: 'Security review pending on the RS256 rotation logic.'
+    }
+  ]
+};
 
 export const MOCK_DOC_SOURCES: DocSource[] = [
   { id: 'src-backend', name: 'Core Backend', description: 'Internal specs and service map for the main orchestrator.', type: 'project', icon: '⚙️', pageCount: 24, lastUpdated: '2h ago' },

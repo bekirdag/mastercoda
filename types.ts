@@ -124,6 +124,10 @@ export interface DocPage {
   isPinned?: boolean;
   isDraft?: boolean;
   lastViewedAt?: string;
+  author?: string;
+  sourceType?: 'github' | 'notion' | 'local' | 'web';
+  aiSummary?: string[];
+  relatedDocs?: { id: string, title: string }[];
 }
 
 export interface DocFolder {
@@ -140,6 +144,15 @@ export interface DocSource {
   icon: string | React.ReactNode;
   pageCount: number;
   lastUpdated: string;
+}
+
+export interface DocComment {
+  id: string;
+  author: string;
+  avatar?: string;
+  text: string;
+  timestamp: string;
+  replies?: DocComment[];
 }
 
 // Agent Management Types
@@ -356,10 +369,7 @@ export type ExtensionCategory = 'Agents' | 'Languages' | 'Themes' | 'Snippets' |
 export type ExtensionInstallStatus = 'idle' | 'installing' | 'installed' | 'updating';
 
 export interface ExtensionPermission {
-  id: string;
-  label: string;
-  description: string;
-  revocable: boolean;
+  id: string; label: string; description: string; revocable: boolean;
 }
 
 export interface Extension {
