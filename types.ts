@@ -406,6 +406,35 @@ export interface ThoughtStep {
   timestamp: string;
 }
 
+// AG-04 Evaluation Types
+export type EvalStatus = 'pass' | 'fail' | 'marginal' | 'unstable' | 'timeout' | 'pending';
+
+export interface EvalCase {
+  id: string;
+  name: string;
+  prompt: string;
+  expectedBehavior: string;
+  targetResult?: {
+    score: number;
+    status: EvalStatus;
+    output: string;
+    reasoning: string;
+  };
+  baselineResult?: {
+    score: number;
+    status: EvalStatus;
+    output: string;
+  };
+}
+
+export interface EvalSuite {
+  id: string;
+  name: string;
+  description: string;
+  cases: EvalCase[];
+  isLocked?: boolean;
+}
+
 // Orchestrator Types (EX-15)
 export type OrchNodeType = 'trigger' | 'router' | 'agent' | 'fallback';
 
