@@ -17,10 +17,11 @@ import CreateWorkspaceDefaults from './components/CreateWorkspaceDefaults';
 import InitializingWorkspace from './components/InitializingWorkspace';
 import WorkspaceReady from './components/WorkspaceReady';
 import ValidatingWorkspace from './components/ValidatingWorkspace';
+import DatabaseMigration from './components/DatabaseMigration';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'database-migration' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -122,6 +123,16 @@ function App() {
     return (
       <ValidatingWorkspace
         path={newProjectData.path || '~/unknown/project'}
+        onComplete={() => setCurrentStep('dashboard')}
+        onCancel={() => setCurrentStep('recent-projects')}
+        onMigrationNeeded={() => setCurrentStep('database-migration')}
+      />
+    );
+  }
+
+  if (currentStep === 'database-migration') {
+    return (
+      <DatabaseMigration 
         onComplete={() => setCurrentStep('dashboard')}
         onCancel={() => setCurrentStep('recent-projects')}
       />

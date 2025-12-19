@@ -278,3 +278,18 @@ export const ClipboardIcon: React.FC<IconProps> = (props) => (
     <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
   </BaseIcon>
 );
+
+export const ArrowRightIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </BaseIcon>
+);
+
+export const SaveIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+    <polyline points="17 21 17 13 7 13 7 21" />
+    <polyline points="7 3 7 8 15 8" />
+  </BaseIcon>
+);

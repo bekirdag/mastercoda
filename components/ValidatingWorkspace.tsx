@@ -15,12 +15,13 @@ interface ValidatingWorkspaceProps {
   path: string;
   onComplete: () => void;
   onCancel: () => void;
+  onMigrationNeeded: () => void;
 }
 
 type CheckStatus = 'pending' | 'active' | 'success' | 'error';
 type Step = 'fs' | 'config' | 'db';
 
-const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onComplete, onCancel }) => {
+const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onComplete, onCancel, onMigrationNeeded }) => {
   const [currentStep, setCurrentStep] = useState<Step>('fs');
   const [fsStatus, setFsStatus] = useState<CheckStatus>('active');
   const [configStatus, setConfigStatus] = useState<CheckStatus>('pending');
@@ -78,9 +79,8 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
 
       // Simulate Migration Needed
       if (path.includes('migration')) {
-        // In a real app we would redirect to ON-15
-        setDbStatus('error'); // Using error visual for now to stop flow
-        setErrorMsg('Schema mismatch detected. Migration required (v12 -> v14).');
+        // Redirect to ON-15 flow
+        if (mounted) onMigrationNeeded();
         clearTimeout(timeoutId);
         return;
       }
@@ -98,7 +98,7 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
       mounted = false;
       clearTimeout(timeoutId);
     };
-  }, [path, onComplete]);
+  }, [path, onComplete, onMigrationNeeded]);
 
   // Helper to render check items
   const renderCheckItem = (label: string, status: CheckStatus, icon: React.ReactNode) => (
