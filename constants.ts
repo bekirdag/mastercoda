@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,36 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_AGENT_TEMPLATES: AgentTemplate[] = [
+  {
+    id: 'tpl-coding',
+    name: 'Coding Assistant',
+    description: 'Optimized for high-density code generation and refactoring.',
+    icon: '💻',
+    defaultModel: 'gemini-3-pro-preview',
+    recommendedSkills: ['fs_write', 'shell', 'search'],
+    systemPrompt: "You are a Senior Full-Stack Engineer. You write clean, performant, and well-tested code.\n\nContext Variables:\nProject: {{project_name}}\nStack: {{tech_stack}}"
+  },
+  {
+    id: 'tpl-qa',
+    name: 'QA specialist',
+    description: 'Focuses on edge cases, test coverage, and reliability.',
+    icon: '🧪',
+    defaultModel: 'claude-3-5-sonnet',
+    recommendedSkills: ['shell', 'browser'],
+    systemPrompt: "You are a rigorous QA Engineer. Your goal is to find vulnerabilities and edge cases in every implementation."
+  },
+  {
+    id: 'tpl-writer',
+    name: 'Technical Writer',
+    description: 'Excels at documentation, ADRs, and explaining complex logic.',
+    icon: '📚',
+    defaultModel: 'gpt-4o',
+    recommendedSkills: ['fs_write', 'search'],
+    systemPrompt: "You are a Technical Architect. You translate complex code logic into clear, human-readable documentation."
+  }
+];
 
 export const MOCK_DRIFT_RECORDS: DriftRecord[] = [
   {
@@ -1101,14 +1131,14 @@ export const MOCK_AGENTS: AgentPersona[] = [
     name: 'Grace',
     role: 'QA Engineer',
     status: 'online',
-    model: 'gpt-4o',
-    provider: 'openai',
+    model: 'claude-3-5-sonnet',
+    provider: 'anthropic',
     avatarColor: 'purple',
     isPrimary: false,
     currentActivity: 'Running E2E tests on login.spec.ts...',
     progress: 45,
     memoryUsage: 68,
-    systemPrompt: "You are Grace. Your purpose is to ensure software quality through automated testing and regression checks.",
+    systemPrompt: "You are Grace. Your purpose is to ensure software quality through automated testing and regression checks. You are rigorous and prioritize edge cases. You investigate why tests fail before reporting them.",
     capabilities: [
       { id: 'shell', label: 'Terminal Access', enabled: true, level: 'exec' },
       { id: 'browser', label: 'Browser Automation', enabled: true, level: 'exec' }
@@ -1162,6 +1192,28 @@ export const MOCK_AGENTS: AgentPersona[] = [
       avgLatency: '0.8s'
     }
   }
+];
+
+export const MOCK_MEMORIES: MemoryItem[] = [
+  { id: 'mem-1', fact: 'The user prefers TypeScript over JavaScript for all new files.', source: 'Chat #102', timestamp: '2d ago', relevanceScore: 0.95 },
+  { id: 'mem-2', fact: 'The staging server IP is 10.0.0.5.', source: 'Architecture Docs', timestamp: '1w ago', relevanceScore: 0.88 },
+  { id: 'mem-3', fact: 'The project uses Tailwind CSS for all styling.', source: 'Initial Scan', timestamp: '1w ago', relevanceScore: 0.92 },
+  { id: 'mem-4', fact: 'Legacy headers in the auth module need updating to support RBAC v2.', source: 'Sarah J.', timestamp: '3h ago', relevanceScore: 0.75, needsReview: true },
+  { id: 'mem-5', fact: 'The API key for Stripe changed to the new test key.', source: 'Chat #105', timestamp: '1d ago', relevanceScore: 0.98 }
+];
+
+export const MOCK_TOOL_LOGS: ToolUsageRecord[] = [
+  { id: 'tl-1', tool: 'fs.readFile', call: "readFile('src/auth/login.spec.ts')", status: 'success', timestamp: '2m ago', latency: '45ms' },
+  { id: 'tl-2', tool: 'terminal.exec', call: "exec('npm test')", status: 'failed', timestamp: '5m ago', latency: '1.2s' },
+  { id: 'tl-3', tool: 'browser.open', call: "open('http://localhost:3000/login')", status: 'success', timestamp: '10m ago', latency: '850ms' },
+  { id: 'tl-4', tool: 'fs.writeFile', call: "writeFile('src/auth/middleware.ts', content)", status: 'success', timestamp: '15m ago', latency: '120ms' }
+];
+
+export const MOCK_THOUGHT_TRACE: ThoughtStep[] = [
+  { id: 's1', thought: 'The user wants to fix a bug in the login flow. I should first identify the relevant files.', timestamp: '10:45:01' },
+  { id: 's2', thought: 'Searching for "login" in the project structure...', action: 'fs.ls("src")', observation: 'Found src/auth, src/components/Login.tsx', timestamp: '10:45:05' },
+  { id: 's3', thought: 'I will inspect the auth middleware to see how it handles session cookies.', action: 'fs.readFile("src/auth/middleware.ts")', timestamp: '10:45:12' },
+  { id: 's4', thought: 'The cookie parsing logic seems outdated. I need to update it to use the new "SessionManager" class.', timestamp: '10:45:25' }
 ];
 
 export const MOCK_FLEET_ACTIVITY: FleetActivity[] = [

@@ -210,7 +210,8 @@ const AgentCard: React.FC<{ agent: AgentPersona }> = ({ agent }) => {
 
    const handleDetails = () => {
       // Deep link to AG-02
-      console.log(`Opening detail for ${agent.id}`);
+      const evt = new CustomEvent('app-navigate', { detail: `/agents/${agent.id}/profile` });
+      window.dispatchEvent(evt);
    };
 
    return (
@@ -240,8 +241,8 @@ const AgentCard: React.FC<{ agent: AgentPersona }> = ({ agent }) => {
                }`} />
             </div>
             
-            <div className="min-w-0 flex-1">
-               <h3 className="text-lg font-bold text-white truncate group-hover:text-indigo-200 transition-colors">{agent.name}</h3>
+            <div className="min-w-0 flex-1" onClick={handleDetails}>
+               <h3 className="text-lg font-bold text-white truncate group-hover:text-indigo-200 transition-colors cursor-pointer">{agent.name}</h3>
                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none mt-1">{agent.role}</p>
                <div className="flex items-center mt-2 space-x-2">
                   <Badge variant="neutral">{agent.model}</Badge>

@@ -332,6 +332,13 @@ export interface AdrRecord {
 // Agent Management Types
 export type AgentStatus = 'online' | 'idle' | 'offline' | 'error' | 'rate-limited';
 
+export interface AgentCapability {
+  id: string;
+  label: string;
+  enabled: boolean;
+  level: 'read' | 'write' | 'exec';
+}
+
 export interface AgentPersona {
   id: string;
   name: string;
@@ -346,17 +353,22 @@ export interface AgentPersona {
   progress?: number;
   memoryUsage?: number; // 0-100
   lastAction?: string;
-  capabilities: {
-    id: string;
-    label: string;
-    enabled: boolean;
-    level: 'read' | 'write' | 'exec';
-  }[];
+  capabilities: AgentCapability[];
   metrics: {
     tokensUsed: number;
     tasksCompleted: number;
     avgLatency: string;
   };
+}
+
+export interface AgentTemplate {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  systemPrompt: string;
+  defaultModel: string;
+  recommendedSkills: string[];
 }
 
 export interface FleetActivity {
@@ -365,6 +377,33 @@ export interface FleetActivity {
   agentName: string;
   message: string;
   type: 'info' | 'success' | 'warn' | 'error';
+}
+
+// AG-02 Detailed Types
+export interface MemoryItem {
+  id: string;
+  fact: string;
+  source: string;
+  timestamp: string;
+  relevanceScore: number;
+  needsReview?: boolean;
+}
+
+export interface ToolUsageRecord {
+  id: string;
+  tool: string;
+  call: string;
+  status: 'success' | 'failed' | 'running';
+  timestamp: string;
+  latency?: string;
+}
+
+export interface ThoughtStep {
+  id: string;
+  thought: string;
+  action?: string;
+  observation?: string;
+  timestamp: string;
 }
 
 // Orchestrator Types (EX-15)
