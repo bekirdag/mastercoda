@@ -197,3 +197,32 @@ export interface Playbook {
   updatedAt: string;
   isSystem?: boolean;
 }
+
+// WS-17 Quality Hub Types
+export type TestStatus = 'pass' | 'fail' | 'running' | 'pending' | 'skipped';
+
+export interface TestResult {
+  id: string;
+  name: string;
+  suite: string;
+  file: string;
+  status: TestStatus;
+  duration?: string;
+  error?: string;
+  aiInsight?: string;
+}
+
+export interface CoverageMetric {
+  id: string;
+  path: string;
+  percentage: number;
+  lines: number;
+  uncoveredRegions?: string[];
+}
+
+export interface FlakyTest {
+  id: string;
+  name: string;
+  failRate: number;
+  lastRunStatus: TestStatus;
+}

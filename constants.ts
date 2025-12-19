@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -706,4 +706,31 @@ export const MOCK_PLAYBOOKS: Playbook[] = [
     author: 'Architect Prime',
     updatedAt: 'Yesterday'
   }
+];
+
+export const MOCK_TEST_RESULTS: TestResult[] = [
+  { id: 't1', name: 'should render workspace overview', suite: 'Dashboard', file: 'src/components/Dashboard.test.tsx', status: 'pass', duration: '14ms' },
+  { id: 't2', name: 'should load active tasks', suite: 'Dashboard', file: 'src/components/Dashboard.test.tsx', status: 'pass', duration: '28ms' },
+  { id: 't3', name: 'should validate JWT signature', suite: 'AuthFlow', file: 'src/auth/middleware.test.ts', status: 'pass', duration: '45ms' },
+  { id: 't4', name: 'should handle invalid password', suite: 'AuthFlow', file: 'src/auth/middleware.test.ts', status: 'fail', duration: '12ms', error: 'Expected 401, received 200', aiInsight: 'The mock API provider is returning a default success response. Check mocks/auth.ts line 42.' },
+  { id: 't5', name: 'should connect to Gemini API', suite: 'Agentic', file: 'src/agents/client.test.ts', status: 'pass', duration: '120ms' },
+  { id: 't6', name: 'should process streaming tokens', suite: 'Agentic', file: 'src/agents/client.test.ts', status: 'fail', duration: '85ms', error: 'Stream interrupted: Connection reset', aiInsight: 'Network timeout during SSE connection. Increase keep-alive interval.' },
+  { id: 't7', name: 'should calculate roadmap bounds', suite: 'Roadmap', file: 'src/utils/roadmap.test.ts', status: 'pass', duration: '8ms' },
+  { id: 't8', name: 'should handle timezone offsets', suite: 'Roadmap', file: 'src/utils/roadmap.test.ts', status: 'skipped' },
+  { id: 't9', name: 'should resolve conflicts automatically', suite: 'Git', file: 'src/git/merger.test.ts', status: 'pass', duration: '340ms' },
+];
+
+export const MOCK_COVERAGE: CoverageMetric[] = [
+  { id: 'c1', path: 'src/components/Dashboard.tsx', percentage: 92, lines: 450 },
+  { id: 'c2', path: 'src/auth/middleware.ts', percentage: 74, lines: 120, uncoveredRegions: ['L42-L55', 'L88'] },
+  { id: 'c3', path: 'src/utils/helpers.ts', percentage: 100, lines: 85 },
+  { id: 'c4', path: 'src/utils/payment.ts', percentage: 32, lines: 210, uncoveredRegions: ['L10-L150'] },
+  { id: 'c5', path: 'src/components/Roadmap.tsx', percentage: 88, lines: 340 },
+  { id: 'c6', path: 'src/agents/client.ts', percentage: 65, lines: 500, uncoveredRegions: ['L200-L310'] },
+];
+
+export const MOCK_FLAKY_TESTS: FlakyTest[] = [
+  { id: 't4', name: 'AuthFlow > handle invalid password', failRate: 15, lastRunStatus: 'fail' },
+  { id: 't6', name: 'Agentic > process streaming tokens', failRate: 42, lastRunStatus: 'fail' },
+  { id: 'f-1', name: 'E2E > Checkout Flow', failRate: 8, lastRunStatus: 'pass' },
 ];
