@@ -35,6 +35,31 @@ export interface PaymentMethod {
   isPrimary: boolean;
 }
 
+// SY-07 Security Types
+export type AuditCategory = 'login' | 'billing' | 'deletion' | 'api' | 'system';
+
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  actor: string;
+  event: string;
+  ip: string;
+  location: string;
+  category: AuditCategory;
+  details?: Record<string, string>;
+  isSuspicious?: boolean;
+}
+
+export interface UserSession {
+  id: string;
+  device: string;
+  browser: string;
+  location: string;
+  lastActive: string;
+  isCurrent: boolean;
+  type: 'desktop' | 'mobile';
+}
+
 // RAG Manager Types (AG-08)
 export type RagSourceType = 'git' | 'pdf' | 'wiki' | 'web' | 'api';
 export type RagSyncStatus = 'synced' | 'indexing' | 'stale' | 'error';

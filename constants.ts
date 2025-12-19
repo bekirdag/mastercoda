@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -19,6 +19,20 @@ export const MOCK_INVOICES: Invoice[] = [
 export const MOCK_PAYMENT_METHODS: PaymentMethod[] = [
   { id: 'pm_1', type: 'visa', last4: '4242', expiry: '12/26', isPrimary: true },
   { id: 'pm_2', type: 'mastercard', last4: '8888', expiry: '05/28', isPrimary: false }
+];
+
+export const MOCK_AUDIT_LOG: AuditLogEntry[] = [
+  { id: 'a1', timestamp: 'Oct 14, 14:02', actor: 'You', event: 'Project Deleted: "Legacy-App"', ip: '192.168.1.1', location: 'San Francisco, US', category: 'deletion' },
+  { id: 'a2', timestamp: 'Oct 14, 13:45', actor: 'Agent: DeployBot', event: 'Production Deployment Triggered', ip: '10.0.0.42', location: 'AWS-US-EAST-1', category: 'api' },
+  { id: 'a3', timestamp: 'Oct 13, 09:12', actor: 'You', event: 'Login Success', ip: '192.168.1.1', location: 'San Francisco, US', category: 'login' },
+  { id: 'a4', timestamp: 'Oct 12, 22:30', actor: 'Unknown', event: 'Failed Login Attempt', ip: '45.12.88.2', location: 'Moscow, RU', category: 'login', isSuspicious: true },
+  { id: 'a5', timestamp: 'Oct 12, 11:00', actor: 'You', event: 'Plan Upgraded to Pro', ip: '192.168.1.1', location: 'San Francisco, US', category: 'billing' }
+];
+
+export const MOCK_SESSIONS: UserSession[] = [
+  { id: 's1', device: 'MacBook Pro', browser: 'Chrome', location: 'San Francisco, US', lastActive: 'Active Now', isCurrent: true, type: 'desktop' },
+  { id: 's2', device: 'iPhone 14', browser: 'Safari', location: 'New York, US', lastActive: '2h ago', isCurrent: false, type: 'mobile' },
+  { id: 's3', device: 'Windows Desktop', browser: 'Master Coda App', location: 'London, UK', lastActive: '5d ago', isCurrent: false, type: 'desktop' }
 ];
 
 export const MOCK_PLUGINS: Plugin[] = [

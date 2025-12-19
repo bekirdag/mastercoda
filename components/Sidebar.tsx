@@ -119,6 +119,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
       {/* Bottom Actions */}
       <div className="p-2 border-t border-slate-700">
         <button 
+          onClick={() => setActivePath('/system/security')}
+          className={`flex items-center w-full px-2 py-2 rounded-md transition-colors mb-1 ${
+            activePath === '/system/security' 
+              ? 'text-indigo-400 bg-indigo-600/10' 
+              : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700/50'
+          }`}
+        >
+          <ShieldIcon size={20} />
+          <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+            Security
+          </span>
+        </button>
+        <button 
           onClick={() => setActivePath('/system/about')}
           className={`flex items-center w-full px-2 py-2 rounded-md transition-colors mb-1 ${
             activePath === '/system/about' 
@@ -126,7 +139,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
               : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700/50'
           }`}
         >
-          {/* Fix: Added missing RotateCwIcon to imports to fix 'Cannot find name' error */}
           <RotateCwIcon size={20} />
           <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
             Updates

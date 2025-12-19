@@ -31,6 +31,7 @@ import ProjectSettings from './components/ProjectSettings';
 import GlobalPreferences from './components/GlobalPreferences'; 
 import BillingSettings from './components/BillingSettings'; 
 import AboutUpdates from './components/AboutUpdates'; // SY-06
+import SecurityAudit from './components/SecurityAudit'; // SY-07
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; 
 import DocEditor from './components/DocEditor'; 
@@ -117,7 +118,7 @@ function App() {
         setIsCmdKOpen(prev => !prev);
       }
       // Cmd+Shift+N: Notifications
-      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'n') {
+      if ((e.metaKey || e.ctrlKey) && shiftKey && e.key === 'n') {
         e.preventDefault();
         setActivePath('/notifications');
       }
@@ -250,10 +251,11 @@ function App() {
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
-    if (activePath === '/notifications') return <NotificationCenter />; // SY-04
-    if (activePath === '/help') return <HelpSupport />; // SY-05
-    if (activePath === '/system/about') return <AboutUpdates />; // SY-06
-    if (activePath === '/inbox') return <NotificationCenter />; // Backwards compatibility / same context
+    if (activePath === '/notifications') return <NotificationCenter />; 
+    if (activePath === '/help') return <HelpSupport />; 
+    if (activePath === '/system/about') return <AboutUpdates />; 
+    if (activePath === '/system/security') return <SecurityAudit />; // SY-07
+    if (activePath === '/inbox') return <NotificationCenter />; 
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
     if (activePath === '/quality') return <QualityHub />;
@@ -326,6 +328,7 @@ function App() {
     if (activePath === '/notifications' || activePath === '/inbox') return 'System / Notification Center';
     if (activePath === '/help') return 'System / Help & Support';
     if (activePath === '/system/about') return 'System / About Master Coda';
+    if (activePath === '/system/security') return 'System / Security & Audit';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
@@ -377,7 +380,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
