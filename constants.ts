@@ -1,5 +1,4 @@
-
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -718,6 +717,81 @@ export const MOCK_SERVICE_ACCOUNTS: ServiceAccount[] = [
     authorizedExtensions: [],
     isManual: true
   }
+];
+
+// EX-14 Network Firewall Mock
+export const MOCK_NETWORK_REQUESTS: NetworkRequest[] = [
+  {
+    id: 'req-1',
+    timestamp: '10:42:05',
+    extensionId: 'ag-primary',
+    extensionName: 'Architect Prime',
+    method: 'POST',
+    domain: 'api.openai.com',
+    url: 'https://api.openai.com/v1/chat/completions',
+    status: 200,
+    size: '4.2kb',
+    initiator: 'agent-host.js:102',
+    body: '{"model": "gpt-4o", "messages": [{"role": "user", "content": "Analyzing src/auth..."}]}'
+  },
+  {
+    id: 'req-2',
+    timestamp: '10:42:06',
+    extensionId: 'ext-py-agent',
+    extensionName: 'Python Data Agent',
+    method: 'GET',
+    domain: 'pypi.org',
+    url: 'https://pypi.org/pypi/pandas/json',
+    status: 200,
+    size: '12kb',
+    initiator: 'extension.js:45'
+  },
+  {
+    id: 'req-3',
+    timestamp: '10:42:08',
+    extensionId: 'ext-vercel',
+    extensionName: 'Deploy to Vercel',
+    method: 'POST',
+    domain: 'api.vercel.com',
+    url: 'https://api.vercel.com/v13/deployments',
+    status: 'BLOCKED',
+    size: '0b',
+    initiator: 'vercel-client.ts:89',
+    body: '{"name":"master-coda","files":[]}'
+  },
+  {
+    id: 'req-4',
+    timestamp: '10:42:10',
+    extensionId: 'ag-coder',
+    extensionName: 'Logic Synth',
+    method: 'GET',
+    domain: 'google-analytics.com',
+    url: 'https://google-analytics.com/collect?v=1&tid=UA-42...',
+    status: 'BLOCKED',
+    size: '0b',
+    initiator: 'telemetry.js:12'
+  },
+  {
+    id: 'req-5',
+    timestamp: '10:42:12',
+    extensionId: 'ext-rust-lsp',
+    extensionName: 'Rust Language Support',
+    method: 'GET',
+    domain: 'crates.io',
+    url: 'https://crates.io/api/v1/crates/tokio',
+    status: 200,
+    size: '1.5kb',
+    initiator: 'lsp-bridge.rs:402'
+  }
+];
+
+export const MOCK_FIREWALL_RULES: FirewallRule[] = [
+  { id: 'rule-1', domain: 'api.openai.com', type: 'allow' },
+  { id: 'rule-2', domain: 'github.com', type: 'allow' },
+  { id: 'rule-3', domain: 'registry.mastercoda.com', type: 'allow', isSystem: true },
+  { id: 'rule-4', domain: 'google-analytics.com', type: 'block' },
+  { id: 'rule-5', domain: 'tracking.stats.io', type: 'block' },
+  { id: 'rule-6', domain: '*.internal.corp', type: 'allow' }
 ];
 
 // WS-15 Mock Data

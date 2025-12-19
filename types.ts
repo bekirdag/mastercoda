@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export type OmniDrawerState = 'hidden' | 'collapsed' | 'open' | 'maximized';
@@ -196,6 +195,29 @@ export interface ServiceAccount {
   authorizedExtensions: AuthorizedExtension[];
   isManual?: boolean;
   lastVerified: string;
+}
+
+// EX-14 Firewall Types
+export interface NetworkRequest {
+  id: string;
+  timestamp: string;
+  extensionId: string;
+  extensionName: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'WS';
+  domain: string;
+  url: string;
+  status: number | 'BLOCKED';
+  size: string;
+  headers?: Record<string, string>;
+  body?: string;
+  initiator?: string;
+}
+
+export interface FirewallRule {
+  id: string;
+  domain: string;
+  type: 'allow' | 'block';
+  isSystem?: boolean;
 }
 
 // WS-14 Notification Types

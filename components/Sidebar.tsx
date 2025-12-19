@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -18,6 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
+    { id: 'firewall', label: 'Privacy Firewall', icon: <GlobeIcon size={20} />, path: '/extensions/firewall' }, // EX-14
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
     { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, // EX-12
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
