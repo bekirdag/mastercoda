@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -20,8 +19,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'orchestrator', label: 'Orchestrator', icon: <div className="relative"><ActivityIcon size={20} className="text-indigo-400" /><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full" /></div>, path: '/extensions/orchestrator' }, // EX-15
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
     { id: 'firewall', label: 'Privacy Firewall', icon: <GlobeIcon size={20} />, path: '/extensions/firewall' }, // EX-14
+    { id: 'topology', label: 'Topology', icon: <LayoutGridIcon size={20} className="text-emerald-400" />, path: '/docs/topology' }, // DO-06
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
+    { id: 'adrs', label: 'Decision Log', icon: <HistoryIcon size={20} className="text-indigo-400" />, path: '/docs/adrs' }, // DO-07
     { id: 'apiexplorer', label: 'API Explorer', icon: <ZapIcon size={20} className="text-amber-400" />, path: '/docs/api-explorer' }, // DO-05
+    { id: 'learning', label: 'Learning Paths', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/learning' }, // DO-08
     { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, // EX-12
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
     { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, // EX-10

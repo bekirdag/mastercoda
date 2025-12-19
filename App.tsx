@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -33,6 +32,9 @@ import DocsHub from './components/DocsHub'; // Added for DO-01
 import DocEditor from './components/DocEditor'; // Added for DO-03
 import DocSiteManager from './components/DocSiteManager'; // Added for DO-04
 import ApiExplorer from './components/ApiExplorer'; // Added for DO-05
+import SystemTopology from './components/SystemTopology'; // Added for DO-06
+import DecisionLog from './components/DecisionLog'; // Added for DO-07
+import LearningPaths from './components/LearningPaths'; // Added for DO-08
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
@@ -214,6 +216,9 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
     if (activePath === '/extensions/firewall') return <NetworkFirewall />;
+    if (activePath === '/docs/topology') return <SystemTopology />; // DO-06
+    if (activePath === '/docs/adrs') return <DecisionLog />; // DO-07
+    if (activePath === '/docs/learning') return <LearningPaths />; // DO-08
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
     if (activePath === '/extensions/references') return <ReferenceLibrary />;
@@ -256,6 +261,9 @@ function App() {
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/extensions/firewall') return 'Workspace / Privacy Firewall';
+    if (activePath === '/docs/topology') return 'Documentation / System Topology';
+    if (activePath === '/docs/adrs') return 'Governance / Decision Log';
+    if (activePath === '/docs/learning') return 'Documentation / Learning Paths';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
     if (activePath === '/extensions/references') return 'Ecosystem / References';
@@ -282,7 +290,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer'];
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

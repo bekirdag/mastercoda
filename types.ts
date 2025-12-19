@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export type OmniDrawerState = 'hidden' | 'collapsed' | 'open' | 'maximized';
@@ -172,6 +171,31 @@ export interface DocSiteNavItem {
   children?: DocSiteNavItem[];
 }
 
+// DO-08 Learning Path Types
+export type PathModuleType = 'read' | 'task' | 'quiz' | 'project';
+export type PathModuleStatus = 'locked' | 'active' | 'completed';
+
+export interface PathModule {
+  id: string;
+  type: PathModuleType;
+  title: string;
+  description: string;
+  status: PathModuleStatus;
+  duration?: string;
+  resourceId?: string; // Links to docId or taskId
+  isStale?: boolean;
+}
+
+export interface LearningPath {
+  id: string;
+  title: string;
+  subtitle: string;
+  author: string;
+  modules: PathModule[];
+  progress: number; // 0-100
+  estimatedTime: string;
+}
+
 // API Explorer Types (DO-05)
 export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
@@ -196,6 +220,63 @@ export interface ApiEndpoint {
     contentType: string;
     schema: string;
   };
+}
+
+// DO-06 Topology Types
+export type TopologyNodeType = 'service' | 'database' | 'external' | 'frontend' | 'gateway' | 'worker';
+
+export interface TopologyNode {
+  id: string;
+  type: TopologyNodeType;
+  label: string;
+  description?: string;
+  x: number;
+  y: number;
+  metadata: {
+    language?: string;
+    framework?: string;
+    maintainer?: string;
+    health?: 'healthy' | 'warning' | 'error';
+    uptime?: string;
+    internalModules?: string[];
+  };
+}
+
+export interface TopologyEdge {
+  id: string;
+  source: string;
+  target: string;
+  label?: string; // Protocol/Port
+  type: 'sync' | 'async';
+}
+
+// ADR Types (DO-07)
+export type AdrStatus = 'draft' | 'proposed' | 'accepted' | 'rejected' | 'deprecated';
+
+export interface AdrReviewer {
+  id: string;
+  name: string;
+  avatar?: string;
+  vote?: 'yes' | 'no' | 'none';
+}
+
+export interface AdrRecord {
+  id: string; // ADR-042
+  title: string;
+  status: AdrStatus;
+  date: string;
+  author: string;
+  category: string;
+  context: string;
+  decision: string;
+  consequences: {
+    positive: string[];
+    negative: string[];
+  };
+  supersedes?: string; // ID of another ADR
+  supersededBy?: string; // ID of another ADR
+  implementationUrl?: string;
+  reviewers: AdrReviewer[];
 }
 
 // Agent Management Types

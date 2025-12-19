@@ -1,5 +1,4 @@
-
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +7,212 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_LEARNING_PATHS: LearningPath[] = [
+  {
+    id: 'path-frontend-101',
+    title: 'Frontend Onboarding: Day 1 to Deploy',
+    subtitle: 'Master the component library, CI/CD flow, and styling guidelines used in Master Coda.',
+    author: 'Sarah Chen',
+    progress: 45,
+    estimatedTime: '3 Hours',
+    modules: [
+      {
+        id: 'm1',
+        type: 'read',
+        title: 'Design System Philosophy',
+        description: 'Understand why we chose Tailwind and our cyberpunk design tokens.',
+        status: 'completed',
+        duration: '15m',
+        resourceId: 'p-design-system'
+      },
+      {
+        id: 'm2',
+        type: 'task',
+        title: 'Local Environment Setup',
+        description: 'Clone the repository, run npm install, and verify your local build with mcoda status.',
+        status: 'completed',
+        duration: '30m'
+      },
+      {
+        id: 'm3',
+        type: 'read',
+        title: 'Authentication Middleware Architecture',
+        description: 'Deep dive into our JWT implementation and RS256 rotation logic.',
+        status: 'active',
+        duration: '20m',
+        resourceId: 'p-auth-flow'
+      },
+      {
+        id: 'm4',
+        type: 'quiz',
+        title: 'Security Standards Check',
+        description: 'A quick 5-question check on handling sensitive API keys.',
+        status: 'locked',
+        duration: '10m'
+      },
+      {
+        id: 'm5',
+        type: 'project',
+        title: 'First Component Pull Request',
+        description: 'Scaffold a new UI component using the /scaffold playbook and submit for review.',
+        status: 'locked',
+        duration: '1h'
+      }
+    ]
+  },
+  {
+    id: 'path-backend-adv',
+    title: 'Advanced Backend: High-Density Pipelines',
+    subtitle: 'Learn to build resilient gRPC microservices and optimize SQL workloads.',
+    author: 'Alex Dev',
+    progress: 0,
+    estimatedTime: '8 Hours',
+    modules: [
+      {
+        id: 'b1',
+        type: 'read',
+        title: 'gRPC Communication Patterns',
+        description: 'Learn our standard for bi-directional streaming between services.',
+        status: 'active',
+        duration: '45m'
+      },
+      {
+        id: 'b2',
+        type: 'read',
+        title: 'SQL Performance Tuning',
+        description: 'Common pitfalls when using our shared Postgres cluster.',
+        status: 'locked',
+        duration: '1h',
+        isStale: true
+      }
+    ]
+  }
+];
+
+export const MOCK_ADRS: AdrRecord[] = [
+  {
+    id: 'ADR-045',
+    title: 'Adopt Rust for Image Service',
+    status: 'accepted',
+    date: formatDate(-2),
+    author: 'Alex Dev',
+    category: 'Backend',
+    context: 'The current Node.js image processing service is hitting CPU limits during peak resizing tasks, causing latency spikes in the UI. We need a more performant runtime for compute-intensive tasks.',
+    decision: 'We will rewrite the core image processing logic in Rust using the `image` crate and expose it via a gRPC interface. This will leverage Rusts zero-cost abstractions and safe concurrency.',
+    consequences: {
+      positive: [
+        'Significant reduction in processing latency (estimated 4x speedup).',
+        'Lower memory footprint per request.',
+        'Better utilization of multi-core CPU architectures.'
+      ],
+      negative: [
+        'Steeper learning curve for the team.',
+        'Initial overhead in setting up the gRPC bridge.',
+        'Build times will increase slightly due to LLVM compilation.'
+      ]
+    },
+    implementationUrl: 'https://github.com/master-coda/image-service',
+    reviewers: [
+      { id: '1', name: 'Sarah Chen', vote: 'yes' },
+      { id: '2', name: 'John Smith', vote: 'yes' },
+      { id: '3', name: 'Audit Zero', vote: 'yes' }
+    ]
+  },
+  {
+    id: 'ADR-044',
+    title: 'Standardize on gRPC for Internal Services',
+    status: 'accepted',
+    date: formatDate(-15),
+    author: 'Sarah Chen',
+    category: 'Architecture',
+    context: 'Our microservices are currently communicating via a mix of REST and raw TCP sockets. This makes it difficult to maintain type safety across language boundaries (Go, Node, Python).',
+    decision: 'All new internal service communication will use gRPC with Protocol Buffers (proto3). This ensures strict typing and contract-first development.',
+    consequences: {
+      positive: ['Strict contract enforcement.', 'Built-in support for streaming.', 'Smaller payload sizes.'],
+      negative: ['More complex debugging (binary protocol).', 'Browser clients require grpc-web bridge.']
+    },
+    reviewers: [
+      { id: '1', name: 'Alex Dev', vote: 'yes' },
+      { id: '2', name: 'Audit Zero', vote: 'none' }
+    ]
+  },
+  {
+    id: 'ADR-046',
+    title: 'Migrate Session Storage to Redis',
+    status: 'proposed',
+    date: formatDate(0),
+    author: 'Alex Dev',
+    category: 'Infrastructure',
+    context: 'Current sessions are stored in Postgres, leading to high DB load for simple auth checks.',
+    decision: 'Move session management to an elastic Redis cluster.',
+    consequences: {
+      positive: ['Sub-millisecond session lookups.', 'Decoupled auth from main DB.'],
+      negative: ['Introduces another point of failure.', 'Requires Redis cluster management.']
+    },
+    reviewers: [
+      { id: '1', name: 'Sarah Chen', vote: 'none' },
+      { id: '2', name: 'Architect Prime', vote: 'none' }
+    ]
+  },
+  {
+    id: 'ADR-012',
+    title: 'Use XML for Configuration',
+    status: 'deprecated',
+    date: formatDate(-365),
+    author: 'Legacy Dev',
+    category: 'Core',
+    context: 'Need a structured format for app config.',
+    decision: 'Standardize on XML for all configuration files.',
+    consequences: {
+      positive: ['Widely supported.'],
+      negative: ['Verbose.', 'Hard to read for humans.']
+    },
+    supersededBy: 'ADR-015',
+    reviewers: []
+  }
+];
+
+export const MOCK_TOPOLOGY_NODES: TopologyNode[] = [
+  { 
+    id: 't-web', type: 'frontend', label: 'Web App', x: 50, y: 200, 
+    metadata: { language: 'TypeScript', framework: 'React', health: 'healthy', uptime: '99.9%' } 
+  },
+  { 
+    id: 't-gw', type: 'gateway', label: 'API Gateway', x: 250, y: 200, 
+    metadata: { framework: 'Nginx', health: 'healthy' } 
+  },
+  { 
+    id: 't-auth', type: 'service', label: 'Auth Service', x: 450, y: 100, 
+    metadata: { language: 'Go', framework: 'Gin', maintainer: 'Identity Team', health: 'healthy', internalModules: ['JWT', 'OAuth2', 'RBAC'] } 
+  },
+  { 
+    id: 't-user', type: 'service', label: 'User Service', x: 450, y: 300, 
+    metadata: { language: 'Node.js', framework: 'Express', maintainer: 'Core Team', health: 'warning' } 
+  },
+  { 
+    id: 't-db', type: 'database', label: 'Postgres DB', x: 650, y: 200, 
+    metadata: { language: 'SQL', health: 'healthy', uptime: '100%' } 
+  },
+  { 
+    id: 't-stripe', type: 'external', label: 'Stripe API', x: 650, y: 50, 
+    metadata: { health: 'healthy' } 
+  },
+  { 
+    id: 't-worker', type: 'worker', label: 'Email Worker', x: 650, y: 350, 
+    metadata: { language: 'Python', health: 'healthy' } 
+  }
+];
+
+export const MOCK_TOPOLOGY_EDGES: TopologyEdge[] = [
+  { id: 'e1', source: 't-web', target: 't-gw', label: 'HTTPS:443', type: 'sync' },
+  { id: 'e2', source: 't-gw', target: 't-auth', label: 'gRPC:50051', type: 'sync' },
+  { id: 'e3', source: 't-gw', target: 't-user', label: 'HTTP:3000', type: 'sync' },
+  { id: 'e4', source: 't-auth', target: 't-db', label: 'TCP:5432', type: 'sync' },
+  { id: 'e5', source: 't-user', target: 't-db', label: 'TCP:5432', type: 'sync' },
+  { id: 'e6', source: 't-auth', target: 't-stripe', label: 'HTTPS', type: 'sync' },
+  { id: 'e7', source: 't-user', target: 't-worker', label: 'AMQP', type: 'async' }
+];
 
 export const MOCK_API_ENDPOINTS: ApiEndpoint[] = [
   {
@@ -814,7 +1019,6 @@ export const MOCK_AI_PROVIDERS: AIProvider[] = [
     id: 'ollama',
     name: 'Ollama (Local)',
     status: 'loading',
-    baseUrl: 'http://localhost:11434',
     icon: '🦙',
     models: [
       { id: 'llama3:8b', name: 'Llama 3 8B', contextWindow: 8192, type: 'chat' },
