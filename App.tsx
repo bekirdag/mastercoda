@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
 import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
+import TaskBoard from './components/TaskBoard'; // Imported TaskBoard
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
 import CliConfig from './components/CliConfig';
@@ -63,7 +64,12 @@ function App() {
   }, []);
 
   if (currentStep === 'intro') {
-    return <IntroCarousel onFinish={() => setCurrentStep('system-check')} />;
+    return (
+      <IntroCarousel 
+        onFinish={() => setCurrentStep('system-check')} 
+        onSkip={() => setCurrentStep('dashboard')} 
+      />
+    );
   }
 
   if (currentStep === 'system-check') {
@@ -246,6 +252,23 @@ function App() {
       ? 'pb-0' 
       : 'pb-8';
 
+  const renderContent = () => {
+    if (activePath === '/') return <Dashboard />;
+    if (activePath === '/plan') return <TaskBoard />;
+    // Placeholder for other routes
+    return (
+      <div className="flex items-center justify-center h-full text-slate-500">
+        <p>Section under construction: {activePath}</p>
+      </div>
+    );
+  };
+
+  const getBreadcrumb = () => {
+    if (activePath === '/') return 'Workspace / Dashboard';
+    if (activePath === '/plan') return 'Workspace / Plan / Board';
+    return `Workspace ${activePath}`;
+  };
+
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
@@ -265,9 +288,7 @@ function App() {
           <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
              <span className="hover:text-slate-300 cursor-pointer transition-colors">Master Coda</span>
              <span>/</span>
-             <span className="hover:text-slate-300 cursor-pointer transition-colors">Workspace</span>
-             <span>/</span>
-             <span className="text-slate-200">Dashboard</span>
+             <span className="text-slate-200">{getBreadcrumb()}</span>
           </div>
           <div className="ml-auto">
              {/* Hint for keyboard shortcuts */}
@@ -284,7 +305,7 @@ function App() {
 
         {/* Scrollable Content */}
         <div className={`flex-1 overflow-auto custom-scrollbar ${contentPaddingClass} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
-           <Dashboard />
+           {renderContent()}
         </div>
 
         {/* Omni Drawer - Bottom Layer */}

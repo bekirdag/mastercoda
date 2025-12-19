@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Button from './Button';
-import { TerminalIcon, SparklesIcon, GitBranchIcon, ActivityIcon, CheckCircleIcon } from './Icons';
+import { TerminalIcon, SparklesIcon, GitBranchIcon, ActivityIcon, CheckCircleIcon, ArrowRightIcon } from './Icons';
 
 interface IntroCarouselProps {
   onFinish: () => void;
+  onSkip?: () => void;
 }
 
-const IntroCarousel: React.FC<IntroCarouselProps> = ({ onFinish }) => {
+const IntroCarousel: React.FC<IntroCarouselProps> = ({ onFinish, onSkip }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -132,6 +133,17 @@ const IntroCarousel: React.FC<IntroCarouselProps> = ({ onFinish }) => {
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-950 -z-10" />
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 -z-10 mix-blend-overlay" />
+
+      {/* Development Skip Button */}
+      {onSkip && (
+        <button 
+          onClick={onSkip}
+          className="absolute top-4 left-4 z-50 flex items-center px-3 py-1.5 bg-slate-800/50 hover:bg-slate-700 text-xs font-mono text-slate-500 hover:text-white border border-slate-700/50 rounded transition-all"
+        >
+          <TerminalIcon size={12} className="mr-2" />
+          DEV: SKIP_ONBOARDING
+        </button>
+      )}
 
       <div className="w-full max-w-4xl flex flex-col items-center p-8 animate-in fade-in duration-700 slide-in-from-bottom-4">
         

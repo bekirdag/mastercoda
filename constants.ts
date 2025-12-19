@@ -1,11 +1,16 @@
 import { Task, LogEntry, Metric } from './types';
 
 export const MOCK_TASKS: Task[] = [
-  { id: 'MC-1024', title: 'Refactor authentication middleware', status: 'in-progress', priority: 'high', updatedAt: '10:42 AM' },
-  { id: 'MC-1023', title: 'Update dependencies for security patch', status: 'completed', priority: 'medium', updatedAt: '09:15 AM' },
-  { id: 'MC-1022', title: 'Implement Gemini API stream handler', status: 'failed', priority: 'high', updatedAt: 'Yesterday' },
+  { id: 'MC-1024', title: 'Refactor authentication middleware', status: 'in-progress', priority: 'high', updatedAt: '10:42 AM', assignee: 'Alex' },
+  { id: 'MC-1023', title: 'Update dependencies for security patch', status: 'completed', priority: 'medium', updatedAt: '09:15 AM', assignee: 'Sarah' },
+  { id: 'MC-1022', title: 'Implement Gemini API stream handler', status: 'failed', priority: 'high', updatedAt: 'Yesterday', assignee: 'Alex' },
   { id: 'MC-1021', title: 'Design system typography audit', status: 'pending', priority: 'low', updatedAt: 'Yesterday' },
   { id: 'MC-1020', title: 'Optimize docker build cache', status: 'completed', priority: 'medium', updatedAt: '2 days ago' },
+  // Extended tasks for board
+  { id: 'MC-1025', title: 'Setup GitHub Actions CI pipeline', status: 'pending', priority: 'high', updatedAt: '1 hour ago' },
+  { id: 'MC-1026', title: 'Write unit tests for Utils module', status: 'in-progress', priority: 'medium', updatedAt: '30 mins ago', assignee: 'John' },
+  { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'pending', priority: 'low', updatedAt: '2 hours ago' },
+  { id: 'MC-1028', title: 'Code review for PR #42', status: 'in-progress', priority: 'high', updatedAt: 'Just now', assignee: 'Sarah' },
 ];
 
 export const MOCK_LOGS: LogEntry[] = [

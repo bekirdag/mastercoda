@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon } from './Icons';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -10,7 +10,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath, setActivePath }) => {
   const navItems = [
-    { id: 'workspace', label: 'Workspace', icon: <LayoutGridIcon size={20} />, path: '/' },
+    { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
+    { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
     { id: 'agents', label: 'Agents', icon: <SparklesIcon size={20} />, path: '/agents' },
     { id: 'source', label: 'Source Control', icon: <GitBranchIcon size={20} />, path: '/source' },

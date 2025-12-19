@@ -293,3 +293,42 @@ export const SaveIcon: React.FC<IconProps> = (props) => (
     <polyline points="7 3 7 8 15 8" />
   </BaseIcon>
 );
+
+export const MoreHorizontalIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="19" cy="12" r="1" />
+    <circle cx="5" cy="12" r="1" />
+  </BaseIcon>
+);
+
+export const FilterIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+  </BaseIcon>
+);
+
+export const ListIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <line x1="8" y1="6" x2="21" y2="6" />
+    <line x1="8" y1="12" x2="21" y2="12" />
+    <line x1="8" y1="18" x2="21" y2="18" />
+    <line x1="3" y1="6" x2="3.01" y2="6" />
+    <line x1="3" y1="12" x2="3.01" y2="12" />
+    <line x1="3" y1="18" x2="3.01" y2="18" />
+  </BaseIcon>
+);
+
+export const UserIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </BaseIcon>
+);
+
+export const ArrowUpIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <line x1="12" y1="19" x2="12" y2="5" />
+    <polyline points="5 12 12 5 19 12" />
+  </BaseIcon>
+);
