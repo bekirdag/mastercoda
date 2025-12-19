@@ -25,6 +25,7 @@ import ValidatingWorkspace from './components/ValidatingWorkspace';
 import DatabaseMigration from './components/DatabaseMigration';
 import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorkspace';
 import CreateTaskModal from './components/CreateTaskModal';
+import ProjectSettings from './components/ProjectSettings';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -80,7 +81,7 @@ function App() {
 
   const handleTaskCreate = (task: any) => {
     console.log('Task Created Globally:', task);
-    // In a real app, we would dispatch this to a global store or context
+    // In a real app, this would dispatch this to a global store or context
     // For now, we rely on the modal closing.
     // We could trigger a refresh or toast here.
   };
@@ -175,6 +176,7 @@ function App() {
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
+    if (activePath === '/settings') return <ProjectSettings />;
     
     // Placeholder for other routes
     return (
@@ -190,6 +192,7 @@ function App() {
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Workspace / Code Review';
     if (activePath === '/source') return 'Workspace / Source Control';
+    if (activePath === '/settings') return 'Workspace / Settings';
     return `Workspace ${activePath}`;
   };
 

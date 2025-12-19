@@ -70,7 +70,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
 
       {/* Bottom Actions */}
       <div className="p-2 border-t border-slate-700">
-        <button className="flex items-center w-full px-2 py-2 text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 rounded-md transition-colors">
+        <button 
+          onClick={() => setActivePath('/settings')}
+          className={`flex items-center w-full px-2 py-2 rounded-md transition-colors ${
+            activePath === '/settings' 
+              ? 'text-indigo-400 bg-indigo-600/10' 
+              : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700/50'
+          }`}
+        >
           <SettingsIcon size={20} />
           <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
             Settings
