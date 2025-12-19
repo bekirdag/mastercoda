@@ -13,10 +13,11 @@ import RecentProjects from './components/RecentProjects';
 import UpdateRequired from './components/UpdateRequired';
 import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
 import CreateWorkspaceDetails from './components/CreateWorkspaceDetails';
+import CreateWorkspaceDefaults from './components/CreateWorkspaceDefaults';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -26,7 +27,7 @@ function App() {
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   
   // Temporary state to hold wizard data
-  const [newProjectData, setNewProjectData] = useState<{ path?: string; name?: string; key?: string }>({});
+  const [newProjectData, setNewProjectData] = useState<{ path?: string; name?: string; key?: string; docdex?: string; gitignore?: boolean }>({});
 
   // Keyboard shortcut listener for Cmd+K and Drawer toggle (Cmd+J)
   useEffect(() => {
@@ -129,10 +130,20 @@ function App() {
         onBack={() => setCurrentStep('create-project-location')}
         onNext={(details) => {
           setNewProjectData(prev => ({ ...prev, ...details }));
-          // Placeholder for Step 3 (Defaults) or Dashboard for now
-          // Assuming next request will implement Step 3
+          setCurrentStep('create-project-defaults');
+        }}
+      />
+    );
+  }
+
+  if (currentStep === 'create-project-defaults') {
+    return (
+      <CreateWorkspaceDefaults
+        onBack={() => setCurrentStep('create-project-details')}
+        onNext={() => {
           setCurrentStep('dashboard');
         }}
+        projectSummary={newProjectData}
       />
     );
   }
