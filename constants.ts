@@ -1,6 +1,5 @@
 
-
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -1057,6 +1056,9 @@ export const MOCK_AGENTS: AgentPersona[] = [
     provider: 'google',
     avatarColor: 'indigo',
     isPrimary: true,
+    currentActivity: 'Orchestrating system-wide refactor...',
+    progress: 32,
+    memoryUsage: 45,
     systemPrompt: "You are Architect Prime, the lead orchestrator for Master Coda. Your goal is to analyze complex engineering requirements and decompose them into actionable tasks. Maintain a high-density, professional tone. Focus on system stability, scalability, and security.",
     capabilities: [
       { id: 'fs_write', label: 'File System (Write)', enabled: true, level: 'write' },
@@ -1079,6 +1081,8 @@ export const MOCK_AGENTS: AgentPersona[] = [
     provider: 'google',
     avatarColor: 'emerald',
     isPrimary: false,
+    currentActivity: 'Waiting for instructions...',
+    memoryUsage: 12,
     systemPrompt: "You are Logic Synth. You excel at writing clean, modular, and well-tested code. Follow established design patterns and documentation standards strictly.",
     capabilities: [
       { id: 'fs_write', label: 'File System (Write)', enabled: true, level: 'write' },
@@ -1094,13 +1098,38 @@ export const MOCK_AGENTS: AgentPersona[] = [
   },
   {
     id: 'ag-qa',
+    name: 'Grace',
+    role: 'QA Engineer',
+    status: 'online',
+    model: 'gpt-4o',
+    provider: 'openai',
+    avatarColor: 'purple',
+    isPrimary: false,
+    currentActivity: 'Running E2E tests on login.spec.ts...',
+    progress: 45,
+    memoryUsage: 68,
+    systemPrompt: "You are Grace. Your purpose is to ensure software quality through automated testing and regression checks.",
+    capabilities: [
+      { id: 'shell', label: 'Terminal Access', enabled: true, level: 'exec' },
+      { id: 'browser', label: 'Browser Automation', enabled: true, level: 'exec' }
+    ],
+    metrics: {
+      tokensUsed: 310400,
+      tasksCompleted: 85,
+      avgLatency: '1.5s'
+    }
+  },
+  {
+    id: 'ag-audit',
     name: 'Audit Zero',
     role: 'QA & Security Researcher',
-    status: 'offline',
+    status: 'error',
     model: 'gpt-4o',
     provider: 'openai',
     avatarColor: 'amber',
     isPrimary: false,
+    currentActivity: 'System Halt: Infinite recursion detected in auth audit.',
+    memoryUsage: 95,
     systemPrompt: "You are Audit Zero. Your purpose is to find vulnerabilities, bugs, and edge cases. You are pedantic and thorough.",
     capabilities: [
       { id: 'fs_write', label: 'File System (Write)', enabled: false, level: 'write' },
@@ -1113,7 +1142,34 @@ export const MOCK_AGENTS: AgentPersona[] = [
       tasksCompleted: 12,
       avgLatency: '1.8s'
     }
+  },
+  {
+    id: 'ag-throttled',
+    name: 'Sync Bot',
+    role: 'Docs Synchronizer',
+    status: 'rate-limited',
+    model: 'claude-3-haiku',
+    provider: 'anthropic',
+    avatarColor: 'blue',
+    isPrimary: false,
+    currentActivity: 'Sleeping (429): Resuming in 42s...',
+    memoryUsage: 20,
+    systemPrompt: "You are Sync Bot.",
+    capabilities: [],
+    metrics: {
+      tokensUsed: 12000,
+      tasksCompleted: 5,
+      avgLatency: '0.8s'
+    }
   }
+];
+
+export const MOCK_FLEET_ACTIVITY: FleetActivity[] = [
+  { id: 'fa1', timestamp: '10:01:22', agentName: 'Logic Synth', message: 'modified src/app.py', type: 'info' },
+  { id: 'fa2', timestamp: '10:01:25', agentName: 'Grace', message: 'started test run #402', type: 'success' },
+  { id: 'fa3', timestamp: '10:01:45', agentName: 'Architect Prime', message: 'flagged "Missing params" in README', type: 'warn' },
+  { id: 'fa4', timestamp: '10:02:10', agentName: 'Audit Zero', message: 'security scan failed: context overflow', type: 'error' },
+  { id: 'fa5', timestamp: '10:02:45', agentName: 'Grace', message: 'Test login.spec.ts passed', type: 'success' }
 ];
 
 // EX-15 Mock Orchestrator Data
@@ -1749,6 +1805,7 @@ export const MOCK_KEYBINDINGS: Keybinding[] = [
   { id: 'kb-7', commandId: 'conflict.demo', commandLabel: 'Conflicting Command', key: 'meta+k', source: 'AI Agent', when: 'global', hasConflict: true },
   { id: 'kb-8', commandId: 'editor.action.save', commandLabel: 'Save File', key: 'meta+s', source: 'System', when: 'global', isDefault: true },
   { id: 'kb-9', commandId: 'editor.action.copy', commandLabel: 'Copy', key: 'meta+c', source: 'System', when: 'global', isDefault: true },
+  // Fix: Removed 'font' property as it is not part of the Keybinding type
   { id: 'kb-10', commandId: 'editor.action.paste', commandLabel: 'Paste', key: 'meta+v', source: 'System', when: 'global', isDefault: true },
 ];
 

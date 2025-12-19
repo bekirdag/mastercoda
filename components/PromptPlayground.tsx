@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import Button from './Button';
 import Badge from './Badge';
@@ -22,7 +21,12 @@ import {
   PlusIcon,
   TerminalIcon,
   CheckCircleIcon,
-  RefreshCwIcon
+  RefreshCwIcon,
+  XIcon,
+  GlobeIcon,
+  HardDriveIcon,
+  // Added SettingsIcon to fix "Cannot find name 'SettingsIcon'" error on line 453
+  SettingsIcon
 } from './Icons';
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
@@ -119,6 +123,7 @@ const PromptPlayground: React.FC = () => {
                     if (v.key) finalPrompt = finalPrompt.replace(new RegExp(`{{${v.key}}}`, 'g'), v.value);
                 });
 
+                // Correctly include thinkingConfig for Gemini 3 and 2.5 models when maxOutputTokens is set
                 const stream = await ai.models.generateContentStream({
                     model: modelName,
                     contents: finalPrompt,
@@ -127,6 +132,7 @@ const PromptPlayground: React.FC = () => {
                         temperature: temp,
                         topP: topP,
                         maxOutputTokens: maxTokens,
+                        thinkingConfig: { thinkingBudget: Math.floor(maxTokens / 2) }
                     }
                 });
 
@@ -388,6 +394,12 @@ const PromptPlayground: React.FC = () => {
                               {results['B'].output}
                               {results['B'].status === 'streaming' && <span className="inline-block w-1.5 h-4 bg-indigo-500 ml-1 animate-pulse" />}
                            </div>
+                           {results['B'].status === 'idle' && !userPrompt && (
+                              <div className="h-full flex flex-col items-center justify-center text-slate-700 opacity-20">
+                                 <CodeIcon size={64} className="mb-4" />
+                                 <p className="text-xl font-bold uppercase tracking-widest">Model B Standby</p>
+                              </div>
+                           )}
                         </div>
                      </div>
                      <ResultMeta result={results['B']} />
@@ -395,205 +407,158 @@ const PromptPlayground: React.FC = () => {
                )}
             </div>
 
-            <div className="shrink-0 p-6 bg-[#0f1117] border-t border-slate-800">
+            {/* User Input Section (Center Bottom) */}
+            <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 p-6 z-20">
                <div className="max-w-4xl mx-auto space-y-4">
-                  <div className="relative group">
-                     <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-xl blur group-focus-within:opacity-100 transition duration-500 opacity-50"></div>
+                  <div className="relative">
                      <textarea 
                         value={userPrompt}
                         onChange={(e) => setUserPrompt(e.target.value)}
-                        onKeyDown={(e) => {
-                           if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                              handleRun();
-                           }
-                        }}
-                        placeholder="Ask the models something... (Cmd + Enter to run)"
-                        className="relative w-full h-32 bg-slate-950 border border-slate-700 rounded-xl p-4 text-sm text-white focus:border-indigo-500 outline-none resize-none custom-scrollbar shadow-inner"
+                        placeholder="Type your prompt here... (e.g. 'Refactor this function to be more efficient')"
+                        className="w-full h-32 bg-slate-950 border border-slate-700 rounded-xl p-4 text-sm font-mono text-slate-300 focus:border-indigo-500 outline-none resize-none transition-all pr-12 shadow-inner"
                      />
-                     
-                     <div className="absolute bottom-3 right-4 flex items-center space-x-3">
-                        <div className="flex items-center text-[10px] font-mono font-bold">
-                           <span className={tokenPercentage > 90 ? 'text-red-400' : 'text-slate-500'}>
-                              {Math.floor((systemPrompt.length + userPrompt.length) / 4)} tokens
-                           </span>
-                           <span className="text-slate-700 mx-1">/</span>
-                           <span className="text-slate-600">{maxTokens}</span>
-                        </div>
-                        <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                           <div 
-                              className={`h-full transition-all duration-300 ${tokenPercentage > 90 ? 'bg-red-500' : 'bg-indigo-500'}`} 
-                              style={{ width: `${tokenPercentage}%` }} 
-                           />
-                        </div>
+                     <div className="absolute top-4 right-4 flex flex-col space-y-2 opacity-50 group-hover:opacity-100">
+                         <div className="h-1 w-8 bg-slate-800 rounded-full overflow-hidden">
+                             <div className="h-full bg-indigo-500" style={{ width: `${tokenPercentage}%` }} />
+                         </div>
                      </div>
                   </div>
-                  
                   <div className="flex items-center justify-between">
-                     <div className="flex space-x-3">
-                        <button className="flex items-center text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors">
-                           <SearchIcon size={12} className="mr-1.5" /> Reference Files
-                        </button>
-                        <button className="flex items-center text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors">
-                           <PlusIcon size={12} className="mr-1.5" /> Attach History
-                        </button>
+                     <div className="flex items-center space-x-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        <div className="flex items-center"><ActivityIcon size={12} className="mr-2 text-indigo-400" /> CONTEXT: USER_PROVIDED</div>
+                        <div className="flex items-center"><TerminalIcon size={12} className="mr-2 text-indigo-400" /> MODE: {mode}</div>
                      </div>
-                     <div className="flex items-center space-x-4">
-                        <button className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest flex items-center">
-                           <SaveIcon size={12} className="mr-1.5" /> Save as Playbook
-                        </button>
+                     <div className="flex items-center space-x-3">
+                        <Badge variant="neutral">Tokens: ~{Math.floor((systemPrompt.length + userPrompt.length)/4)} / {maxTokens}</Badge>
                      </div>
                   </div>
                </div>
             </div>
          </main>
 
-         {isRightPaneOpen ? (
-           <aside className="w-[300px] border-l border-slate-800 bg-slate-900/30 flex flex-col shrink-0 animate-in slide-in-from-right-4 duration-300">
-              <div className="h-12 border-b border-slate-800 flex items-center bg-slate-900/50">
-                 {(['variables', 'tools'] as const).map(tab => (
-                    <button 
-                       key={tab}
-                       onClick={() => setRightTab(tab)}
-                       className={`flex-1 h-full text-[10px] font-bold uppercase tracking-widest transition-all relative ${
-                          rightTab === tab ? 'text-white' : 'text-slate-500 hover:text-slate-300'
-                       }`}
-                    >
-                       {tab}
-                       {rightTab === tab && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500" />}
-                    </button>
-                 ))}
-              </div>
+         {/* 3. Right Sidebar: Context & Variables */}
+         {isRightPaneOpen && (
+            <aside className="w-[300px] border-l border-slate-800 bg-slate-900 flex flex-col shrink-0 z-20 animate-in slide-in-from-right-full">
+               <div className="flex h-12 border-b border-slate-800 bg-slate-900 shrink-0">
+                  <button 
+                     onClick={() => setRightTab('variables')}
+                     className={`flex-1 flex flex-col items-center justify-center transition-all relative ${rightTab === 'variables' ? 'text-white' : 'text-slate-600 hover:text-slate-300'}`}
+                  >
+                     <PlusIcon size={14} className="mb-1" />
+                     <span className="text-[9px] font-bold uppercase tracking-widest">Variables</span>
+                     {rightTab === 'variables' && <div className="absolute bottom-0 inset-x-0 h-0.5 bg-indigo-500" />}
+                  </button>
+                  <button 
+                     onClick={() => setRightTab('tools')}
+                     className={`flex-1 flex flex-col items-center justify-center transition-all relative ${rightTab === 'tools' ? 'text-white' : 'text-slate-600 hover:text-slate-300'}`}
+                  >
+                     <SettingsIcon size={14} className="mb-1" />
+                     <span className="text-[9px] font-bold uppercase tracking-widest">Tools</span>
+                     {rightTab === 'tools' && <div className="absolute bottom-0 inset-x-0 h-0.5 bg-indigo-500" />}
+                  </button>
+               </div>
 
-              <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
-                 {rightTab === 'variables' ? (
-                    <div className="space-y-6">
-                       <div className="flex items-center justify-between">
-                          <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Template Keys</h3>
-                          <button onClick={() => setVariables([...variables, { id: Date.now().toString(), key: '', value: '' }])} className="text-indigo-400 hover:text-indigo-300">
-                             <PlusIcon size={14} />
-                          </button>
-                       </div>
-                       
-                       <div className="space-y-3">
-                          {variables.map(v => (
-                             <div key={v.id} className="p-3 bg-slate-800/40 border border-slate-700/50 rounded-xl space-y-2 group">
-                                <div className="flex items-center justify-between">
-                                   <input 
-                                      value={v.key}
-                                      onChange={(e) => setVariables(variables.map(x => x.id === v.id ? { ...x, key: e.target.value } : x))}
-                                      placeholder="key" 
-                                      className="bg-transparent border-none text-[10px] font-mono text-emerald-400 outline-none w-20" 
-                                   />
-                                   <button 
-                                      onClick={() => setVariables(variables.filter(x => x.id !== v.id))}
-                                      className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-red-400 transition-all"
-                                   >
-                                      <TrashIcon size={12} />
-                                   </button>
-                                </div>
-                                <input 
-                                   value={v.value}
-                                   onChange={(e) => setVariables(variables.map(x => x.id === v.id ? { ...x, value: e.target.value } : x))}
-                                   placeholder="value" 
-                                   className="w-full bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-xs text-slate-400 outline-none focus:border-indigo-500" 
-                                />
-                             </div>
-                          ))}
-                       </div>
+               <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                  {rightTab === 'variables' && (
+                     <div className="space-y-6 animate-in fade-in duration-300">
+                        <div className="flex items-center justify-between">
+                           <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Injected Context</h3>
+                           <button onClick={() => setVariables([...variables, { id: String(Date.now()), key: '', value: '' }])} className="text-indigo-400 hover:text-indigo-300">
+                              <PlusIcon size={16} />
+                           </button>
+                        </div>
+                        <div className="space-y-4">
+                           {variables.map(v => (
+                              <div key={v.id} className="space-y-2 group">
+                                 <div className="flex items-center justify-between">
+                                    <input 
+                                       value={v.key} 
+                                       onChange={(e) => setVariables(variables.map(vr => vr.id === v.id ? { ...vr, key: e.target.value } : vr))}
+                                       placeholder="key" 
+                                       className="bg-transparent border-none text-[10px] font-mono text-indigo-400 p-0 focus:ring-0 w-24" 
+                                    />
+                                    <button onClick={() => setVariables(variables.filter(vr => vr.id !== v.id))} className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-red-400 transition-all">
+                                       <XIcon size={12} />
+                                    </button>
+                                 </div>
+                                 <textarea 
+                                    value={v.value} 
+                                    onChange={(e) => setVariables(variables.map(vr => vr.id === v.id ? { ...vr, value: e.target.value } : vr))}
+                                    className="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-400 h-20 resize-none focus:border-indigo-500 outline-none" 
+                                 />
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  )}
 
-                       <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-xl p-4 text-[10px] text-indigo-200/60 leading-relaxed">
-                          Use <code className="text-indigo-400 font-bold">{"{{key}}"}</code> in your prompts to inject these values automatically.
-                       </div>
-                    </div>
-                 ) : (
-                    <div className="space-y-6">
-                       <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Available Extensions</h3>
-                       
-                       <div className="space-y-2">
-                          <ToolToggle label="fs.readFile" enabled />
-                          <ToolToggle label="fs.writeFile" enabled={false} />
-                          <ToolToggle label="git.commit" enabled />
-                          <ToolToggle label="shell.exec" enabled={false} />
-                       </div>
-
-                       <div className="pt-6 border-t border-slate-800">
-                          <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Function Call Log</h3>
-                          <div className="bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-[10px] text-slate-500 h-48 overflow-y-auto custom-scrollbar">
-                             <div className="opacity-40 italic">Waiting for agent to invoke tools...</div>
-                          </div>
-                       </div>
-                    </div>
-                 )}
-              </div>
-           </aside>
-         ) : (
-           <button 
-             onClick={() => setIsRightPaneOpen(true)}
-             className="w-10 border-l border-slate-800 bg-slate-900/30 flex items-center justify-center text-slate-600 hover:text-white transition-colors"
-           >
-              <ChevronRightIcon className="rotate-180" size={16} />
-           </button>
+                  {rightTab === 'tools' && (
+                     <div className="space-y-6 animate-in fade-in duration-300">
+                        <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Function Declarations</h3>
+                        <div className="space-y-3">
+                           <ToolToggle label="Google Search" icon={<GlobeIcon size={12}/>} checked={true} />
+                           <ToolToggle label="Code Interpreter" icon={<TerminalIcon size={12}/>} checked={true} />
+                           <ToolToggle label="File System Access" icon={<HardDriveIcon size={12}/>} checked={false} />
+                        </div>
+                     </div>
+                  )}
+               </div>
+            </aside>
          )}
-
       </div>
+
+      {/* Control Pane Toggle (Bottom Right Floating) */}
+      <button 
+        onClick={() => setIsRightPaneOpen(!isRightPaneOpen)}
+        className="absolute bottom-24 right-6 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-2xl z-50 hover:bg-indigo-500 transition-all"
+      >
+         {isRightPaneOpen ? <MinimizeIcon size={20} /> : <MaximizeIcon size={20} />}
+      </button>
     </div>
   );
 };
 
-const ResultHeader: React.FC<{ result: RunResult; isCompare: boolean; onCopy: (s: string) => void }> = ({ result, isCompare, onCopy }) => (
-   <div className="h-10 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between px-4 shrink-0">
-      <div className="flex items-center space-x-2">
-         <div className={`w-1.5 h-1.5 rounded-full ${result.status === 'streaming' ? 'bg-indigo-500 animate-pulse' : result.status === 'error' ? 'bg-red-500' : 'bg-emerald-500'}`} />
-         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[120px]">
-            {isCompare ? result.model : 'MODEL OUTPUT'}
-         </span>
-      </div>
-      <div className="flex items-center space-x-1 opacity-0 group-hover/col:opacity-100 transition-opacity">
-         <button 
-            onClick={() => onCopy(result.output)}
-            className="p-1.5 text-slate-600 hover:text-white rounded transition-colors"
-         >
-            <CopyIcon size={14} />
-         </button>
-      </div>
-   </div>
-);
+const ResultHeader: React.FC<{ result: RunResult; isCompare: boolean; onCopy: (t: string) => void }> = ({ result, isCompare, onCopy }) => (
+    <div className="h-12 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between px-6 shrink-0">
+       <div className="flex items-center space-x-3">
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+             {isCompare ? `Model ${result.id}:` : 'Output:'}
+          </span>
+          <span className="text-xs font-bold text-indigo-400 font-mono">{result.model}</span>
+       </div>
+       <div className="flex items-center space-x-2">
+          <button 
+             onClick={() => onCopy(result.output)}
+             className="p-1.5 text-slate-500 hover:text-white transition-colors"
+             title="Copy Output"
+          >
+             <CopyIcon size={14} />
+          </button>
+       </div>
+    </div>
+  );
+  
+  const ResultMeta: React.FC<{ result: RunResult }> = ({ result }) => (
+    <div className="h-8 border-t border-slate-800 bg-slate-900/30 px-6 flex items-center justify-between shrink-0">
+       <div className="flex items-center space-x-4 text-[9px] font-mono text-slate-600">
+          <span>LATENCY: {result.latency}ms</span>
+          <span>TOKENS: {result.tokensIn} in / {result.tokensOut} out</span>
+          <span>COST: ${result.cost.toFixed(4)}</span>
+       </div>
+       <div className={`w-1.5 h-1.5 rounded-full ${result.status === 'complete' ? 'bg-emerald-500' : result.status === 'streaming' ? 'bg-indigo-500 animate-pulse' : 'bg-slate-700'}`} />
+    </div>
+  );
 
-const ResultMeta: React.FC<{ result: RunResult }> = ({ result }) => (
-   <div className="h-8 bg-slate-900/50 border-t border-slate-800 flex items-center justify-between px-4 shrink-0 text-[10px] font-mono text-slate-600">
-      {result.status === 'complete' ? (
-         <>
-            <div className="flex items-center space-x-4">
-               <span>LATENCY: {result.latency}ms</span>
-               <span>TOKENS: {result.tokensIn} in / {result.tokensOut} out</span>
-            </div>
-            <div className="text-emerald-500/80 font-bold">COST: ${result.cost.toFixed(3)}</div>
-         </>
-      ) : result.status === 'streaming' ? (
-         <div className="flex items-center">
-            <RotateCwIcon size={10} className="animate-spin mr-2 text-indigo-500" />
-            GENERATING...
-         </div>
-      ) : result.status === 'error' ? (
-         <span className="text-red-400 font-bold uppercase">Request Failed</span>
-      ) : (
-         <span>STANDBY</span>
-      )}
-   </div>
-);
-
-const ToolToggle: React.FC<{ label: string; enabled: boolean }> = ({ label, enabled }) => (
-   <div className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-800 transition-colors group">
-      <div className="flex items-center space-x-2">
-         <div className={`p-1 rounded bg-slate-900 ${enabled ? 'text-indigo-400' : 'text-slate-600'}`}>
-            <CodeIcon size={12} />
-         </div>
-         <span className={`text-xs font-mono ${enabled ? 'text-slate-200' : 'text-slate-500'}`}>{label}</span>
-      </div>
-      <div className={`w-8 h-4 rounded-full p-0.5 transition-all relative ${enabled ? 'bg-indigo-600' : 'bg-slate-700'}`}>
-         <div className={`w-3 h-3 bg-white rounded-full transition-transform ${enabled ? 'translate-x-4' : 'translate-x-0'}`} />
-      </div>
-   </div>
-);
+  const ToolToggle: React.FC<{ label: string; icon: React.ReactNode; checked: boolean }> = ({ label, icon, checked }) => (
+    <div className="flex items-center justify-between p-3 bg-slate-800/40 border border-slate-700 rounded-xl">
+        <div className="flex items-center space-x-3">
+            <div className="text-slate-500">{icon}</div>
+            <span className="text-xs font-medium text-slate-300">{label}</span>
+        </div>
+        <div className={`w-8 h-4 rounded-full p-0.5 transition-all relative ${checked ? 'bg-indigo-600' : 'bg-slate-700'}`}>
+            <div className={`w-3 h-3 bg-white rounded-full transition-all ${checked ? 'translate-x-4' : 'translate-x-0'}`} />
+        </div>
+    </div>
+  );
 
 export default PromptPlayground;

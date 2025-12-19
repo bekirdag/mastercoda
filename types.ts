@@ -330,7 +330,7 @@ export interface AdrRecord {
 }
 
 // Agent Management Types
-export type AgentStatus = 'online' | 'idle' | 'offline' | 'error';
+export type AgentStatus = 'online' | 'idle' | 'offline' | 'error' | 'rate-limited';
 
 export interface AgentPersona {
   id: string;
@@ -342,6 +342,10 @@ export interface AgentPersona {
   systemPrompt: string;
   avatarColor: string;
   isPrimary: boolean;
+  currentActivity?: string;
+  progress?: number;
+  memoryUsage?: number; // 0-100
+  lastAction?: string;
   capabilities: {
     id: string;
     label: string;
@@ -353,6 +357,14 @@ export interface AgentPersona {
     tasksCompleted: number;
     avgLatency: string;
   };
+}
+
+export interface FleetActivity {
+  id: string;
+  timestamp: string;
+  agentName: string;
+  message: string;
+  type: 'info' | 'success' | 'warn' | 'error';
 }
 
 // Orchestrator Types (EX-15)

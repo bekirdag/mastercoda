@@ -39,6 +39,7 @@ import LearningPaths from './components/LearningPaths'; // Added for DO-08
 import DomainDictionary from './components/DomainDictionary'; // Added for DO-09
 import DocsAnalytics from './components/DocsAnalytics'; // Added for DO-10
 import Agents from './components/Agents';
+import AgentFleet from './components/AgentFleet'; // AG-01
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -245,6 +246,7 @@ function App() {
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
+    if (activePath === '/agents/fleet') return <AgentFleet />; // AG-01
     if (activePath === '/agents') return <Agents />;
     if (activePath === '/docs') return <DocsHub />; 
     if (activePath === '/docs/view') return <Documentation />; 
@@ -290,6 +292,7 @@ function App() {
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Workspace / Code Review';
+    if (activePath === '/agents/fleet') return 'Workspace / Agent Fleet';
     if (activePath === '/agents') return 'Workspace / Agents';
     if (activePath === '/docs') return 'Workspace / Documentation Hub';
     if (activePath.startsWith('/docs/edit')) return 'Workspace / Document Editor';
