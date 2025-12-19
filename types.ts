@@ -172,6 +172,32 @@ export interface DocSiteNavItem {
   children?: DocSiteNavItem[];
 }
 
+// API Explorer Types (DO-05)
+export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
+export interface ApiParameter {
+  name: string;
+  in: 'path' | 'query' | 'header';
+  required: boolean;
+  type: string;
+  description: string;
+  example?: any;
+}
+
+export interface ApiEndpoint {
+  id: string;
+  method: ApiMethod;
+  path: string;
+  tag: string;
+  summary: string;
+  description: string;
+  parameters: ApiParameter[];
+  requestBody?: {
+    contentType: string;
+    schema: string;
+  };
+}
+
 // Agent Management Types
 export type AgentStatus = 'online' | 'idle' | 'offline' | 'error';
 

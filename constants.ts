@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,68 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_API_ENDPOINTS: ApiEndpoint[] = [
+  {
+    id: 'get-users',
+    method: 'GET',
+    path: '/users',
+    tag: 'Users',
+    summary: 'List all users',
+    description: 'Returns a paginated list of users in the system.',
+    parameters: [
+      { name: 'page', in: 'query', required: false, type: 'integer', description: 'Page number', example: 1 },
+      { name: 'limit', in: 'query', required: false, type: 'integer', description: 'Page size', example: 20 }
+    ]
+  },
+  {
+    id: 'get-user-by-id',
+    method: 'GET',
+    path: '/users/{id}',
+    tag: 'Users',
+    summary: 'Get user by ID',
+    description: 'Retrieves a single user record by their unique ID.',
+    parameters: [
+      { name: 'id', in: 'path', required: true, type: 'string', description: 'User unique ID', example: 'usr_12345' },
+      { name: 'include_details', in: 'query', required: false, type: 'boolean', description: 'Return extended metadata', example: true }
+    ]
+  },
+  {
+    id: 'create-user',
+    method: 'POST',
+    path: '/users',
+    tag: 'Users',
+    summary: 'Create a new user',
+    description: 'Creates a user profile with the provided information.',
+    parameters: [],
+    requestBody: {
+      contentType: 'application/json',
+      schema: '{\n  "name": "string",\n  "email": "string",\n  "role": "string"\n}'
+    }
+  },
+  {
+    id: 'delete-user',
+    method: 'DELETE',
+    path: '/users/{id}',
+    tag: 'Users',
+    summary: 'Delete user',
+    description: 'Permanently removes a user and their associated data.',
+    parameters: [
+      { name: 'id', in: 'path', required: true, type: 'string', description: 'Target user ID' }
+    ]
+  },
+  {
+    id: 'get-orders',
+    method: 'GET',
+    path: '/orders',
+    tag: 'Orders',
+    summary: 'List recent orders',
+    description: 'Fetch the latest orders filtered by status.',
+    parameters: [
+      { name: 'status', in: 'query', required: false, type: 'string', description: 'Order status' }
+    ]
+  }
+];
 
 export const MOCK_TASKS: Task[] = [
   // Epic 1
@@ -618,6 +680,7 @@ export const MOCK_DOC_SOURCES: DocSource[] = [
   { id: 'src-mobile', name: 'Mobile App', description: 'React Native architecture and deployment guides.', type: 'project', icon: '📱', pageCount: 12, lastUpdated: '1d ago' },
   { id: 'src-standards', name: 'Engineering Standards', description: 'Team coding conventions and PR requirements.', type: 'team', icon: '📜', pageCount: 8, lastUpdated: '3d ago' },
   { id: 'src-stripe', name: 'Stripe API Docs', description: 'External payment processing reference.', type: 'external', icon: '💳', pageCount: 142, lastUpdated: '1w ago' },
+  { id: 'src-stripe', name: 'Internal API Spec', description: 'Interactive OpenAPI explorer for the core monolith.', type: 'project', icon: '⚡', pageCount: 14, lastUpdated: 'Just Now' },
   { id: 'src-aws', name: 'AWS Infrastructure', description: 'Terraform and environment deployment documentation.', type: 'external', icon: '☁️', pageCount: 56, lastUpdated: '2d ago' },
   { id: 'src-onboarding', name: 'Onboarding Wiki', description: 'Everything a new hire needs to know.', type: 'team', icon: '🚀', pageCount: 15, lastUpdated: 'Yesterday' }
 ];
@@ -1267,7 +1330,7 @@ export const MOCK_THEMES: ThemeDefinition[] = [
 
 export const MOCK_ICON_SETS: IconPack[] = [
   { id: 'material', name: 'Material Icons', author: 'Google', iconMap: { 'ts': 'TypeScript', 'js': 'JavaScript', 'json': 'JSON' } },
-  { id: 'vscode', name: 'VSCode Default', author: 'Microsoft', iconMap: { 'ts': 'TS', 'js': 'JS', 'json': '{}' } },
+  { id: 'material', name: 'VSCode Default', author: 'Microsoft', iconMap: { 'ts': 'TS', 'js': 'JS', 'json': '{}' } },
 ];
 
 export const MOCK_SNIPPETS: Snippet[] = [

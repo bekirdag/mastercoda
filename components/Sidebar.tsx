@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
     { id: 'firewall', label: 'Privacy Firewall', icon: <GlobeIcon size={20} />, path: '/extensions/firewall' }, // EX-14
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
+    { id: 'apiexplorer', label: 'API Explorer', icon: <ZapIcon size={20} className="text-amber-400" />, path: '/docs/api-explorer' }, // DO-05
     { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, // EX-12
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
     { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, // EX-10
