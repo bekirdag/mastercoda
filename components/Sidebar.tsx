@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -18,7 +18,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
-    { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' }, // WS-18 Entry
+    { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
+    { id: 'extensions', label: 'Extensions', icon: <GridIcon size={20} />, path: '/extensions' }, // EX-01 Entry
     { id: 'playbooks', label: 'Playbooks', icon: <BookOpenIcon size={20} />, path: '/playbooks' },
     { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
@@ -36,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     >
       {/* Logo Area */}
       <div className="flex items-center h-14 px-4 border-b border-slate-700">
-        <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center shrink-0">
+        <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(79,70,229,0.3)]">
           <span className="text-white font-bold font-mono">M</span>
         </div>
         <div className={`ml-3 overflow-hidden transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
@@ -45,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
       </div>
 
       {/* Nav Items */}
-      <nav className="flex-1 py-4 space-y-1 px-2">
+      <nav className="flex-1 py-4 space-y-1 px-2 overflow-y-auto custom-scrollbar">
         {navItems.map((item) => (
           <button
             key={item.id}

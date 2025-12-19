@@ -34,7 +34,8 @@ import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
 import QualityHub from './components/QualityHub';
-import ReleaseManager from './components/ReleaseManager'; // WS-18
+import ReleaseManager from './components/ReleaseManager';
+import Extensions from './components/Extensions'; // EX-01
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -188,7 +189,8 @@ function App() {
     if (activePath === '/inbox') return <Inbox />;
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/quality') return <QualityHub />;
-    if (activePath === '/releases') return <ReleaseManager />; // WS-18
+    if (activePath === '/releases') return <ReleaseManager />;
+    if (activePath === '/extensions') return <Extensions />; // EX-01
     if (activePath === '/playbooks') return <Playbooks />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
@@ -211,6 +213,7 @@ function App() {
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
+    if (activePath === '/extensions') return 'Ecosystem / Extensions';
     if (activePath === '/playbooks') return 'Workspace / Playbooks';
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
@@ -222,7 +225,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions'];
   const showHeader = !skipDrawerPaths.includes(activePath);
 
   return (
@@ -240,7 +243,7 @@ function App() {
         {showHeader && ( 
           <header className="h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
             <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
-               <span className="hover:text-slate-300 cursor-pointer transition-colors">Master Coda</span>
+               <span className="hover:text-slate-300 cursor-pointer transition-colors" onClick={() => setActivePath('/')}>Master Coda</span>
                <span>/</span>
                <span className="text-slate-200">{getBreadcrumb()}</span>
             </div>

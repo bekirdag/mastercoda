@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -760,4 +760,86 @@ export const MOCK_RELEASES: Release[] = [
     commitHash: 'f5g6h7i', 
     status: 'published' 
   },
+];
+
+// EX-01 Mock Extensions
+export const MOCK_EXTENSIONS: Extension[] = [
+  {
+    id: 'ext-py-agent',
+    title: 'Python Data Agent',
+    author: 'pandas_team',
+    verified: true,
+    downloads: '200k',
+    rating: 4.8,
+    description: 'Specialized agent for data analysis using pandas/numpy. Can generate complex visualizations and statistical models.',
+    category: 'Agents',
+    icon: '📊',
+    status: 'idle',
+    version: 'v1.2.0'
+  },
+  {
+    id: 'ext-dracula',
+    title: 'Dracula Theme',
+    author: 'dracula_official',
+    verified: true,
+    downloads: '1.2M',
+    rating: 4.9,
+    description: 'The world-famous Dracula color palette for Master Coda. Dark, high-contrast, and easy on the eyes.',
+    category: 'Themes',
+    icon: '🧛',
+    status: 'installed',
+    version: 'v2.4.1'
+  },
+  {
+    id: 'ext-rust-lsp',
+    title: 'Rust Language Support',
+    author: 'rust_foundation',
+    verified: true,
+    downloads: '85k',
+    rating: 4.7,
+    description: 'Full Rust LSP integration, including cargo tasks, unit test runner, and borrow checker visualization.',
+    category: 'Languages',
+    icon: '🦀',
+    status: 'updating',
+    version: 'v0.9.8'
+  },
+  {
+    id: 'ext-vercel',
+    title: 'Deploy to Vercel',
+    author: 'vercel',
+    verified: true,
+    downloads: '150k',
+    rating: 4.6,
+    description: 'Official extension for Vercel. Manage deployments, environments, and logs directly from Master Coda.',
+    category: 'Snippets',
+    icon: '▲',
+    status: 'idle',
+    version: 'v1.0.2'
+  },
+  {
+    id: 'ext-sql-agent',
+    title: 'SQL Optimizer Agent',
+    author: 'query_kings',
+    verified: false,
+    downloads: '12k',
+    rating: 4.2,
+    description: 'Analyzes your database schema and slow query logs to suggest indices and refactor expensive JOINs.',
+    category: 'Agents',
+    icon: '🗄️',
+    status: 'idle',
+    version: 'v0.4.1'
+  },
+  {
+    id: 'ext-go-lang',
+    title: 'Golang Toolset',
+    author: 'go_devs',
+    verified: true,
+    downloads: '60k',
+    rating: 4.5,
+    description: 'Enhanced support for Go. Fast compilation, race detector integration, and automated boilerplate generation.',
+    category: 'Languages',
+    icon: '🐹',
+    status: 'idle',
+    version: 'v1.1.0'
+  }
 ];

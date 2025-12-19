@@ -249,3 +249,22 @@ export interface EnvironmentStatus {
   author: string;
   uptime?: string;
 }
+
+// EX-01 Extension Types
+export type ExtensionCategory = 'Agents' | 'Languages' | 'Themes' | 'Snippets';
+export type ExtensionInstallStatus = 'idle' | 'installing' | 'installed' | 'updating';
+
+export interface Extension {
+  id: string;
+  title: string;
+  author: string;
+  verified: boolean;
+  downloads: string;
+  rating: number;
+  description: string;
+  category: ExtensionCategory;
+  icon: string | React.ReactNode;
+  status: ExtensionInstallStatus;
+  version: string;
+  minCodaVersion?: string;
+}
