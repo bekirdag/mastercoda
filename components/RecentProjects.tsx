@@ -6,14 +6,13 @@ import {
   HelpCircleIcon, 
   XIcon, 
   ClockIcon, 
-  CheckCircleIcon,
   AlertCircleIcon
 } from './Icons';
-import Badge from './Badge';
 
 interface RecentProjectsProps {
   onOpenProject: () => void;
   onCreateNew: () => void;
+  onVersionMismatch?: () => void;
 }
 
 interface Project {
@@ -24,14 +23,15 @@ interface Project {
   color: string;
 }
 
-const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreateNew }) => {
+const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreateNew, onVersionMismatch }) => {
   const [projects, setProjects] = useState<Project[]>([
     { id: '1', name: 'master-coda-v1', path: '~/dev/master-coda-v1', lastOpened: '2 hours ago', color: 'indigo' },
     { id: '2', name: 'analytics-service', path: '~/work/analytics-service', lastOpened: '5 hours ago', color: 'emerald' },
     { id: '3', name: 'legacy-api', path: '~/work/legacy-api', lastOpened: '2 days ago', color: 'amber' }
   ]);
   
-  const [cliVersionMatch, setCliVersionMatch] = useState(true);
+  // Simulated state for CLI mismatch
+  const [cliVersionMatch] = useState(false);
 
   const removeProject = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -70,14 +70,17 @@ const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreate
       {/* Main Container */}
       <div className="w-full max-w-[900px] mx-auto p-8 flex-1 flex flex-col animate-in fade-in duration-500">
         
-        {/* CLI Mismatch Banner (Conditional Mock) */}
+        {/* CLI Mismatch Banner */}
         {!cliVersionMatch && (
            <div className="mb-6 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex items-center justify-between animate-in slide-in-from-top-2">
              <div className="flex items-center text-amber-400 text-sm">
                <AlertCircleIcon size={16} className="mr-2" />
                <span className="font-medium">CLI Version Mismatch. Update recommended.</span>
              </div>
-             <button className="text-xs font-bold text-amber-500 hover:text-amber-400 px-3 py-1 bg-amber-500/10 rounded border border-amber-500/20 transition-colors">
+             <button 
+                onClick={onVersionMismatch}
+                className="text-xs font-bold text-amber-500 hover:text-amber-400 px-3 py-1 bg-amber-500/10 rounded border border-amber-500/20 transition-colors"
+             >
                 Update Now
              </button>
            </div>

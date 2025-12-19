@@ -10,10 +10,11 @@ import SecureStorage from './components/SecureStorage';
 import ConnectAgent from './components/ConnectAgent';
 import PrivacySettings from './components/PrivacySettings';
 import RecentProjects from './components/RecentProjects';
+import UpdateRequired from './components/UpdateRequired';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -92,6 +93,15 @@ function App() {
       <RecentProjects 
         onOpenProject={() => setCurrentStep('dashboard')}
         onCreateNew={() => setCurrentStep('dashboard')}
+        onVersionMismatch={() => setCurrentStep('update-required')}
+      />
+    );
+  }
+
+  if (currentStep === 'update-required') {
+    return (
+      <UpdateRequired 
+        onFixed={() => setCurrentStep('recent-projects')} 
       />
     );
   }
