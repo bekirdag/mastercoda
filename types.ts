@@ -16,6 +16,25 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// SY-03 Billing Types
+export type InvoiceStatus = 'paid' | 'pending' | 'failed';
+
+export interface Invoice {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  status: InvoiceStatus;
+}
+
+export interface PaymentMethod {
+  id: string;
+  type: 'visa' | 'mastercard' | 'amex';
+  last4: string;
+  expiry: string;
+  isPrimary: boolean;
+}
+
 // RAG Manager Types (AG-08)
 export type RagSourceType = 'git' | 'pdf' | 'wiki' | 'web' | 'api';
 export type RagSyncStatus = 'synced' | 'indexing' | 'stale' | 'error';

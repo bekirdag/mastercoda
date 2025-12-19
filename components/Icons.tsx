@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
@@ -20,6 +21,21 @@ const BaseIcon: React.FC<IconProps> = ({ size = 20, strokeWidth = 1.5, children,
   >
     {children}
   </svg>
+);
+
+export const CreditCardIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <rect width="20" height="14" x="2" y="5" rx="2" />
+    <line x1="2" x2="22" y1="10" y2="10" />
+  </BaseIcon>
+);
+
+export const DownloadIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" x2="12" y1="15" y2="3" />
+  </BaseIcon>
 );
 
 export const TerminalIcon: React.FC<IconProps> = (props) => (
@@ -180,7 +196,7 @@ export const CpuIcon: React.FC<IconProps> = (props) => (
 
 export const ShieldIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="M12 222s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
   </BaseIcon>
 );
 

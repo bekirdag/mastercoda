@@ -29,6 +29,7 @@ import CreateTaskModal from './components/CreateTaskModal';
 import TaskDetailView from './components/TaskDetailView';
 import ProjectSettings from './components/ProjectSettings';
 import GlobalPreferences from './components/GlobalPreferences'; // Added SY-01
+import BillingSettings from './components/BillingSettings'; // Added SY-03
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; // Added for DO-01
 import DocEditor from './components/DocEditor'; // Added for DO-03
@@ -133,10 +134,16 @@ function App() {
       if (e.key === 't' && !['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
         setActivePath('/quality');
       }
+      // Cmd+K Cmd+S: Keybindings
+      if ((e.metaKey || e.ctrlKey) && e.key === 's' && isCmdKOpen) {
+          e.preventDefault();
+          setIsCmdKOpen(false);
+          setActivePath('/settings/keybindings');
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [taskDetailId]);
+  }, [taskDetailId, isCmdKOpen]);
 
   // Global navigation listener for extension shortcuts
   useEffect(() => {
@@ -259,7 +266,7 @@ function App() {
     if (activePath === '/extensions/models') return <ModelRegistry />;
     if (activePath === '/extensions/accounts') return <ServiceAccounts />;
     if (activePath === '/extensions/snippets') return <SnippetStudio />;
-    if (activePath === '/extensions/keymaps') return <KeymapManager />;
+    if (activePath === '/extensions/keymaps' || activePath === '/settings/keybindings') return <KeymapManager />;
     if (activePath === '/extensions/stacks') return <ExtensionStacks />;
     if (activePath === '/extensions/themes') return <ThemeStudio />;
     if (activePath === '/extensions/installed') return <ExtensionManager />;
@@ -291,6 +298,7 @@ function App() {
     if (activePath === '/docs/api-explorer') return <ApiExplorer />; // DO-05
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
     if (activePath === '/settings') return <GlobalPreferences />; // Map SY-01 to global gear
+    if (activePath === '/settings/billing') return <BillingSettings />; // Added SY-03
     if (activePath === '/settings/project') return <ProjectSettings />;
     
     return (
@@ -328,6 +336,7 @@ function App() {
     if (activePath === '/extensions/models') return 'Ecosystem / Brain Center';
     if (activePath === '/extensions/accounts') return 'Ecosystem / Service Accounts';
     if (activePath === '/extensions/snippets') return 'Ecosystem / Extensions / Snippets';
+    if (activePath === '/settings/keybindings') return 'System / Keyboard Shortcuts';
     if (activePath === '/extensions/keymaps') return 'Ecosystem / Extensions / Keymaps';
     if (activePath === '/extensions/stacks') return 'Ecosystem / Extensions / Stacks';
     if (activePath === '/extensions/themes') return 'Ecosystem / Personalization / Theme Studio';
@@ -348,11 +357,12 @@ function App() {
     if (activePath === '/docs/api-explorer') return 'Workspace / Documentation / API Explorer';
     if (activePath === '/source') return 'Workspace / Source Control';
     if (activePath === '/settings') return 'User / Global Preferences';
+    if (activePath === '/settings/billing') return 'Account / Billing & Subscription';
     if (activePath === '/settings/project') return 'Workspace / Project Settings';
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

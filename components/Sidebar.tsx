@@ -1,7 +1,7 @@
 
 import React from 'react';
 // Fix: Added missing CrownIcon to the imports
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -42,8 +42,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'playground', label: 'Prompt Lab', icon: <BeakerIcon size={20} className="text-indigo-400" />, path: '/playground' },
     { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, // EX-10
     { id: 'accounts', label: 'Service Accounts', icon: <UserIcon size={20} />, path: '/extensions/accounts' }, // EX-11
-    { id: 'snippets', label: 'Snippets', icon: <ScissorsIcon size={20} />, path: '/extensions/snippets' }, // EX-08
-    { id: 'keymaps', label: 'Keymaps', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-indigo-500 rounded-sm"/></div>, path: '/extensions/keymaps' }, // EX-09
+    { id: 'snippets', label: 'Snippets', icon: <ScissorsIcon size={14} />, path: '/extensions/snippets' }, // EX-08
+    { id: 'keymaps', label: 'Keymaps', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-indigo-500 rounded-sm"/></div>, path: '/settings/keybindings' }, // SY-02
     { id: 'stacks', label: 'Stacks', icon: <PackageIcon size={20} />, path: '/extensions/stacks' }, // EX-06
     { id: 'themes', label: 'Theme Studio', icon: <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500" />, path: '/extensions/themes' }, // EX-07
     { id: 'manager', label: 'Ext Manager', icon: <SettingsIcon size={20} />, path: '/extensions/installed' }, // EX-05
@@ -118,6 +118,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
 
       {/* Bottom Actions */}
       <div className="p-2 border-t border-slate-700">
+        <button 
+          onClick={() => setActivePath('/settings/billing')}
+          className={`flex items-center w-full px-2 py-2 rounded-md transition-colors ${
+            activePath === '/settings/billing' 
+              ? 'text-indigo-400 bg-indigo-600/10' 
+              : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700/50'
+          }`}
+        >
+          <CreditCardIcon size={20} />
+          <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+            Billing
+          </span>
+        </button>
         <button 
           onClick={() => setActivePath('/settings')}
           className={`flex items-center w-full px-2 py-2 rounded-md transition-colors ${

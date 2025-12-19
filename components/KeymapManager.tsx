@@ -1,8 +1,9 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Keybinding, KeymapProfile } from '../types';
 import { MOCK_KEYBINDINGS, MOCK_KEYMAP_PROFILES } from '../constants';
 import Button from './Button';
+/* Fix: Added missing Badge import to resolve "Cannot find name 'Badge'" error on line 176. */
+import Badge from './Badge';
 import VisualKeyboard from './VisualKeyboard';
 import { 
   SearchIcon, 
@@ -17,7 +18,8 @@ import {
   CodeIcon,
   ShieldIcon,
   ActivityIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  XIcon
 } from './Icons';
 
 const KeymapManager: React.FC = () => {
@@ -27,6 +29,8 @@ const KeymapManager: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [highlightKey, setHighlightKey] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewJson, setViewJson] = useState(false);
+  const [flashingRows, setFlashingRows] = useState<Set<string>>(new Set());
 
   const profiles = MOCK_KEYMAP_PROFILES;
 
@@ -79,15 +83,29 @@ const KeymapManager: React.FC = () => {
   };
 
   const handleReset = (id: string) => {
-    // Mock reset to default
     setKeybindings(prev => prev.map(kb => kb.id === id ? { ...kb, key: kb.isDefault ? MOCK_KEYBINDINGS.find(m => m.id === id)?.key || '' : kb.key, hasConflict: false } : kb));
+  };
+
+  const handleSaveBinding = (id: string, newKey: string) => {
+     setKeybindings(prev => prev.map(kb => kb.id === id ? { ...kb, key: newKey, hasConflict: false, isDefault: false } : kb));
+     setEditingId(null);
+     
+     // Trigger flash success animation
+     setFlashingRows(prev => new Set(prev).add(id));
+     setTimeout(() => {
+        setFlashingRows(prev => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+        });
+     }, 1000);
   };
 
   return (
     <div className="flex flex-col h-full bg-[#0f172a] text-slate-200 overflow-hidden font-sans">
       
       {/* 1. Global Keymap Toolbar */}
-      <header className="h-[64px] border-b border-slate-800 bg-slate-900/50 backdrop-blur shrink-0 flex items-center justify-between px-8 z-30 sticky top-0">
+      <header className="h-[64px] border-b border-slate-800 bg-slate-900/50 backdrop-blur shrink-0 flex items-center justify-between px-8 z-30 sticky top-0 shadow-lg">
          <div className="flex items-center space-x-6">
             <div className="flex items-center">
                <div className="bg-indigo-600 p-1.5 rounded mr-3 shadow-lg shadow-indigo-900/20">
@@ -102,7 +120,7 @@ const KeymapManager: React.FC = () => {
                {/* Search & Record */}
                <div className="flex items-center space-x-2">
                   <div className="relative group">
-                     <SearchIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                     <SearchIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-all" />
                      <input 
                         type="text" 
                         placeholder={isRecording ? "Press key combination..." : "Search commands..."}
@@ -121,20 +139,30 @@ const KeymapManager: React.FC = () => {
                </div>
 
                {/* Profile Select */}
-               <div className="flex flex-col">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Keymap Profile</span>
-                  <select 
-                     className="bg-transparent border-none text-xs font-bold text-indigo-400 outline-none p-0 cursor-pointer"
-                     value={activeProfile}
-                     onChange={(e) => setActiveProfile(e.target.value)}
-                  >
-                     {profiles.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-                  </select>
+               <div className="flex items-center space-x-4">
+                  <div className="flex flex-col">
+                     <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Keymap Profile</span>
+                     <select 
+                        className="bg-transparent border-none text-xs font-bold text-indigo-400 outline-none p-0 cursor-pointer"
+                        value={activeProfile}
+                        onChange={(e) => setActiveProfile(e.target.value)}
+                     >
+                        {profiles.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                     </select>
+                  </div>
                </div>
             </div>
          </div>
 
          <div className="flex items-center space-x-3">
+            <button 
+              onClick={() => setViewJson(!viewJson)}
+              className={`flex items-center px-3 py-1.5 rounded text-[10px] font-bold uppercase tracking-widest transition-all ${viewJson ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-white'}`}
+            >
+               <CodeIcon size={14} className="mr-2" />
+               {viewJson ? 'View Table' : 'Open JSON'}
+            </button>
+            <div className="h-4 w-px bg-slate-800" />
             <Button variant="secondary" size="sm" icon={<RotateCwIcon size={14} />}>Reset All</Button>
             <Button variant="primary" size="sm" icon={<PlusIcon size={14} />}>Add Binding</Button>
          </div>
@@ -143,113 +171,133 @@ const KeymapManager: React.FC = () => {
       {/* 2. Main Split Area */}
       <div className="flex-1 flex overflow-hidden">
          
-         {/* LEFT: Command List (Fluid) */}
-         <main className="flex-1 flex flex-col min-w-0 border-r border-slate-800">
-            {/* Stats Row */}
-            <div className="h-10 bg-slate-900/50 border-b border-slate-800 px-6 flex items-center justify-between shrink-0">
-               <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                  <div className="flex items-center">
-                     <ActivityIcon size={12} className="mr-2 text-indigo-400" />
-                     {stats.total} Commands
-                  </div>
-                  {stats.conflicts > 0 && (
-                     <div className="flex items-center text-red-400">
-                        <AlertTriangleIcon size={12} className="mr-2" />
-                        {stats.conflicts} Conflicts detected
-                     </div>
-                  )}
-                  <div className="flex items-center">
-                     <CheckCircleIcon size={12} className="mr-2 text-emerald-500" />
-                     {stats.custom} User Overrides
-                  </div>
-               </div>
-               <div className="flex items-center space-x-2 text-[10px] text-slate-600 font-mono">
-                  <span>CONTEXT_ENGINE: V3_ACTIVE</span>
-               </div>
-            </div>
+         {/* LEFT: Command List or JSON Editor */}
+         <main className="flex-1 flex flex-col min-w-0 border-r border-slate-800 relative">
+            {viewJson ? (
+                <div className="flex-1 flex flex-col bg-slate-950 p-6 overflow-hidden">
+                    <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase font-mono">keybindings.json</span>
+                        <Badge variant="warning">MANUAL_OVERRIDE_MODE</Badge>
+                    </div>
+                    <textarea 
+                        className="flex-1 bg-slate-900/50 border border-slate-800 rounded-xl p-6 font-mono text-sm text-indigo-300 focus:outline-none focus:border-indigo-500 custom-scrollbar resize-none"
+                        value={JSON.stringify(keybindings, null, 2)}
+                        readOnly
+                    />
+                    <div className="mt-4 flex justify-end space-x-3">
+                        <Button variant="ghost" size="sm" onClick={() => setViewJson(false)}>Close Editor</Button>
+                        <Button variant="primary" size="sm">Download Config</Button>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {/* Stats Row */}
+                    <div className="h-10 bg-slate-900/50 border-b border-slate-800 px-6 flex items-center justify-between shrink-0">
+                       <div className="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                          <div className="flex items-center">
+                             <ActivityIcon size={12} className="mr-2 text-indigo-400" />
+                             {stats.total} Commands
+                          </div>
+                          {stats.conflicts > 0 && (
+                             <div className="flex items-center text-red-400">
+                                <AlertTriangleIcon size={12} className="mr-2" />
+                                {stats.conflicts} Conflicts detected
+                             </div>
+                          )}
+                          <div className="flex items-center">
+                             <CheckCircleIcon size={12} className="mr-2 text-emerald-500" />
+                             {stats.custom} User Overrides
+                          </div>
+                       </div>
+                       <div className="flex items-center space-x-2 text-[10px] text-slate-600 font-mono">
+                          <span>CONTEXT_ENGINE: V3_ACTIVE</span>
+                       </div>
+                    </div>
 
-            {/* List Body */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
-               <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-900 sticky top-0 z-20">
-                     <tr className="text-[10px] font-bold text-slate-600 uppercase tracking-widest border-b border-slate-800">
-                        <th className="px-6 py-3 w-[40%]">Command</th>
-                        <th className="px-6 py-3">Keybinding</th>
-                        <th className="px-6 py-3">When / Context</th>
-                        <th className="px-6 py-3 text-right">Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     {filteredBindings.map(kb => (
-                        <tr 
-                           key={kb.id} 
-                           className={`group border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors ${kb.hasConflict ? 'bg-red-950/10' : ''}`}
-                        >
-                           <td className="px-6 py-4">
-                              <div className="flex items-center space-x-3">
-                                 {kb.hasConflict && (
-                                    <div className="p-1 rounded bg-red-500/20 text-red-500" title="Conflict with another binding">
-                                       <AlertTriangleIcon size={12} />
-                                    </div>
-                                 )}
-                                 <div className="min-w-0">
-                                    <div className="text-sm font-medium text-slate-200 truncate group-hover:text-indigo-200 transition-colors">{kb.commandLabel}</div>
-                                    <div className="text-[10px] font-mono text-slate-500 truncate flex items-center mt-0.5">
-                                       {kb.source}
-                                       {kb.source !== 'System' && <ChevronRightIcon size={8} className="mx-1" />}
-                                       <span className="text-slate-600">{kb.commandId}</span>
-                                    </div>
-                                 </div>
-                              </div>
-                           </td>
-                           <td className="px-6 py-4">
-                              <div className="flex items-center space-x-1">
-                                 {kb.key === 'None' ? (
-                                    <span className="text-xs text-slate-600 italic">Not Bound</span>
-                                 ) : (
-                                    kb.key.split('+').map((key, i) => (
-                                       <React.Fragment key={i}>
-                                          <kbd className="px-1.5 py-0.5 rounded bg-slate-700 border border-slate-600 text-[10px] font-bold text-slate-300 uppercase shadow-sm">
-                                             {key.replace('meta', '⌘').replace('shift', '⇧').replace('alt', '⌥')}
-                                          </kbd>
-                                          {i < kb.key.split('+').length - 1 && <span className="text-slate-600 text-[10px] mx-0.5">+</span>}
-                                       </React.Fragment>
-                                    ))
-                                 )}
-                              </div>
-                           </td>
-                           <td className="px-6 py-4">
-                              <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/5 px-2 py-0.5 rounded border border-indigo-500/20">
-                                 {kb.when}
-                              </span>
-                           </td>
-                           <td className="px-6 py-4">
-                              <div className="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                 <button 
-                                   onClick={() => setEditingId(kb.id)}
-                                   className="p-1.5 text-slate-500 hover:text-white hover:bg-slate-700 rounded transition-colors" title="Edit"
-                                 >
-                                    <Edit2Icon size={14} />
-                                 </button>
-                                 <button 
-                                   onClick={() => handleReset(kb.id)}
-                                   className="p-1.5 text-slate-500 hover:text-indigo-400 hover:bg-slate-700 rounded transition-colors" title="Reset to Default"
-                                 >
-                                    <RotateCwIcon size={14} />
-                                 </button>
-                                 <button 
-                                   onClick={() => handleUnbind(kb.id)}
-                                   className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-950/30 rounded transition-colors" title="Unbind"
-                                 >
-                                    <TrashIcon size={14} />
-                                 </button>
-                              </div>
-                           </td>
-                        </tr>
-                     ))}
-                  </tbody>
-               </table>
-            </div>
+                    {/* List Body */}
+                    <div className="flex-1 overflow-y-auto custom-scrollbar">
+                       <table className="w-full text-left border-collapse">
+                          <thead className="bg-slate-900 sticky top-0 z-20">
+                             <tr className="text-[10px] font-bold text-slate-600 uppercase tracking-widest border-b border-slate-800">
+                                <th className="px-6 py-3 w-[40%]">Command</th>
+                                <th className="px-6 py-3">Keybinding</th>
+                                <th className="px-6 py-3">When / Context</th>
+                                <th className="px-6 py-3 text-right">Actions</th>
+                             </tr>
+                          </thead>
+                          <tbody>
+                             {filteredBindings.map(kb => (
+                                <tr 
+                                   key={kb.id} 
+                                   className={`group border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors ${kb.hasConflict ? 'bg-red-950/10' : ''} ${flashingRows.has(kb.id) ? 'animate-flash-green' : ''}`}
+                                >
+                                   <td className="px-6 py-4">
+                                      <div className="flex items-center space-x-3">
+                                         {kb.hasConflict && (
+                                            <div className="p-1 rounded bg-red-500/20 text-red-500" title="Conflict with another binding">
+                                               <AlertTriangleIcon size={12} />
+                                            </div>
+                                         )}
+                                         <div className="min-w-0">
+                                            <div className="text-sm font-medium text-slate-200 truncate group-hover:text-indigo-200 transition-colors">{kb.commandLabel}</div>
+                                            <div className="text-[10px] font-mono text-slate-500 truncate flex items-center mt-0.5">
+                                               {kb.source}
+                                               {kb.source !== 'System' && <ChevronRightIcon size={8} className="mx-1" />}
+                                               <span className="text-slate-600">{kb.commandId}</span>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </td>
+                                   <td className="px-6 py-4">
+                                      <div className="flex items-center space-x-1">
+                                         {kb.key === 'None' ? (
+                                            <span className="text-xs text-slate-600 italic">Not Bound</span>
+                                         ) : (
+                                            kb.key.split('+').map((key, i) => (
+                                               <React.Fragment key={i}>
+                                                  <kbd className="px-1.5 py-0.5 rounded bg-slate-700 border border-slate-600 text-[10px] font-bold text-slate-300 uppercase shadow-sm">
+                                                     {key.replace('meta', '⌘').replace('shift', '⇧').replace('alt', '⌥')}
+                                                  </kbd>
+                                                  {i < kb.key.split('+').length - 1 && <span className="text-slate-600 text-[10px] mx-0.5">+</span>}
+                                               </React.Fragment>
+                                            ))
+                                         )}
+                                      </div>
+                                   </td>
+                                   <td className="px-6 py-4">
+                                      <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/5 px-2 py-0.5 rounded border border-indigo-500/20">
+                                         {kb.when}
+                                      </span>
+                                   </td>
+                                   <td className="px-6 py-4">
+                                      <div className="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                         <button 
+                                           onClick={() => setEditingId(kb.id)}
+                                           className="p-1.5 text-slate-500 hover:text-white hover:bg-slate-700 rounded transition-colors" title="Edit"
+                                         >
+                                            <Edit2Icon size={14} />
+                                         </button>
+                                         <button 
+                                           onClick={() => handleReset(kb.id)}
+                                           className="p-1.5 text-slate-500 hover:text-indigo-400 hover:bg-slate-700 rounded transition-colors" title="Reset to Default"
+                                         >
+                                            <RotateCwIcon size={14} />
+                                         </button>
+                                         <button 
+                                           onClick={() => handleUnbind(kb.id)}
+                                           className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-950/30 rounded transition-colors" title="Unbind"
+                                         >
+                                            <TrashIcon size={14} />
+                                         </button>
+                                      </div>
+                                   </td>
+                                </tr>
+                             ))}
+                          </tbody>
+                       </table>
+                    </div>
+                </>
+            )}
          </main>
 
          {/* RIGHT: Visual Keyboard & Inspector (350px) */}
@@ -345,11 +393,9 @@ const KeymapManager: React.FC = () => {
       {editingId && (
          <BindingDialog 
             binding={keybindings.find(k => k.id === editingId)!} 
+            existingBindings={keybindings}
             onClose={() => setEditingId(null)}
-            onSave={(newKey) => {
-               setKeybindings(prev => prev.map(kb => kb.id === editingId ? { ...kb, key: newKey, hasConflict: false } : kb));
-               setEditingId(null);
-            }}
+            onSave={(newKey) => handleSaveBinding(editingId, newKey)}
          />
       )}
 
@@ -372,9 +418,13 @@ const ToggleOption: React.FC<{ label: string; description: string; defaultChecke
    );
 };
 
-const BindingDialog: React.FC<{ binding: Keybinding; onClose: () => void; onSave: (key: string) => void }> = ({ binding, onClose, onSave }) => {
-   const [pressed, setPressed] = useState<string[]>([]);
+const BindingDialog: React.FC<{ binding: Keybinding; existingBindings: Keybinding[]; onClose: () => void; onSave: (key: string) => void }> = ({ binding, existingBindings, onClose, onSave }) => {
    const [inputKey, setInputKey] = useState(binding.key);
+
+   const conflict = useMemo(() => {
+     if (inputKey === 'None' || inputKey === binding.key) return null;
+     return existingBindings.find(b => b.key === inputKey);
+   }, [inputKey, existingBindings, binding.key]);
 
    useEffect(() => {
       const handleKey = (e: KeyboardEvent) => {
@@ -386,7 +436,7 @@ const BindingDialog: React.FC<{ binding: Keybinding; onClose: () => void; onSave
             return;
          }
 
-         if (e.key === 'Enter' && pressed.length > 0) {
+         if (e.key === 'Enter' && inputKey !== 'None') {
             onSave(inputKey);
             return;
          }
@@ -402,19 +452,17 @@ const BindingDialog: React.FC<{ binding: Keybinding; onClose: () => void; onSave
          }
 
          if (keys.length > 0) {
-            const joined = keys.join('+');
-            setInputKey(joined);
-            setPressed(keys);
+            setInputKey(keys.join('+'));
          }
       };
 
       window.addEventListener('keydown', handleKey, true);
       return () => window.removeEventListener('keydown', handleKey, true);
-   }, [inputKey, pressed, onClose, onSave]);
+   }, [inputKey, onClose, onSave]);
 
    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300">
-         <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300">
+         <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 ring-1 ring-white/10">
             <div className="p-6 border-b border-slate-800">
                <h3 className="text-lg font-bold text-white mb-1">Edit Keybinding</h3>
                <p className="text-xs text-slate-500 uppercase tracking-widest font-mono">{binding.commandLabel}</p>
@@ -427,7 +475,7 @@ const BindingDialog: React.FC<{ binding: Keybinding; onClose: () => void; onSave
                   ) : (
                      inputKey.split('+').map((k, i) => (
                         <div key={i} className="flex items-center">
-                           <kbd className="px-4 py-2 rounded-xl bg-slate-800 border-2 border-slate-700 text-xl font-bold text-indigo-400 shadow-lg min-w-[50px] text-center animate-in zoom-in">
+                           <kbd className="px-4 py-2 rounded-xl bg-slate-800 border-2 border-slate-700 text-xl font-bold text-indigo-400 shadow-lg min-w-[60px] text-center animate-in zoom-in">
                               {k.replace('meta', '⌘').replace('shift', '⇧').replace('alt', '⌥')}
                            </kbd>
                            {i < inputKey.split('+').length - 1 && <span className="text-2xl text-slate-700 mx-2">+</span>}
@@ -436,29 +484,38 @@ const BindingDialog: React.FC<{ binding: Keybinding; onClose: () => void; onSave
                   )}
                </div>
 
-               <div className="text-center space-y-2">
+               <div className="text-center space-y-4">
                   <p className="text-sm text-slate-400">Capture mode is active. System keys are intercepted.</p>
-                  <div className="flex items-center justify-center space-x-4">
-                     <div className="flex items-center text-[10px] text-slate-500">
-                        <span className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 mr-2 font-mono text-white">ESC</span>
-                        To Cancel
-                     </div>
-                     <div className="flex items-center text-[10px] text-slate-500">
-                        <span className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 mr-2 font-mono text-white">ENTER</span>
-                        To Save
-                     </div>
-                  </div>
+                  
+                  {conflict ? (
+                    <div className="p-4 bg-amber-950/20 border border-amber-500/30 rounded-xl text-left animate-in slide-in-from-top-1">
+                        <div className="flex items-center text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-2">
+                            <AlertTriangleIcon size={14} className="mr-2" /> Conflict Detected
+                        </div>
+                        <p className="text-xs text-amber-200/80 leading-relaxed">
+                            ⚠️ <code className="font-bold text-amber-400">{inputKey.toUpperCase()}</code> is already used by <strong className="text-white">'{conflict.commandLabel}'</strong>. Do you want to replace it?
+                        </p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-4">
+                        <div className="flex items-center text-[10px] text-slate-500">
+                           <span className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 mr-2 font-mono text-white">ESC</span>
+                           To Cancel
+                        </div>
+                        <div className="flex items-center text-[10px] text-slate-500">
+                           <span className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 mr-2 font-mono text-white">ENTER</span>
+                           To Save
+                        </div>
+                    </div>
+                  )}
                </div>
             </div>
 
-            <div className="p-6 bg-slate-950/50 border-t border-slate-800 flex items-center justify-between">
-               <div className="flex items-center text-red-400 text-[10px] font-bold uppercase tracking-widest">
-                  {inputKey === 'meta+k' && <><AlertTriangleIcon size={12} className="mr-2" /> 1 Existing Conflict</>}
-               </div>
-               <div className="flex space-x-3">
-                  <Button variant="ghost" onClick={onClose}>Cancel</Button>
-                  <Button variant="primary" onClick={() => onSave(inputKey)} disabled={inputKey === 'None'}>Save Binding</Button>
-               </div>
+            <div className="p-6 bg-slate-950/50 border-t border-slate-800 flex items-center justify-end space-x-3">
+               <Button variant="ghost" onClick={onClose}>Cancel</Button>
+               <Button variant="primary" onClick={() => onSave(inputKey)} disabled={inputKey === 'None'}>
+                  {conflict ? 'Replace Binding' : 'Save Binding'}
+               </Button>
             </div>
          </div>
       </div>

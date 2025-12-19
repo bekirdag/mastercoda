@@ -74,6 +74,10 @@
         0%, 100% { background-color: transparent; }
         50% { background-color: rgba(239, 68, 68, 0.2); }
       }
+      @keyframes flashGreen {
+        0%, 100% { background-color: transparent; }
+        50% { background-color: rgba(16, 185, 129, 0.15); }
+      }
 
       .animate-in {
         animation-duration: 0.5s;
@@ -102,6 +106,9 @@
       }
       .animate-flash-red {
         animation: flashRed 0.5s ease-in-out;
+      }
+      .animate-flash-green {
+        animation: flashGreen 0.8s ease-in-out;
       }
       
       .duration-300 { animation-duration: 300ms; }
