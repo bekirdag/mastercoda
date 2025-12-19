@@ -155,6 +155,27 @@ export interface AgentPersona {
   };
 }
 
+// Model Registry Types (EX-10)
+export type AIProviderStatus = 'connected' | 'disconnected' | 'error' | 'loading';
+
+export interface AIModel {
+  id: string;
+  name: string;
+  contextWindow: number;
+  type: 'chat' | 'reasoning' | 'embedding';
+}
+
+export interface AIProvider {
+  id: string;
+  name: string;
+  status: AIProviderStatus;
+  apiKey?: string;
+  orgId?: string;
+  baseUrl?: string;
+  models: AIModel[];
+  icon: string | React.ReactNode;
+}
+
 // WS-14 Notification Types
 export type NotificationCategory = 'agent' | 'system' | 'mention';
 export type NotificationStatus = 'unread' | 'read' | 'archived';

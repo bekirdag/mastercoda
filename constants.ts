@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -612,6 +612,58 @@ export const MOCK_AGENTS: AgentPersona[] = [
       tasksCompleted: 12,
       avgLatency: '1.8s'
     }
+  }
+];
+
+// EX-10 Mock Data
+export const MOCK_AI_PROVIDERS: AIProvider[] = [
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    status: 'connected',
+    apiKey: 'sk-proj-••••••••••••••••••••••••••••',
+    orgId: 'org-mcoda-prime',
+    icon: '🌐',
+    models: [
+      { id: 'gpt-4o', name: 'GPT-4o (Omni)', contextWindow: 128000, type: 'reasoning' },
+      { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', contextWindow: 128000, type: 'reasoning' },
+      { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', contextWindow: 16384, type: 'chat' },
+      { id: 'text-embedding-3-small', name: 'Embed Small v3', contextWindow: 8191, type: 'embedding' }
+    ]
+  },
+  {
+    id: 'anthropic',
+    name: 'Anthropic',
+    status: 'connected',
+    apiKey: 'sk-ant-••••••••••••••••••••••••••••',
+    icon: '🐚',
+    models: [
+      { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', contextWindow: 200000, type: 'reasoning' },
+      { id: 'claude-3-opus', name: 'Claude 3 Opus', contextWindow: 200000, type: 'reasoning' },
+      { id: 'claude-3-haiku', name: 'Claude 3 Haiku', contextWindow: 200000, type: 'chat' }
+    ]
+  },
+  {
+    id: 'google',
+    name: 'Google Cloud (Vertex)',
+    status: 'loading',
+    icon: '☁️',
+    models: [
+      { id: 'gemini-3-pro-preview', name: 'Gemini 3 Pro', contextWindow: 1000000, type: 'reasoning' },
+      { id: 'gemini-3-flash-preview', name: 'Gemini 3 Flash', contextWindow: 1000000, type: 'chat' }
+    ]
+  },
+  {
+    id: 'ollama',
+    name: 'Ollama (Local)',
+    status: 'loading',
+    baseUrl: 'http://localhost:11434',
+    icon: '🦙',
+    models: [
+      { id: 'llama3:8b', name: 'Llama 3 8B', contextWindow: 8192, type: 'chat' },
+      { id: 'codellama:7b', name: 'CodeLlama 7B', contextWindow: 16384, type: 'chat' },
+      { id: 'mistral:v0.3', name: 'Mistral v0.3', contextWindow: 32768, type: 'chat' }
+    ]
   }
 ];
 

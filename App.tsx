@@ -36,6 +36,7 @@ import Playbooks from './components/Playbooks';
 import QualityHub from './components/QualityHub';
 import ReleaseManager from './components/ReleaseManager';
 import Extensions from './components/Extensions'; 
+import ModelRegistry from './components/ModelRegistry'; // EX-10
 import ExtensionManager from './components/ExtensionManager'; // EX-05
 import ExtensionSettings from './components/ExtensionSettings';
 import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
@@ -205,6 +206,7 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/extensions/models') return <ModelRegistry />; // EX-10
     if (activePath === '/extensions/snippets') return <SnippetStudio />; // EX-08
     if (activePath === '/extensions/keymaps') return <KeymapManager />; // EX-09
     if (activePath === '/extensions/stacks') return <ExtensionStacks />; // EX-06
@@ -238,6 +240,7 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/extensions/models') return 'Ecosystem / Brain Center';
     if (activePath === '/extensions/snippets') return 'Ecosystem / Extensions / Snippets';
     if (activePath === '/extensions/keymaps') return 'Ecosystem / Extensions / Keymaps';
     if (activePath === '/extensions/stacks') return 'Ecosystem / Extensions / Stacks';
@@ -256,7 +259,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
