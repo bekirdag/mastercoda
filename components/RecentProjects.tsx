@@ -10,7 +10,7 @@ import {
 } from './Icons';
 
 interface RecentProjectsProps {
-  onOpenProject: () => void;
+  onOpenProject: (path: string) => void;
   onCreateNew: () => void;
   onVersionMismatch?: () => void;
 }
@@ -38,9 +38,11 @@ const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreate
     setProjects(prev => prev.filter(p => p.id !== id));
   };
 
-  const handleOpenMock = () => {
-    // Simulate slight delay for file picker
-    setTimeout(onOpenProject, 400);
+  const handleOpenFolderMock = () => {
+    // Simulate picking a random folder for "Open Existing"
+    const mockPaths = ['~/dev/unknown-project', '~/work/secret-codebase'];
+    const p = mockPaths[Math.floor(Math.random() * mockPaths.length)];
+    onOpenProject(p);
   };
 
   return (
@@ -110,7 +112,7 @@ const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreate
 
            {/* Open Existing */}
            <button 
-             onClick={handleOpenMock}
+             onClick={handleOpenFolderMock}
              className="group relative flex items-center p-6 bg-slate-800/40 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500 rounded-xl transition-all duration-300 text-left hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] overflow-hidden"
            >
               <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center mr-6 transition-colors duration-300 shrink-0">
@@ -140,7 +142,7 @@ const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreate
                {projects.map((project) => (
                  <div 
                    key={project.id}
-                   onClick={handleOpenMock}
+                   onClick={() => onOpenProject(project.path)}
                    className="group flex items-center justify-between p-4 bg-slate-800/30 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-600 rounded-lg cursor-pointer transition-all duration-200"
                  >
                     <div className="flex items-center min-w-0">

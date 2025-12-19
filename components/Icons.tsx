@@ -229,6 +229,14 @@ export const ServerIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
+export const DatabaseIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+  </BaseIcon>
+);
+
 export const PlusIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <line x1="12" y1="5" x2="12" y2="19" />

@@ -15,10 +15,12 @@ import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
 import CreateWorkspaceDetails from './components/CreateWorkspaceDetails';
 import CreateWorkspaceDefaults from './components/CreateWorkspaceDefaults';
 import InitializingWorkspace from './components/InitializingWorkspace';
+import WorkspaceReady from './components/WorkspaceReady';
+import ValidatingWorkspace from './components/ValidatingWorkspace';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -106,9 +108,22 @@ function App() {
   if (currentStep === 'recent-projects') {
     return (
       <RecentProjects 
-        onOpenProject={() => setCurrentStep('dashboard')}
+        onOpenProject={(path) => {
+          setNewProjectData({ path }); // Store path for validation context
+          setCurrentStep('validating-workspace');
+        }}
         onCreateNew={() => setCurrentStep('create-project-location')}
         onVersionMismatch={() => setCurrentStep('update-required')}
+      />
+    );
+  }
+
+  if (currentStep === 'validating-workspace') {
+    return (
+      <ValidatingWorkspace
+        path={newProjectData.path || '~/unknown/project'}
+        onComplete={() => setCurrentStep('dashboard')}
+        onCancel={() => setCurrentStep('recent-projects')}
       />
     );
   }
@@ -162,11 +177,27 @@ function App() {
     return (
       <InitializingWorkspace
         config={newProjectData}
-        onNext={() => setCurrentStep('dashboard')}
+        onNext={() => setCurrentStep('workspace-ready')}
         onCancel={() => setCurrentStep('create-project-defaults')}
       />
     );
   }
+
+  if (currentStep === 'workspace-ready') {
+    return (
+      <WorkspaceReady
+        workspacePath={newProjectData.path}
+        onNext={() => setCurrentStep('dashboard')}
+      />
+    );
+  }
+
+  // Calculate padding based on drawer state
+  const contentPaddingClass = drawerState === 'peek' 
+    ? 'pb-[340px]' 
+    : drawerState === 'maximized' 
+      ? 'pb-0' 
+      : 'pb-8';
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -205,7 +236,7 @@ function App() {
         </header>
 
         {/* Scrollable Content */}
-        <div className={`flex-1 overflow-auto custom-scrollbar pb-[340px] ${drawerState === 'maximized' ? 'overflow-hidden' : ''}`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${contentPaddingClass} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            <Dashboard />
         </div>
 
