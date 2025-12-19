@@ -28,6 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'apiexplorer', label: 'API Explorer', icon: <ZapIcon size={20} className="text-amber-400" />, path: '/docs/api-explorer' }, // DO-05
     { id: 'learning', label: 'Learning Paths', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/learning' }, // DO-08
     { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, // EX-12
+    { id: 'doc-health', label: 'Doc Health', icon: <HistoryIcon size={20} className="text-red-400" />, path: '/docs/analytics' }, // DO-10
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
     { id: 'playground', label: 'Prompt Lab', icon: <BeakerIcon size={20} className="text-indigo-400" />, path: '/playground' },
     { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, // EX-10

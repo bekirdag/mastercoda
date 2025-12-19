@@ -1,5 +1,6 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +9,73 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_DRIFT_RECORDS: DriftRecord[] = [
+  {
+    id: 'dr-1',
+    title: 'Authentication Flow',
+    docPath: 'docs/auth.md',
+    codePath: 'src/auth/*',
+    lastDocEdit: formatDate(-180), // 6 months
+    lastCodeEdit: formatDate(-1), // Yesterday
+    score: 'high'
+  },
+  {
+    id: 'dr-2',
+    title: 'Billing Engine',
+    docPath: 'docs/billing.md',
+    codePath: 'src/services/billing/*',
+    lastDocEdit: formatDate(-7),
+    lastCodeEdit: formatDate(-45),
+    score: 'low'
+  },
+  {
+    id: 'dr-3',
+    title: 'Deployment Strategy',
+    docPath: 'docs/deployment.md',
+    codePath: '.github/workflows/*',
+    lastDocEdit: formatDate(-60),
+    lastCodeEdit: formatDate(-10),
+    score: 'medium'
+  }
+];
+
+export const MOCK_SEARCH_GAPS: SearchGap[] = [
+  { id: 'sg-1', term: 'Websocket', count: 45 },
+  { id: 'sg-2', term: 'Dark Mode', count: 12 },
+  { id: 'sg-3', term: 'Zustand Store', count: 8 },
+  { id: 'sg-4', term: 'VPC Peering', count: 6 }
+];
+
+export const MOCK_DOC_FEEDBACK: DocFeedbackItem[] = [
+  {
+    id: 'df-1',
+    user: 'Bob (New Hire)',
+    context: 'Setup Guide',
+    comment: 'The command `npm run start` fails on Windows. Needs updating.',
+    helpful: false,
+    status: 'open',
+    timestamp: '2h ago'
+  },
+  {
+    id: 'df-2',
+    user: 'Sarah',
+    context: 'API Reference',
+    comment: 'Missing query parameters documentation for /v2/search.',
+    helpful: false,
+    status: 'open',
+    timestamp: '5h ago'
+  },
+  {
+    id: 'df-3',
+    user: 'Alex',
+    context: 'Design Tokens',
+    comment: 'The hex codes are very helpful, thanks!',
+    helpful: true,
+    status: 'resolved',
+    timestamp: '1d ago'
+  }
+];
 
 export const MOCK_DICTIONARY: DictionaryTerm[] = [
   {

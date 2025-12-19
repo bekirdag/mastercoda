@@ -37,6 +37,7 @@ import SystemTopology from './components/SystemTopology'; // Added for DO-06
 import DecisionLog from './components/DecisionLog'; // Added for DO-07
 import LearningPaths from './components/LearningPaths'; // Added for DO-08
 import DomainDictionary from './components/DomainDictionary'; // Added for DO-09
+import DocsAnalytics from './components/DocsAnalytics'; // Added for DO-10
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
@@ -223,6 +224,7 @@ function App() {
     if (activePath === '/docs/adrs') return <DecisionLog />; // DO-07
     if (activePath === '/docs/glossary') return <DomainDictionary />; // DO-09
     if (activePath === '/docs/learning') return <LearningPaths />; // DO-08
+    if (activePath === '/docs/analytics') return <DocsAnalytics />; // DO-10
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
     if (activePath === '/playground') return <PromptPlayground />; // Added Lab
@@ -270,6 +272,7 @@ function App() {
     if (activePath === '/docs/adrs') return 'Governance / Decision Log';
     if (activePath === '/docs/glossary') return 'Documentation / Domain Dictionary';
     if (activePath === '/docs/learning') return 'Documentation / Learning Paths';
+    if (activePath === '/docs/analytics') return 'Documentation / Health & Analytics';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
     if (activePath === '/playground') return 'Ecosystem / Prompt Lab';
@@ -297,7 +300,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary'];
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

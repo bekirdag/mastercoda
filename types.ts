@@ -172,6 +172,33 @@ export interface DocSiteNavItem {
   children?: DocSiteNavItem[];
 }
 
+// DO-10 Health & Insights
+export interface DriftRecord {
+  id: string;
+  title: string;
+  docPath: string;
+  codePath: string;
+  lastDocEdit: string;
+  lastCodeEdit: string;
+  score: 'high' | 'medium' | 'low';
+}
+
+export interface SearchGap {
+  id: string;
+  term: string;
+  count: number;
+}
+
+export interface DocFeedbackItem {
+  id: string;
+  user: string;
+  context: string;
+  comment: string;
+  helpful: boolean;
+  status: 'open' | 'resolved';
+  timestamp: string;
+}
+
 // DO-08 Learning Path Types
 export type PathModuleType = 'read' | 'task' | 'quiz' | 'project';
 export type PathModuleStatus = 'locked' | 'active' | 'completed';
