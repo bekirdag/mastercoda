@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -36,6 +35,7 @@ import Playbooks from './components/Playbooks';
 import QualityHub from './components/QualityHub';
 import ReleaseManager from './components/ReleaseManager';
 import Extensions from './components/Extensions'; // EX-01
+import ExtensionSettings from './components/ExtensionSettings'; // EX-03
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -191,6 +191,10 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />; // EX-01
+    if (activePath.startsWith('/extensions/settings/')) {
+        const extId = activePath.split('/').pop();
+        return <ExtensionSettings extensionId={extId || ''} onBack={() => setActivePath('/extensions')} />;
+    }
     if (activePath === '/playbooks') return <Playbooks />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
@@ -214,6 +218,7 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath.startsWith('/extensions/settings/')) return 'Ecosystem / Extensions / Settings';
     if (activePath === '/playbooks') return 'Workspace / Playbooks';
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
@@ -226,7 +231,7 @@ function App() {
   };
 
   const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions'];
-  const showHeader = !skipDrawerPaths.includes(activePath);
+  const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -269,11 +274,11 @@ function App() {
           </header>
         )}
 
-        <div className={`flex-1 overflow-auto custom-scrollbar ${!skipDrawerPaths.includes(activePath) ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${(!skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/')) ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            {renderContent()}
         </div>
 
-        {!skipDrawerPaths.includes(activePath) && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
+        {(!skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/')) && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
 
       </main>
 

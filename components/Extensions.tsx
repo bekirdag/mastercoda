@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Extension, ExtensionCategory } from '../types';
 import { MOCK_EXTENSIONS } from '../constants';
@@ -241,6 +240,7 @@ const Extensions: React.FC = () => {
                         ext={ext} 
                         onInstall={() => handleInstall(ext.id)}
                         onClick={() => setSelectedExtId(ext.id)}
+                        onSettings={() => window.location.hash = `/extensions/settings/${ext.id}`} // Using hash hack or standard prop navigation
                      />
                   ))}
 
@@ -267,7 +267,7 @@ const Extensions: React.FC = () => {
   );
 };
 
-const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void; onClick: () => void }> = ({ ext, onInstall, onClick }) => {
+const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void; onClick: () => void; onSettings: () => void }> = ({ ext, onInstall, onClick, onSettings }) => {
    return (
       <article 
          onClick={onClick}
@@ -314,9 +314,19 @@ const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void; onClick: 
             
             <div className="flex items-center">
                <ExtensionButton status={ext.status} onClick={(e) => { e.stopPropagation(); onInstall(); }} />
-               <button className="ml-2 p-1.5 text-slate-600 hover:text-white hover:bg-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100">
-                  <SettingsIcon size={14} />
-               </button>
+               {ext.status === 'installed' && (
+                  <button 
+                     onClick={(e) => { 
+                        e.stopPropagation(); 
+                        // Simulate manual activePath update if parent doesn't provide it
+                        const evt = new CustomEvent('app-navigate', { detail: `/extensions/settings/${ext.id}` });
+                        window.dispatchEvent(evt);
+                     }}
+                     className="ml-2 p-1.5 text-slate-600 hover:text-white hover:bg-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                     <SettingsIcon size={14} />
+                  </button>
+               )}
             </div>
          </div>
 

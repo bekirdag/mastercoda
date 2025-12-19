@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Extension } from '../types';
 import Button from './Button';
 import Badge from './Badge';
@@ -18,8 +17,8 @@ import {
   CodeIcon,
   MessageSquareIcon,
   ArrowRightIcon,
-  // Added XCircleIcon to fix the error on line 310
-  XCircleIcon
+  XCircleIcon,
+  SettingsIcon
 } from './Icons';
 
 // Proxy for Box icon
@@ -70,6 +69,12 @@ const ExtensionDetail: React.FC<ExtensionDetailProps> = ({ extension, onClose, o
 
   const isInstalling = extension.status === 'installing';
   const isInstalled = extension.status === 'installed';
+
+  const handleConfigure = () => {
+     // Emit navigation event
+     const evt = new CustomEvent('app-navigate', { detail: `/extensions/settings/${extension.id}` });
+     window.dispatchEvent(evt);
+  };
 
   return (
     <div className="flex flex-col h-full bg-slate-900 overflow-hidden font-sans">
@@ -135,6 +140,14 @@ const ExtensionDetail: React.FC<ExtensionDetailProps> = ({ extension, onClose, o
                                  <div className={`w-3 h-3 bg-white rounded-full shadow-sm transition-transform duration-300 ${isEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
                               </button>
                            </div>
+                           <Button 
+                              variant="primary" 
+                              className="w-full bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/30"
+                              onClick={handleConfigure}
+                              icon={<SettingsIcon size={16} />}
+                           >
+                              Configure
+                           </Button>
                            <Button 
                               variant="secondary" 
                               className="w-full text-red-400 hover:text-red-300 hover:bg-red-900/10 border-red-500/20"
