@@ -308,3 +308,49 @@ export interface DevExtensionProject {
     };
   };
 }
+
+// EX-06 Extension Stack Types
+export interface ExtensionStack {
+  id: string;
+  name: string;
+  description: string;
+  extensions: string[]; // Array of extension IDs
+  isActive: boolean;
+  syncedWith?: string; // e.g. "master-coda.json"
+  author: string;
+  updatedAt: string;
+  includeConfig: boolean;
+}
+
+// EX-07 Theme Studio Types
+export interface ThemeDefinition {
+  id: string;
+  name: string;
+  colors: {
+    background: string;
+    foreground: string;
+    accent: string;
+    border: string;
+    sidebar: string;
+    terminal: string;
+  };
+  syntax: {
+    keyword: string;
+    string: string;
+    function: string;
+    comment: string;
+  };
+  typography: {
+    fontFamily: string;
+    fontSize: number;
+    lineHeight: number;
+    ligatures: boolean;
+  };
+}
+
+export interface IconPack {
+  id: string;
+  name: string;
+  author: string;
+  iconMap: Record<string, string>; // ext -> emoji/path
+}

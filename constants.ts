@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -902,4 +902,95 @@ This agent runs in a sandboxed Python environment. It cannot access your host fi
     version: 'v1.1.0',
     tags: ['go', 'golang', 'language']
   }
+];
+
+export const MOCK_STACKS: ExtensionStack[] = [
+  {
+    id: 'stack-fullstack',
+    name: 'Full Stack Web',
+    description: 'Primary stack for Master Coda development. Includes React, Node, and Tailwind tools.',
+    extensions: ['ext-vercel', 'ext-dracula'],
+    isActive: true,
+    syncedWith: 'master-coda.json',
+    author: 'Alex Dev',
+    updatedAt: '2h ago',
+    includeConfig: true
+  },
+  {
+    id: 'stack-python-data',
+    name: 'Python Data Analysis',
+    description: 'Includes Pandas Agent, Jupyter Viewer, and PyTest for data science workflows.',
+    extensions: ['ext-py-agent', 'ext-sql-agent'],
+    isActive: false,
+    author: 'Sarah C.',
+    updatedAt: '1d ago',
+    includeConfig: false
+  },
+  {
+    id: 'stack-systems',
+    name: 'Systems Engineering',
+    description: 'Rust, C++, and low-level debugging tools. Optimized for performance.',
+    extensions: ['ext-rust-lsp'],
+    isActive: false,
+    author: 'Alex Dev',
+    updatedAt: '3d ago',
+    includeConfig: true
+  }
+];
+
+// EX-07 Mock Themes
+export const MOCK_THEMES: ThemeDefinition[] = [
+  {
+    id: 'dracula',
+    name: 'Dracula',
+    colors: {
+      background: '#282a36',
+      foreground: '#f8f8f2',
+      accent: '#6272a4',
+      border: '#44475a',
+      sidebar: '#21222c',
+      terminal: '#000000',
+    },
+    syntax: {
+      keyword: '#ff79c6',
+      string: '#f1fa8c',
+      function: '#50fa7b',
+      comment: '#6272a4',
+    },
+    typography: {
+      fontFamily: 'JetBrains Mono',
+      fontSize: 14,
+      lineHeight: 1.5,
+      ligatures: true
+    }
+  },
+  {
+    id: 'github-dark',
+    name: 'GitHub Dark',
+    colors: {
+      background: '#0d1117',
+      foreground: '#c9d1d9',
+      accent: '#58a6ff',
+      border: '#30363d',
+      sidebar: '#010409',
+      terminal: '#000000',
+    },
+    syntax: {
+      keyword: '#ff7b72',
+      string: '#a5d6ff',
+      function: '#d2a8ff',
+      comment: '#8b949e',
+    },
+    typography: {
+      fontFamily: 'Inter',
+      fontSize: 13,
+      lineHeight: 1.6,
+      ligatures: false
+    }
+  }
+];
+
+export const MOCK_ICON_SETS: IconPack[] = [
+  { id: 'material', name: 'Material Icons', author: 'Google', iconMap: { 'ts': 'TypeScript', 'js': 'JavaScript', 'json': 'JSON' } },
+  { id: 'vscode', name: 'VSCode Default', author: 'Microsoft', iconMap: { 'ts': 'TS', 'js': 'JS', 'json': '{}' } },
 ];

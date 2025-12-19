@@ -39,6 +39,8 @@ import Extensions from './components/Extensions';
 import ExtensionManager from './components/ExtensionManager'; // EX-05
 import ExtensionSettings from './components/ExtensionSettings';
 import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
+import ExtensionStacks from './components/ExtensionStacks'; // EX-06
+import ThemeStudio from './components/ThemeStudio'; // EX-07
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -201,6 +203,8 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/extensions/stacks') return <ExtensionStacks />; // EX-06
+    if (activePath === '/extensions/themes') return <ThemeStudio />; // EX-07
     if (activePath === '/extensions/installed') return <ExtensionManager />; // EX-05
     if (activePath === '/extensions/builder') return <ExtensionBuilder />; // EX-04
     if (activePath.startsWith('/extensions/settings/')) {
@@ -230,6 +234,8 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/extensions/stacks') return 'Ecosystem / Extensions / Stacks';
+    if (activePath === '/extensions/themes') return 'Ecosystem / Personalization / Theme Studio';
     if (activePath === '/extensions/installed') return 'Ecosystem / Extensions / Manager';
     if (activePath === '/extensions/builder') return 'Ecosystem / Extensions / Builder';
     if (activePath.startsWith('/extensions/settings/')) return 'Ecosystem / Extensions / Settings';
@@ -244,7 +250,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/installed', '/extensions/builder'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
