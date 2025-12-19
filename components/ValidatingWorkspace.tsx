@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Button from './Button';
 import { 
@@ -10,18 +11,20 @@ import {
   FolderIcon,
   RefreshCwIcon
 } from './Icons';
+import { WorkspaceErrorType } from './InvalidWorkspace';
 
 interface ValidatingWorkspaceProps {
   path: string;
   onComplete: () => void;
   onCancel: () => void;
   onMigrationNeeded: () => void;
+  onError: (type: WorkspaceErrorType) => void;
 }
 
 type CheckStatus = 'pending' | 'active' | 'success' | 'error';
 type Step = 'fs' | 'config' | 'db';
 
-const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onComplete, onCancel, onMigrationNeeded }) => {
+const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onComplete, onCancel, onMigrationNeeded, onError }) => {
   const [currentStep, setCurrentStep] = useState<Step>('fs');
   const [fsStatus, setFsStatus] = useState<CheckStatus>('active');
   const [configStatus, setConfigStatus] = useState<CheckStatus>('pending');
@@ -45,13 +48,34 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
       await new Promise(r => setTimeout(r, 1000));
       if (!mounted) return;
       
-      // Simulate FS check failure if path contains 'error'
-      if (path.includes('error')) {
+      // Simulate FS check failure: Missing Directory
+      if (path.includes('missing')) {
         setFsStatus('error');
-        setErrorMsg('Directory not found or not accessible.');
+        // Delay slightly to show the red X before navigating
+        await new Promise(r => setTimeout(r, 500));
+        if (mounted) onError('missing_dir');
         clearTimeout(timeoutId);
         return;
       }
+
+      // Simulate FS check failure: Not a workspace (empty)
+      if (path.includes('empty')) {
+        setFsStatus('error');
+        await new Promise(r => setTimeout(r, 500));
+        if (mounted) onError('not_workspace');
+        clearTimeout(timeoutId);
+        return;
+      }
+      
+      // Simulate Permission Denied
+      if (path.includes('root') || path.includes('system')) {
+        setFsStatus('error');
+        await new Promise(r => setTimeout(r, 500));
+        if (mounted) onError('permission');
+        clearTimeout(timeoutId);
+        return;
+      }
+
       setFsStatus('success');
       setCurrentStep('config');
       setConfigStatus('active');
@@ -60,6 +84,15 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
       await new Promise(r => setTimeout(r, 1200));
       if (!mounted) return;
       
+      // Simulate Corrupt Config
+      if (path.includes('corrupt')) {
+        setConfigStatus('error');
+        await new Promise(r => setTimeout(r, 500));
+        if (mounted) onError('corrupt_config');
+        clearTimeout(timeoutId);
+        return;
+      }
+
       setConfigStatus('success');
       setCurrentStep('db');
       setDbStatus('active');
@@ -68,7 +101,7 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
       await new Promise(r => setTimeout(r, 1500));
       if (!mounted) return;
 
-      // Simulate Locked Database
+      // Simulate Locked Database (Internal error, not full page redirect usually, but handled inline)
       if (path.includes('locked')) {
         setDbStatus('error');
         setIsLocked(true);
@@ -79,7 +112,6 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
 
       // Simulate Migration Needed
       if (path.includes('migration')) {
-        // Redirect to ON-15 flow
         if (mounted) onMigrationNeeded();
         clearTimeout(timeoutId);
         return;
@@ -98,7 +130,7 @@ const ValidatingWorkspace: React.FC<ValidatingWorkspaceProps> = ({ path, onCompl
       mounted = false;
       clearTimeout(timeoutId);
     };
-  }, [path, onComplete, onMigrationNeeded]);
+  }, [path, onComplete, onMigrationNeeded, onError]);
 
   // Helper to render check items
   const renderCheckItem = (label: string, status: CheckStatus, icon: React.ReactNode) => (

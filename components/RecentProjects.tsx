@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   PlusIcon, 
@@ -21,13 +22,18 @@ interface Project {
   path: string;
   lastOpened: string;
   color: string;
+  broken?: boolean;
 }
 
 const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreateNew, onVersionMismatch }) => {
   const [projects, setProjects] = useState<Project[]>([
     { id: '1', name: 'master-coda-v1', path: '~/dev/master-coda-v1', lastOpened: '2 hours ago', color: 'indigo' },
     { id: '2', name: 'analytics-service', path: '~/work/analytics-service', lastOpened: '5 hours ago', color: 'emerald' },
-    { id: '3', name: 'legacy-api', path: '~/work/legacy-api', lastOpened: '2 days ago', color: 'amber' }
+    { id: '3', name: 'legacy-api', path: '~/work/legacy-api', lastOpened: '2 days ago', color: 'amber' },
+    // Mock Broken Projects for Testing ON-16
+    { id: '4', name: 'lost-project', path: '~/dev/missing-project', lastOpened: '1 week ago', color: 'slate', broken: true },
+    { id: '5', name: 'bad-config', path: '~/repos/corrupt-config', lastOpened: '2 weeks ago', color: 'red', broken: true },
+    { id: '6', name: 'empty-folder', path: '~/work/empty-folder', lastOpened: '3 weeks ago', color: 'slate', broken: true }
   ]);
   
   // Simulated state for CLI mismatch
@@ -147,10 +153,16 @@ const RecentProjects: React.FC<RecentProjectsProps> = ({ onOpenProject, onCreate
                  >
                     <div className="flex items-center min-w-0">
                        <div className={`w-10 h-10 rounded bg-${project.color}-500/20 text-${project.color}-400 flex items-center justify-center mr-4 border border-${project.color}-500/20 shrink-0`}>
-                          <span className="font-bold text-sm">{project.name.substring(0, 2).toUpperCase()}</span>
+                          {project.broken ? (
+                            <XIcon size={16} className="opacity-70" />
+                          ) : (
+                            <span className="font-bold text-sm">{project.name.substring(0, 2).toUpperCase()}</span>
+                          )}
                        </div>
                        <div className="min-w-0">
-                          <h4 className="font-medium text-slate-200 truncate group-hover:text-white transition-colors">{project.name}</h4>
+                          <h4 className={`font-medium truncate transition-colors ${project.broken ? 'text-slate-400 group-hover:text-slate-300 decoration-slate-600 line-through decoration-2' : 'text-slate-200 group-hover:text-white'}`}>
+                              {project.name}
+                          </h4>
                           <p className="text-xs text-slate-500 truncate font-mono">{project.path}</p>
                        </div>
                     </div>

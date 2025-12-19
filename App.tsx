@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -18,10 +19,11 @@ import InitializingWorkspace from './components/InitializingWorkspace';
 import WorkspaceReady from './components/WorkspaceReady';
 import ValidatingWorkspace from './components/ValidatingWorkspace';
 import DatabaseMigration from './components/DatabaseMigration';
+import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorkspace';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'database-migration' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'database-migration' | 'invalid-workspace' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -30,6 +32,9 @@ function App() {
   const [activePath, setActivePath] = useState('/');
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   
+  // Validation Error State for ON-16
+  const [validationError, setValidationError] = useState<{ type: WorkspaceErrorType; path: string } | null>(null);
+
   // Temporary state to hold wizard data
   const [newProjectData, setNewProjectData] = useState<{ 
       path?: string; 
@@ -126,6 +131,37 @@ function App() {
         onComplete={() => setCurrentStep('dashboard')}
         onCancel={() => setCurrentStep('recent-projects')}
         onMigrationNeeded={() => setCurrentStep('database-migration')}
+        onError={(type) => {
+           setValidationError({ type, path: newProjectData.path || '' });
+           setCurrentStep('invalid-workspace');
+        }}
+      />
+    );
+  }
+
+  if (currentStep === 'invalid-workspace') {
+    return (
+      <InvalidWorkspace 
+        errorType={validationError?.type || 'not_workspace'}
+        path={validationError?.path || ''}
+        onBack={() => setCurrentStep('recent-projects')}
+        onRemoveFromRecent={() => {
+            // Logic to actually remove would go here (passing callback down to RecentProjects via state/context)
+            // For now just navigate back
+            setCurrentStep('recent-projects');
+        }}
+        onInitialize={() => {
+            // Jump to Create Wizard with path
+            setCurrentStep('create-project-location');
+        }}
+        onRetry={() => setCurrentStep('validating-workspace')}
+        onBrowse={() => {
+            // Simulate browsing by going back to recent (which has open existing)
+            setCurrentStep('recent-projects');
+        }}
+        onOpenConfig={() => {
+            alert('Simulated: Opening config.json in default editor');
+        }}
       />
     );
   }
