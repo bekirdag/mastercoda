@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plugin, PluginAuthMethod } from '../types';
 import Button from './Button';
@@ -99,7 +98,8 @@ const PluginConfigDrawer: React.FC<PluginConfigDrawerProps> = ({ plugin, onClose
                             <option value="API Key">Standard API Key</option>
                             <option value="PAT">Personal Access Token</option>
                          </select>
-                         <ChevronDownIcon size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" size={14} />
+                         {/* Fix: Removed duplicate size prop */}
+                         <ChevronDownIcon className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" size={14} />
                       </div>
                    </div>
 
@@ -151,7 +151,7 @@ const PluginConfigDrawer: React.FC<PluginConfigDrawerProps> = ({ plugin, onClose
                       <div 
                          key={key} 
                          onClick={() => setScopes({...scopes, [key]: !scopes[key]})}
-                         className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition-all cursor-pointer group"
+                         className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-700 hover:border-slate-700 transition-all cursor-pointer group"
                       >
                          <span className="text-xs font-mono text-slate-400 group-hover:text-white uppercase tracking-tighter">{key.replace('_', ' ')}</span>
                          <div className={`w-9 h-5 rounded-full p-1 transition-all relative ${scopes[key] ? 'bg-indigo-600' : 'bg-slate-800'}`}>

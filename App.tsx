@@ -28,6 +28,7 @@ import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorksp
 import CreateTaskModal from './components/CreateTaskModal';
 import TaskDetailView from './components/TaskDetailView';
 import ProjectSettings from './components/ProjectSettings';
+import GlobalPreferences from './components/GlobalPreferences'; // Added SY-01
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; // Added for DO-01
 import DocEditor from './components/DocEditor'; // Added for DO-03
@@ -118,6 +119,11 @@ function App() {
       if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
         e.preventDefault();
         setIsCreateTaskOpen(true);
+      }
+      // Cmd+, : Settings (Global)
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault();
+        setActivePath('/settings');
       }
       // Esc: Close Detail
       if (e.key === 'Escape' && taskDetailId) {
@@ -284,7 +290,8 @@ function App() {
     if (activePath === '/docs/manage/site-config') return <DocSiteManager />;
     if (activePath === '/docs/api-explorer') return <ApiExplorer />; // DO-05
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
-    if (activePath === '/settings') return <ProjectSettings />;
+    if (activePath === '/settings') return <GlobalPreferences />; // Map SY-01 to global gear
+    if (activePath === '/settings/project') return <ProjectSettings />;
     
     return (
       <div className="flex items-center justify-center h-full text-slate-500">
@@ -340,11 +347,12 @@ function App() {
     if (activePath === '/docs/manage/site-config') return 'Workspace / Documentation / Site Manager';
     if (activePath === '/docs/api-explorer') return 'Workspace / Documentation / API Explorer';
     if (activePath === '/source') return 'Workspace / Source Control';
-    if (activePath === '/settings') return 'Workspace / Settings';
+    if (activePath === '/settings') return 'User / Global Preferences';
+    if (activePath === '/settings/project') return 'Workspace / Project Settings';
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
