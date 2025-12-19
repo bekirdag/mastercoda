@@ -118,3 +118,62 @@ export const ActivityIcon: React.FC<IconProps> = (props) => (
     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
   </BaseIcon>
 );
+
+export const LoaderIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </BaseIcon>
+);
+
+export const XCircleIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="15" y1="9" x2="9" y2="15" />
+    <line x1="9" y1="9" x2="15" y2="15" />
+  </BaseIcon>
+);
+
+export const RefreshCwIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+    <path d="M21 3v5h-5" />
+    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+    <path d="M8 16H3v5" />
+  </BaseIcon>
+);
+
+export const CpuIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+    <rect x="9" y="9" width="6" height="6" />
+    <path d="M9 1v3" />
+    <path d="M15 1v3" />
+    <path d="M9 20v3" />
+    <path d="M15 20v3" />
+    <path d="M20 9h3" />
+    <path d="M20 14h3" />
+    <path d="M1 9h3" />
+    <path d="M1 14h3" />
+  </BaseIcon>
+);
+
+export const ShieldIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </BaseIcon>
+);
+
+export const HardDriveIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <line x1="22" y1="12" x2="2" y2="12" />
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    <line x1="6" y1="16" x2="6.01" y2="16" />
+    <line x1="10" y1="16" x2="10.01" y2="16" />
+  </BaseIcon>
+);
+
+export const ZapIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </BaseIcon>
+);

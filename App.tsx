@@ -4,11 +4,14 @@ import OmniDrawer from './components/OmniDrawer';
 import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
 import IntroCarousel from './components/IntroCarousel';
+import SystemCheck from './components/SystemCheck';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
+type AppStep = 'intro' | 'system-check' | 'dashboard';
+
 function App() {
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [currentStep, setCurrentStep] = useState<AppStep>('intro');
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [drawerState, setDrawerState] = useState<OmniDrawerState>('peek');
   const [activePath, setActivePath] = useState('/');
@@ -30,8 +33,17 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  if (showOnboarding) {
-    return <IntroCarousel onFinish={() => setShowOnboarding(false)} />;
+  if (currentStep === 'intro') {
+    return <IntroCarousel onFinish={() => setCurrentStep('system-check')} />;
+  }
+
+  if (currentStep === 'system-check') {
+    return (
+      <SystemCheck 
+        onBack={() => setCurrentStep('intro')} 
+        onNext={() => setCurrentStep('dashboard')} 
+      />
+    );
   }
 
   return (
