@@ -1,16 +1,28 @@
 import { Task, LogEntry, Metric } from './types';
 
 export const MOCK_TASKS: Task[] = [
-  { id: 'MC-1024', title: 'Refactor authentication middleware', status: 'in-progress', priority: 'high', updatedAt: '10:42 AM', assignee: 'Alex' },
-  { id: 'MC-1023', title: 'Update dependencies for security patch', status: 'completed', priority: 'medium', updatedAt: '09:15 AM', assignee: 'Sarah' },
-  { id: 'MC-1022', title: 'Implement Gemini API stream handler', status: 'failed', priority: 'high', updatedAt: 'Yesterday', assignee: 'Alex' },
-  { id: 'MC-1021', title: 'Design system typography audit', status: 'pending', priority: 'low', updatedAt: 'Yesterday' },
-  { id: 'MC-1020', title: 'Optimize docker build cache', status: 'completed', priority: 'medium', updatedAt: '2 days ago' },
-  // Extended tasks for board
-  { id: 'MC-1025', title: 'Setup GitHub Actions CI pipeline', status: 'pending', priority: 'high', updatedAt: '1 hour ago' },
-  { id: 'MC-1026', title: 'Write unit tests for Utils module', status: 'in-progress', priority: 'medium', updatedAt: '30 mins ago', assignee: 'John' },
-  { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'pending', priority: 'low', updatedAt: '2 hours ago' },
-  { id: 'MC-1028', title: 'Code review for PR #42', status: 'in-progress', priority: 'high', updatedAt: 'Just now', assignee: 'Sarah' },
+  // Epic 1
+  { id: 'MC-1000', title: 'Core Architecture Overhaul', status: 'in-progress', priority: 'high', type: 'epic', updatedAt: '2 days ago', assignee: 'Alex' },
+  { id: 'MC-1001', title: 'Design System Migration', status: 'completed', priority: 'medium', type: 'story', parentId: 'MC-1000', points: 5, assignee: 'Sarah', updatedAt: '1 day ago' },
+  { id: 'MC-1021', title: 'Typography Audit', status: 'completed', priority: 'low', type: 'task', parentId: 'MC-1001', points: 2, updatedAt: '1 day ago' },
+  { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'completed', priority: 'low', type: 'bug', parentId: 'MC-1001', points: 1, updatedAt: '2 hours ago' },
+  
+  { id: 'MC-1002', title: 'Authentication Middleware', status: 'in-progress', priority: 'high', type: 'story', parentId: 'MC-1000', points: 8, assignee: 'Alex', updatedAt: '4 hours ago' },
+  { id: 'MC-1024', title: 'Refactor JWT validation', status: 'in-progress', priority: 'high', type: 'task', parentId: 'MC-1002', points: 3, assignee: 'Alex', updatedAt: '10:42 AM' },
+  { id: 'MC-1023', title: 'Security Patch Dependencies', status: 'review', priority: 'high', type: 'task', parentId: 'MC-1002', points: 2, assignee: 'Sarah', updatedAt: '09:15 AM' },
+  
+  // Epic 2
+  { id: 'MC-2000', title: 'AI Agent Integration', status: 'pending', priority: 'high', type: 'epic', updatedAt: '1 week ago' },
+  { id: 'MC-2001', title: 'Gemini API Streaming', status: 'failed', priority: 'high', type: 'story', parentId: 'MC-2000', points: 13, assignee: 'Alex', updatedAt: 'Yesterday' },
+  { id: 'MC-1022', title: 'Implement stream handler', status: 'failed', priority: 'high', type: 'task', parentId: 'MC-2001', points: 5, assignee: 'Alex', updatedAt: 'Yesterday' },
+  
+  { id: 'MC-2002', title: 'Agent Context Window', status: 'pending', priority: 'medium', type: 'story', parentId: 'MC-2000', points: 8, updatedAt: '2 days ago' },
+  { id: 'MC-1020', title: 'Optimize docker build cache', status: 'completed', priority: 'medium', type: 'task', parentId: 'MC-2002', points: 3, updatedAt: '2 days ago' },
+  
+  // Loose Tasks
+  { id: 'MC-1025', title: 'Setup GitHub Actions CI pipeline', status: 'qa', priority: 'high', type: 'story', points: 5, updatedAt: '1 hour ago' },
+  { id: 'MC-1026', title: 'Write unit tests for Utils module', status: 'in-progress', priority: 'medium', type: 'task', points: 3, assignee: 'John', updatedAt: '30 mins ago' },
+  { id: 'MC-1028', title: 'Code review for PR #42', status: 'review', priority: 'high', type: 'task', points: 1, assignee: 'Sarah', updatedAt: 'Just now' },
 ];
 
 export const MOCK_LOGS: LogEntry[] = [

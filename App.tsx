@@ -4,7 +4,7 @@ import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
 import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
-import TaskBoard from './components/TaskBoard'; // Imported TaskBoard
+import Plan from './components/Plan'; // Updated import
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
 import CliConfig from './components/CliConfig';
@@ -152,17 +152,13 @@ function App() {
         path={validationError?.path || ''}
         onBack={() => setCurrentStep('recent-projects')}
         onRemoveFromRecent={() => {
-            // Logic to actually remove would go here (passing callback down to RecentProjects via state/context)
-            // For now just navigate back
             setCurrentStep('recent-projects');
         }}
         onInitialize={() => {
-            // Jump to Create Wizard with path
             setCurrentStep('create-project-location');
         }}
         onRetry={() => setCurrentStep('validating-workspace')}
         onBrowse={() => {
-            // Simulate browsing by going back to recent (which has open existing)
             setCurrentStep('recent-projects');
         }}
         onOpenConfig={() => {
@@ -254,7 +250,8 @@ function App() {
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard />;
-    if (activePath === '/plan') return <TaskBoard />;
+    if (activePath === '/plan') return <Plan />; // Updated from TaskBoard
+    
     // Placeholder for other routes
     return (
       <div className="flex items-center justify-center h-full text-slate-500">
@@ -265,7 +262,7 @@ function App() {
 
   const getBreadcrumb = () => {
     if (activePath === '/') return 'Workspace / Dashboard';
-    if (activePath === '/plan') return 'Workspace / Plan / Board';
+    if (activePath === '/plan') return 'Workspace / Plan';
     return `Workspace ${activePath}`;
   };
 

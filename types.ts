@@ -4,6 +4,12 @@ export type OmniDrawerState = 'hidden' | 'peek' | 'maximized';
 
 export type OmniTab = 'terminal' | 'thoughts' | 'history';
 
+export type PlanViewType = 'board' | 'list' | 'graph';
+
+export type TaskType = 'epic' | 'story' | 'task' | 'bug';
+
+export type TaskStatus = 'pending' | 'in-progress' | 'review' | 'qa' | 'completed' | 'failed';
+
 export interface NavItem {
   id: string;
   label: string;
@@ -14,10 +20,13 @@ export interface NavItem {
 export interface Task {
   id: string;
   title: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'failed';
+  status: TaskStatus;
   priority: 'low' | 'medium' | 'high';
+  type: TaskType;
+  points?: number;
   assignee?: string;
   updatedAt: string;
+  parentId?: string;
 }
 
 export interface LogEntry {

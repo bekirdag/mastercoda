@@ -332,3 +332,44 @@ export const ArrowUpIcon: React.FC<IconProps> = (props) => (
     <polyline points="5 12 12 5 19 12" />
   </BaseIcon>
 );
+
+export const CrownIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+  </BaseIcon>
+);
+
+export const BookmarkIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+  </BaseIcon>
+);
+
+export const TrashIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </BaseIcon>
+);
+
+export const CornerDownRightIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <polyline points="15 10 20 15 15 20" />
+    <path d="M4 4v7a4 4 0 0 0 4 4h12" />
+  </BaseIcon>
+);
+
+export const Edit2Icon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+  </BaseIcon>
+);
+
+export const GridIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <rect x="3" y="3" width="7" height="7" />
+    <rect x="14" y="3" width="7" height="7" />
+    <rect x="14" y="14" width="7" height="7" />
+    <rect x="3" y="14" width="7" height="7" />
+  </BaseIcon>
+);
