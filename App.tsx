@@ -29,6 +29,7 @@ import CreateTaskModal from './components/CreateTaskModal';
 import TaskDetailView from './components/TaskDetailView';
 import ProjectSettings from './components/ProjectSettings';
 import Documentation from './components/Documentation';
+import DocsHub from './components/DocsHub'; // Added for DO-01
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
@@ -188,7 +189,6 @@ function App() {
   if (currentStep === 'database-migration') { return <DatabaseMigration onComplete={() => setCurrentStep('dashboard')} onCancel={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
-  // Fix: changed setCurrentCheckItem to setCurrentStep
   if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
   if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
   if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
@@ -209,19 +209,19 @@ function App() {
     if (activePath === '/inbox') return <Inbox />;
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/quality') return <QualityHub />;
-    if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />; // EX-15
-    if (activePath === '/extensions/firewall') return <NetworkFirewall />; // EX-14
+    if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
+    if (activePath === '/extensions/firewall') return <NetworkFirewall />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
-    if (activePath === '/extensions/references') return <ReferenceLibrary />; // EX-12
-    if (activePath === '/extensions/models') return <ModelRegistry />; // EX-10
-    if (activePath === '/extensions/accounts') return <ServiceAccounts />; // EX-11
-    if (activePath === '/extensions/snippets') return <SnippetStudio />; // EX-08
-    if (activePath === '/extensions/keymaps') return <KeymapManager />; // EX-09
-    if (activePath === '/extensions/stacks') return <ExtensionStacks />; // EX-06
-    if (activePath === '/extensions/themes') return <ThemeStudio />; // EX-07
-    if (activePath === '/extensions/installed') return <ExtensionManager />; // EX-05
-    if (activePath === '/extensions/builder') return <ExtensionBuilder />; // EX-04
+    if (activePath === '/extensions/references') return <ReferenceLibrary />;
+    if (activePath === '/extensions/models') return <ModelRegistry />;
+    if (activePath === '/extensions/accounts') return <ServiceAccounts />;
+    if (activePath === '/extensions/snippets') return <SnippetStudio />;
+    if (activePath === '/extensions/keymaps') return <KeymapManager />;
+    if (activePath === '/extensions/stacks') return <ExtensionStacks />;
+    if (activePath === '/extensions/themes') return <ThemeStudio />;
+    if (activePath === '/extensions/installed') return <ExtensionManager />;
+    if (activePath === '/extensions/builder') return <ExtensionBuilder />;
     if (activePath.startsWith('/extensions/settings/')) {
         const extId = activePath.split('/').pop();
         return <ExtensionSettings extensionId={extId || ''} onBack={() => setActivePath('/extensions/installed')} />;
@@ -231,7 +231,8 @@ function App() {
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
     if (activePath === '/agents') return <Agents />;
-    if (activePath === '/docs') return <Documentation />;
+    if (activePath === '/docs') return <DocsHub />; // Changed to DocsHub for DO-01 entry
+    if (activePath === '/docs/view') return <Documentation />; // Legacy or detailed view
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
     if (activePath === '/settings') return <ProjectSettings />;
     
@@ -266,13 +267,13 @@ function App() {
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Workspace / Code Review';
     if (activePath === '/agents') return 'Workspace / Agents';
-    if (activePath === '/docs') return 'Workspace / Documentation';
+    if (activePath === '/docs') return 'Workspace / Documentation Hub';
     if (activePath === '/source') return 'Workspace / Source Control';
     if (activePath === '/settings') return 'Workspace / Settings';
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator'];
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (

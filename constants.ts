@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -469,7 +469,9 @@ sequenceDiagram
     tags: ['auth', 'backend', 'security'],
     linkedTasks: ['MC-1002', 'MC-1024'],
     syncStatus: 'synced',
-    lastIndexed: '2m ago'
+    lastIndexed: '2m ago',
+    isPinned: true,
+    lastViewedAt: '5m ago'
   },
   {
     id: 'p-design-system',
@@ -492,7 +494,8 @@ We are currently moving all components to the new Tailwind-based system.
     tags: ['ui', 'design', 'frontend'],
     linkedTasks: ['MC-1001'],
     syncStatus: 'synced',
-    lastIndexed: '1h ago'
+    lastIndexed: '1h ago',
+    isDraft: true
   },
   {
     id: 'p-agent-config',
@@ -517,7 +520,8 @@ Master Coda is an orchestrator for software engineering.
     tags: ['ai', 'config', 'architecture'],
     linkedTasks: ['MC-2000'],
     syncStatus: 'pending',
-    lastIndexed: 'Yesterday'
+    lastIndexed: 'Yesterday',
+    isPinned: true
   },
   {
     id: 'p-api-v1',
@@ -542,8 +546,18 @@ Stream agent reasoning.
     tags: ['api', 'reference'],
     linkedTasks: [],
     syncStatus: 'synced',
-    lastIndexed: '4h ago'
+    lastIndexed: '4h ago',
+    lastViewedAt: '2h ago'
   }
+];
+
+export const MOCK_DOC_SOURCES: DocSource[] = [
+  { id: 'src-backend', name: 'Core Backend', description: 'Internal specs and service map for the main orchestrator.', type: 'project', icon: '⚙️', pageCount: 24, lastUpdated: '2h ago' },
+  { id: 'src-mobile', name: 'Mobile App', description: 'React Native architecture and deployment guides.', type: 'project', icon: '📱', pageCount: 12, lastUpdated: '1d ago' },
+  { id: 'src-standards', name: 'Engineering Standards', description: 'Team coding conventions and PR requirements.', type: 'team', icon: '📜', pageCount: 8, lastUpdated: '3d ago' },
+  { id: 'src-stripe', name: 'Stripe API Docs', description: 'External payment processing reference.', type: 'external', icon: '💳', pageCount: 142, lastUpdated: '1w ago' },
+  { id: 'src-aws', name: 'AWS Infrastructure', description: 'Terraform and environment deployment documentation.', type: 'external', icon: '☁️', pageCount: 56, lastUpdated: '2d ago' },
+  { id: 'src-onboarding', name: 'Onboarding Wiki', description: 'Everything a new hire needs to know.', type: 'team', icon: '🚀', pageCount: 15, lastUpdated: 'Yesterday' }
 ];
 
 export const MOCK_AGENTS: AgentPersona[] = [

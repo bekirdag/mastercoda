@@ -121,12 +121,25 @@ export interface DocPage {
   syncStatus: 'synced' | 'pending' | 'error';
   lastIndexed: string;
   folderId?: string;
+  isPinned?: boolean;
+  isDraft?: boolean;
+  lastViewedAt?: string;
 }
 
 export interface DocFolder {
   id: string;
   name: string;
   parentId?: string;
+}
+
+export interface DocSource {
+  id: string;
+  name: string;
+  description: string;
+  type: 'project' | 'team' | 'external';
+  icon: string | React.ReactNode;
+  pageCount: number;
+  lastUpdated: string;
 }
 
 // Agent Management Types

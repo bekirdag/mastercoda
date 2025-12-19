@@ -21,7 +21,9 @@ import {
   ZapIcon,
   LockIcon,
   ActivityIcon,
-  HelpCircleIcon
+  HelpCircleIcon,
+  // Fix: Added missing StarIcon import
+  StarIcon
 } from './Icons';
 
 const ModelRegistry: React.FC = () => {
