@@ -199,3 +199,18 @@ export const KeyIcon: React.FC<IconProps> = (props) => (
     <path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4" />
   </BaseIcon>
 );
+
+export const CloudIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M17.5 19c0-1.7-1.3-3-3-3h-1.1c-.1-2.9-2.4-5.2-5.3-5.3-2.7 0-5 2-5.4 4.7-.2 0-.4 0-.6 0-2.8 0-5 2.2-5 5s2.2 5 5 5h10.5c3 0 5.5-2.5 5.5-5.5 0-2.6-1.8-4.8-4.3-5.3" />
+  </BaseIcon>
+);
+
+export const ServerIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+    <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+    <line x1="6" y1="6" x2="6.01" y2="6" />
+    <line x1="6" y1="18" x2="6.01" y2="18" />
+  </BaseIcon>
+);
