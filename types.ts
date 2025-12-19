@@ -78,3 +78,33 @@ export interface FileChange {
   selected: boolean;
   viewed: boolean;
 }
+
+// Version Control Types
+export interface GitCommit {
+  id: string; // short hash
+  message: string;
+  author: string;
+  date: string; // relative string
+  branch: string; // main, feature/x
+  parents: string[];
+  isHead?: boolean;
+  status?: 'pushed' | 'unpushed';
+  column?: number; // Visual column index for graph
+  color?: string; // Visual color for graph line
+}
+
+export interface GitRef {
+  id: string;
+  name: string;
+  type: 'local' | 'remote' | 'tag';
+  active?: boolean;
+  commitId?: string;
+}
+
+// Conflict Resolution Types
+export interface ConflictedFile {
+  id: string;
+  path: string;
+  status: 'unresolved' | 'resolved';
+  content: string; // The raw content with conflict markers
+}

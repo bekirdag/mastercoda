@@ -1,4 +1,4 @@
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -298,5 +298,81 @@ export default OldButton;`,
     "lucide-react": "^0.263.1"
   }
 }`
+  }
+];
+
+export const MOCK_COMMITS: GitCommit[] = [
+  { id: 'c9f1a2', message: 'feat: add oauth provider for google login', author: 'Alex', date: '2h ago', branch: 'feature/login-auth', parents: ['b4d3e1'], isHead: true, status: 'unpushed', column: 1, color: '#10b981' },
+  { id: 'b4d3e1', message: 'fix: resolve race condition in token refresh', author: 'Alex', date: '5h ago', branch: 'feature/login-auth', parents: ['a1b2c3'], column: 1, color: '#10b981' },
+  { id: 'd8e7f6', message: 'style: update sidebar navigation colors', author: 'Sarah', date: '1d ago', branch: 'main', parents: ['a1b2c3'], column: 0, color: '#6366f1' },
+  { id: 'a1b2c3', message: 'Merge pull request #42 from feature/dashboard', author: 'Alex', date: '2d ago', branch: 'main', parents: ['f5g6h7', 'i8j9k0'], column: 0, color: '#6366f1' },
+  { id: 'f5g6h7', message: 'feat: initial dashboard layout', author: 'Alex', date: '3d ago', branch: 'main', parents: ['e1r2t3'], column: 0, color: '#6366f1' },
+  { id: 'i8j9k0', message: 'chore: update dependencies', author: 'Bot', date: '3d ago', branch: 'feature/deps', parents: ['e1r2t3'], column: 2, color: '#f59e0b' },
+  { id: 'e1r2t3', message: 'init: project scaffold', author: 'Alex', date: '1w ago', branch: 'main', parents: [], column: 0, color: '#6366f1' },
+];
+
+export const MOCK_BRANCHES: GitRef[] = [
+  { id: 'b1', name: 'feature/login-auth', type: 'local', active: true, commitId: 'c9f1a2' },
+  { id: 'b2', name: 'main', type: 'local', active: false, commitId: 'd8e7f6' },
+  { id: 'b3', name: 'hotfix/ui-glitch', type: 'local', active: false, commitId: 'a1b2c3' },
+  { id: 'r1', name: 'origin/main', type: 'remote', active: false, commitId: 'd8e7f6' },
+  { id: 'r2', name: 'origin/feature/login-auth', type: 'remote', active: false, commitId: 'b4d3e1' },
+  { id: 't1', name: 'v1.0.0', type: 'tag', active: false, commitId: 'a1b2c3' },
+];
+
+export const MOCK_CONFLICTS: ConflictedFile[] = [
+  {
+    id: 'cf1',
+    path: 'src/utils/api.ts',
+    status: 'unresolved',
+    content: `import { getToken } from './auth';
+
+export const API_BASE = 'https://api.mastercoda.io/v1';
+
+<<<<<<< HEAD
+export const fetchUser = async (id: string) => {
+  const token = await getToken();
+  return fetch(\`\${API_BASE}/users/\${id}\`, {
+    headers: { Authorization: \`Bearer \${token}\` }
+  });
+};
+=======
+export const fetchUser = async (userId: string) => {
+  // New retry logic
+  return fetchWithRetry(\`\${API_BASE}/users/\${userId}\`);
+};
+>>>>>>> feature/retry-logic
+
+export const updateUser = async (data: any) => {
+  return fetch(\`\${API_BASE}/user\`, { method: 'POST', body: JSON.stringify(data) });
+};
+`
+  },
+  {
+    id: 'cf2',
+    path: 'package.json',
+    status: 'unresolved',
+    content: `{
+  "name": "master-coda",
+  "version": "0.1.0",
+  "dependencies": {
+    "react": "^18.2.0",
+<<<<<<< HEAD
+    "lucide-react": "^0.263.1",
+    "date-fns": "^2.30.0"
+=======
+    "lucide-react": "^0.300.0",
+    "lodash": "^4.17.21"
+>>>>>>> feature/update-deps
+  }
+}`
+  },
+  {
+    id: 'cf3',
+    path: 'src/components/Button.tsx',
+    status: 'resolved',
+    content: `import React from 'react';
+// Conflict resolved content placeholder
+export const Button = () => <button>Click me</button>;`
   }
 ];

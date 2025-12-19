@@ -156,6 +156,13 @@ export const RefreshCwIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
+export const RotateCwIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+    <path d="M21 3v5h-5" />
+  </BaseIcon>
+);
+
 export const CpuIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
@@ -301,6 +308,14 @@ export const MoreHorizontalIcon: React.FC<IconProps> = (props) => (
     <circle cx="5" cy="12" r="1" />
   </BaseIcon>
 );
+
+export const MoreVerticalIcon: React.FC<IconProps> = (props) => (
+    <BaseIcon {...props}>
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="12" cy="5" r="1" />
+      <circle cx="12" cy="19" r="1" />
+    </BaseIcon>
+  );
 
 export const FilterIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
@@ -496,5 +511,38 @@ export const DiffIcon: React.FC<IconProps> = (props) => (
     <path d="M10 10h4" />
     <path d="M10 14h4" />
     <path d="M12 12v4" />
+  </BaseIcon>
+);
+
+export const CloudDownloadIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </BaseIcon>
+);
+
+export const CloudUploadIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" y1="3" x2="12" y2="15" />
+  </BaseIcon>
+);
+
+export const GitMergeIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="18" cy="18" r="3" />
+    <circle cx="6" cy="6" r="3" />
+    <path d="M6 21V9a9 9 0 0 0 9 9" />
+  </BaseIcon>
+);
+
+export const GitPullRequestIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="18" cy="18" r="3" />
+    <circle cx="6" cy="6" r="3" />
+    <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+    <line x1="6" y1="9" x2="6" y2="21" />
   </BaseIcon>
 );
