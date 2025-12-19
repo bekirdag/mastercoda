@@ -13,6 +13,39 @@ export type TaskStatus = 'pending' | 'in-progress' | 'review' | 'qa' | 'complete
 
 export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 
+export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
+export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
+
+// RAG Manager Types (AG-08)
+export type RagSourceType = 'git' | 'pdf' | 'wiki' | 'web' | 'api';
+export type RagSyncStatus = 'synced' | 'indexing' | 'stale' | 'error';
+
+export interface RagCollection {
+  id: string;
+  name: string;
+  type: RagSourceType;
+  status: RagSyncStatus;
+  vectorCount: number;
+  lastIndexed: string;
+  description: string;
+}
+
+export interface RagChunk {
+  id: string;
+  source: string;
+  text: string;
+  score: number;
+  index: number;
+}
+
+export interface ClusterPoint {
+  x: number;
+  y: number;
+  id: string;
+  group: string;
+  label: string;
+}
+
 export interface NavItem {
   id: string;
   label: string;
@@ -78,6 +111,23 @@ export interface FileChange {
   contentModified: string;
   selected: boolean;
   viewed: boolean;
+}
+
+export interface Mission {
+  id: string;
+  title: string;
+  agentId: string;
+  agentName: string;
+  status: MissionStatus;
+  priority: MissionPriority;
+  progress: number;
+  trigger: string;
+  timestamp: string;
+  duration?: string;
+  cost?: number;
+  blockerReason?: string;
+  prompt?: string;
+  artifacts?: { name: string; path: string }[];
 }
 
 // Version Control Types

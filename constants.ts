@@ -1,5 +1,6 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +9,29 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_RAG_COLLECTIONS: RagCollection[] = [
+  { id: 'rag-1', name: 'Master Coda Core', type: 'git', status: 'synced', vectorCount: 842000, lastIndexed: '2 mins ago', description: 'Auto-synced repository chunks covering src/ and docs/.' },
+  { id: 'rag-2', name: 'Identity Service Specs', type: 'pdf', status: 'stale', vectorCount: 12000, lastIndexed: '3 days ago', description: 'Internal security and authentication PDF documentation.' },
+  { id: 'rag-3', name: 'HR Policy Base', type: 'pdf', status: 'synced', vectorCount: 45000, lastIndexed: '1 week ago', description: 'Company internal benefits and guidelines.' },
+  { id: 'rag-4', name: 'External SDK Crawler', type: 'web', status: 'indexing', vectorCount: 156000, lastIndexed: 'Running...', description: 'Scraped API documentation for major cloud providers.' }
+];
+
+export const MOCK_RAG_CHUNKS: RagChunk[] = [
+  { id: 'ch-1', source: 'auth_middleware.ts', text: 'export const verifySession = async (token: string) => { const session = await db.sessions.findFirst({ where: { token } }); return session; };', score: 0.94, index: 124 },
+  { id: 'ch-2', source: 'security_audit_v2.pdf', text: 'All internal microservices must implement JWT rotation every 24 hours to mitigate session hijacking risks.', score: 0.88, index: 42 },
+  { id: 'ch-3', source: 'App.tsx', text: 'const App = () => { return <div className="dark"> <Sidebar /> <Main /> </div>; };', score: 0.72, index: 15 }
+];
+
+export const MOCK_CLUSTER_DATA: ClusterPoint[] = [
+  { x: 10, y: 20, id: '1', group: 'Auth', label: 'Login Flow' },
+  { x: 12, y: 22, id: '2', group: 'Auth', label: 'JWT Logic' },
+  { x: 11, y: 18, id: '3', group: 'Auth', label: 'OAuth2' },
+  { x: 45, y: 80, id: '4', group: 'UI', label: 'Sidebar' },
+  { x: 48, y: 78, id: '5', group: 'UI', label: 'Theme Provider' },
+  { x: 80, y: 10, id: '6', group: 'API', label: 'User Controller' },
+  { x: 85, y: 12, id: '7', group: 'API', label: 'Task Endpoints' }
+];
 
 export const MOCK_GUARDRAIL_RULES: GuardrailRule[] = [
   { id: 'dlp-1', category: 'dlp', label: 'PII Redaction', description: 'Automatically redact Credit Card, SSN, and Emails from logs.', enabled: true, severity: 'high' },
@@ -2108,5 +2132,75 @@ export const MOCK_DOCSETS: DocSet[] = [
     status: 'not_downloaded',
     versions: ['v3', 'v2'],
     chapters: []
+  }
+];
+
+export const MOCK_MISSIONS: Mission[] = [
+  {
+    id: 'M-742',
+    title: 'Refactor Auth Middleware',
+    agentId: 'ag-coder',
+    agentName: 'Logic Synth',
+    status: 'in-progress',
+    priority: 'high',
+    progress: 45,
+    trigger: 'Manual (Alex)',
+    timestamp: '10 mins ago',
+    prompt: 'Refactor the existing JWT middleware to use the new RS256 rotation logic from the identity service.',
+    cost: 0.12,
+    artifacts: [{ name: 'middleware.ts', path: 'src/auth/middleware.ts' }]
+  },
+  {
+    id: 'M-743',
+    title: 'Generate API Documentation',
+    agentId: 'ag-throttled',
+    agentName: 'Sync Bot',
+    status: 'queued',
+    priority: 'medium',
+    progress: 0,
+    trigger: 'CI/CD Hook',
+    timestamp: '2 mins ago',
+    prompt: 'Scan all controller files and update the OpenAPI spec.'
+  },
+  {
+    id: 'M-740',
+    title: 'Deploy to Production',
+    agentId: 'ag-primary',
+    agentName: 'Architect Prime',
+    status: 'blocked',
+    priority: 'urgent',
+    progress: 80,
+    trigger: 'Manual (Alex)',
+    timestamp: '1h ago',
+    blockerReason: 'Human Approval Required (AG-06 Guardrail: Sensitive Deployment)',
+    prompt: 'Execute terraform apply for the production cluster.',
+    cost: 0.05
+  },
+  {
+    id: 'M-739',
+    title: 'E2E Test Run #402',
+    agentId: 'ag-qa',
+    agentName: 'Grace',
+    status: 'completed',
+    priority: 'low',
+    progress: 100,
+    trigger: 'Schedule',
+    timestamp: '3h ago',
+    duration: '4m 12s',
+    cost: 0.02,
+    artifacts: [{ name: 'test_report.html', path: 'reports/e2e/402.html' }]
+  },
+  {
+    id: 'M-738',
+    title: 'Security Audit',
+    agentId: 'ag-audit',
+    agentName: 'Audit Zero',
+    status: 'failed',
+    priority: 'high',
+    progress: 30,
+    trigger: 'Manual (Sarah)',
+    timestamp: '5h ago',
+    blockerReason: 'Context Overflow (128k limit exceeded)',
+    cost: 0.45
   }
 ];
