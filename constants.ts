@@ -1,4 +1,4 @@
-import { Task, LogEntry, Metric } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -115,14 +115,6 @@ export const MOCK_TASKS: Task[] = [
   { id: 'MC-1028', title: 'Code review for PR #42', status: 'review', priority: 'high', type: 'task', points: 1, assignee: 'Sarah', updatedAt: 'Just now', dependencies: ['MC-1026'] },
 ];
 
-export const MOCK_LOGS: LogEntry[] = [
-  { id: '1', timestamp: '10:42:01', level: 'info', source: 'system', message: 'Starting development server on port 3000...' },
-  { id: '2', timestamp: '10:42:05', level: 'success', source: 'build', message: 'Compiled successfully in 1240ms' },
-  { id: '3', timestamp: '10:45:12', level: 'warn', source: 'lint', message: 'Warning: unused variable "response" in api/gemini.ts:45' },
-  { id: '4', timestamp: '10:46:00', level: 'info', source: 'agent', message: 'Analyzing code changes for PR #124...' },
-  { id: '5', timestamp: '10:46:05', level: 'info', source: 'agent', message: 'Generating summary...' },
-];
-
 export const MOCK_METRICS: Metric[] = [
   { label: 'Build Time', value: '1.2s', change: '-200ms', trend: 'up', color: 'emerald' },
   { label: 'Test Coverage', value: '84.3%', change: '+1.2%', trend: 'up', color: 'indigo' },
@@ -130,13 +122,63 @@ export const MOCK_METRICS: Metric[] = [
   { label: 'API Latency', value: '45ms', change: 'stable', trend: 'neutral', color: 'blue' },
 ];
 
-export const AGENT_THOUGHTS = `
-> Analyzing project structure...
-> Detected TypeScript/React environment.
-> Reading 'App.tsx'...
-> Identifying missing specialized components for 'OmniDrawer'.
-> Suggesting implementation of resize handles for better UX.
-> Checking tailwind config...
-> Colors look correct: Slate-900 base, Indigo-500 primary.
-> Ready for user input.
-`.trim();
+export const MOCK_AGENT_LOGS: AgentLogEntry[] = [
+  { 
+    id: '1', 
+    type: 'info', 
+    message: 'Agent initialized with context: Master Coda v1', 
+    timestamp: '10:42:01' 
+  },
+  { 
+    id: '2', 
+    type: 'thought', 
+    message: 'Analyzing project structure...', 
+    timestamp: '10:42:02', 
+    details: 'Scanning src/components...\nIdentified 14 React components.\nChecking dependencies in package.json...',
+    collapsed: false 
+  },
+  { 
+    id: '3', 
+    type: 'command', 
+    message: 'Exec: npm run lint', 
+    timestamp: '10:42:05' 
+  },
+  { 
+    id: '4', 
+    type: 'error', 
+    message: 'Linting failed: src/App.tsx (2 errors)', 
+    timestamp: '10:42:06',
+    details: 'src/App.tsx:45:12 - Unused variable "x"\nsrc/App.tsx:50:5 - Missing semicolon'
+  },
+  {
+    id: '5',
+    type: 'thought',
+    message: 'Attempting to fix lint errors automatically.',
+    timestamp: '10:42:07',
+    details: 'Strategy: Use eslint --fix',
+    collapsed: true
+  },
+  {
+    id: '6',
+    type: 'command',
+    message: 'Exec: npm run lint -- --fix',
+    timestamp: '10:42:08'
+  },
+  {
+    id: '7',
+    type: 'success',
+    message: 'Linting passed.',
+    timestamp: '10:42:10'
+  }
+];
+
+export const MOCK_SERVER_LOGS = [
+  "[10:41:55] [webpack] Asset main.js 4.2MiB [emitted] (name: main)",
+  "[10:41:55] [webpack] Asset index.html 1.4KiB [emitted]",
+  "[10:41:55] [webpack] compiled successfully in 1240 ms",
+  "[10:42:00] [API] GET /api/v1/user 200 45ms",
+  "[10:42:01] [API] POST /api/v1/tasks 201 120ms",
+  "[10:42:05] [Watcher] src/App.tsx changed. Rebuilding...",
+  "[10:42:06] [webpack] Asset main.js 4.2MiB [emitted] (name: main)",
+  "[10:42:06] [webpack] compiled with 1 warning",
+];

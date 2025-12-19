@@ -1,8 +1,8 @@
 import React from 'react';
 
-export type OmniDrawerState = 'hidden' | 'peek' | 'maximized';
+export type OmniDrawerState = 'hidden' | 'collapsed' | 'open' | 'maximized';
 
-export type OmniTab = 'terminal' | 'thoughts' | 'history';
+export type OmniTab = 'terminal' | 'agent' | 'server';
 
 export type PlanViewType = 'board' | 'list' | 'graph' | 'roadmap';
 
@@ -54,4 +54,13 @@ export interface Metric {
   change?: string;
   trend?: 'up' | 'down' | 'neutral';
   color?: string;
+}
+
+export interface AgentLogEntry {
+  id: string;
+  type: 'thought' | 'command' | 'error' | 'info' | 'success';
+  message: string;
+  timestamp: string;
+  details?: string; // For collapsible content like thoughts or diffs
+  collapsed?: boolean;
 }

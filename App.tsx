@@ -30,7 +30,7 @@ type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'con
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
-  const [drawerState, setDrawerState] = useState<OmniDrawerState>('peek');
+  const [drawerState, setDrawerState] = useState<OmniDrawerState>('open');
   const [activePath, setActivePath] = useState('/');
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
@@ -60,10 +60,10 @@ function App() {
         e.preventDefault();
         setIsCmdKOpen(prev => !prev);
       }
-      // Cmd+J: Toggle Terminal
+      // Cmd+J: Toggle Terminal (Standard -> Collapsed -> Standard)
       if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
         e.preventDefault();
-        setDrawerState(prev => prev === 'hidden' ? 'peek' : 'hidden');
+        setDrawerState(prev => prev === 'open' ? 'collapsed' : 'open');
       }
       // Cmd+N: New Task (Global)
       if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
@@ -155,11 +155,11 @@ function App() {
   if (currentStep === 'workspace-ready') { return <WorkspaceReady workspacePath={newProjectData.path} onNext={() => setCurrentStep('dashboard')} />; }
 
   // Calculate padding based on drawer state
-  const contentPaddingClass = drawerState === 'peek' 
-    ? 'pb-[340px]' 
-    : drawerState === 'maximized' 
-      ? 'pb-0' 
-      : 'pb-8';
+  const contentPaddingClass = 
+    drawerState === 'open' ? 'pb-[300px]' : 
+    drawerState === 'collapsed' ? 'pb-[32px]' : 
+    drawerState === 'maximized' ? 'pb-0' : 
+    'pb-0'; // hidden
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
@@ -185,7 +185,6 @@ function App() {
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
       {/* Sidebar - Hide in Execution Mode if desired, but specification says Shell Context: Focus Shell. We'll keep it simple for now or collapse it. */}
-      {/* For WS-06 Focus Mode, we might want to collapse sidebar automatically. Let's do that via effect if activePath is /exec */}
       <Sidebar 
         isExpanded={activePath !== '/exec' && isSidebarExpanded} 
         setIsExpanded={setIsSidebarExpanded}
@@ -232,7 +231,6 @@ function App() {
         </div>
 
         {/* Omni Drawer - Bottom Layer */}
-        {/* We might hide drawer or change its mode in execution view, but requirement says it's persistent. */}
         <OmniDrawer state={drawerState} onStateChange={setDrawerState} />
 
       </main>
