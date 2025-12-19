@@ -19,6 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'orchestrator', label: 'Orchestrator', icon: <div className="relative"><ActivityIcon size={20} className="text-indigo-400" /><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full" /></div>, path: '/extensions/orchestrator' }, // EX-15
+    { id: 'guardrails', label: 'Safety Hub', icon: <ShieldIcon size={20} className="text-red-400" />, path: '/agents/governance' }, // AG-06
     { id: 'gym', label: 'The Gymnasium', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/evals' }, // AG-04
     { id: 'squads', label: 'Squads', icon: <div className="relative"><CrownIcon size={20} className="text-indigo-300" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/squads' }, // AG-05
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },

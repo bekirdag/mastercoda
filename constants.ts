@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,60 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_GUARDRAIL_RULES: GuardrailRule[] = [
+  { id: 'dlp-1', category: 'dlp', label: 'PII Redaction', description: 'Automatically redact Credit Card, SSN, and Emails from logs.', enabled: true, severity: 'high' },
+  { id: 'safety-1', category: 'safety', label: 'Dangerous Command Block', description: 'Prevent rm -rf, drop table, and disk formatting commands.', enabled: true, severity: 'high' },
+  { id: 'safety-2', category: 'safety', label: 'Sandbox Enforcement', description: 'Force all code execution to run in isolated Docker containers.', enabled: false, severity: 'medium' },
+  { id: 'cost-1', category: 'cost', label: 'Deletion Limit', description: 'Require approval if an agent attempts to delete > 5 files.', enabled: true, severity: 'medium' },
+  { id: 'cost-2', category: 'cost', label: 'Wallet Guard', description: 'Require approval if estimated task cost exceeds $5.00.', enabled: true, severity: 'low' },
+  { id: 'ethics-1', category: 'ethics', label: 'License Compliance', description: 'Scan generated code for GPL-compatible headers.', enabled: true, severity: 'low' }
+];
+
+export const MOCK_INTERVENTIONS: InterventionLogEntry[] = [
+  { 
+    id: 'int-1', 
+    timestamp: '14:02:11', 
+    agentId: 'ag-coder', 
+    agentName: 'Logic Synth', 
+    action: 'Shell Execute: rm -rf ./src', 
+    policyId: 'safety-1', 
+    policyName: 'Dangerous Command Block', 
+    outcome: 'blocked',
+    context: 'Thinking: Cleanup task requested. I will delete the src folder to start fresh.'
+  },
+  { 
+    id: 'int-2', 
+    timestamp: '13:45:00', 
+    agentId: 'ag-primary', 
+    agentName: 'Architect Prime', 
+    action: 'Log Output: "User key: sk-proj-12345..."', 
+    policyId: 'dlp-1', 
+    policyName: 'PII Redaction', 
+    outcome: 'redacted',
+    context: 'Summarizing env variables for the debugging session.'
+  },
+  { 
+    id: 'int-3', 
+    timestamp: '11:20:05', 
+    agentId: 'ag-coder', 
+    agentName: 'Logic Synth', 
+    action: 'Delete Files: 12 items in /docs', 
+    policyId: 'cost-1', 
+    policyName: 'Deletion Limit', 
+    outcome: 'pending_approval' 
+  },
+  { 
+    id: 'int-4', 
+    timestamp: '09:12:30', 
+    agentId: 'ag-audit', 
+    agentName: 'Audit Zero', 
+    action: 'Shell Execute: format C:', 
+    policyId: 'safety-1', 
+    policyName: 'Dangerous Command Block', 
+    outcome: 'blocked' 
+  }
+];
 
 export const MOCK_SQUADS: Squad[] = [
   {

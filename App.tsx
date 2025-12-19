@@ -44,6 +44,7 @@ import AgentProfile from './components/AgentProfile'; // AG-02
 import AgentStudio from './components/AgentStudio'; // AG-03
 import AgentGym from './components/AgentGym'; // AG-04
 import SquadComposer from './components/SquadComposer'; // AG-05
+import AgentGuardrails from './components/AgentGuardrails'; // AG-06
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -203,8 +204,8 @@ function App() {
   if (currentStep === 'database-migration') { return <DatabaseMigration onComplete={() => setCurrentStep('dashboard')} onCancel={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
-  if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
-  if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
+  if (currentStep === 'create-project-details') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('create-project-location')} onNext={(details: any) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
+  if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults: any) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
   if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
   if (currentStep === 'workspace-ready') { return <WorkspaceReady workspacePath={newProjectData.path} onNext={() => setCurrentStep('dashboard')} />; }
 
@@ -224,6 +225,7 @@ function App() {
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
+    if (activePath === '/agents/governance') return <AgentGuardrails />; // AG-06
     if (activePath === '/agents/evals') return <AgentGym />; // AG-04
     if (activePath === '/agents/squads') return <SquadComposer />; // AG-05
     if (activePath === '/extensions/firewall') return <NetworkFirewall />;
@@ -284,6 +286,7 @@ function App() {
     if (activePath === '/inbox') return 'Workspace / Inbox';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
+    if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/evals') return 'Workspace / Gymnasium';
     if (activePath === '/agents/squads') return 'Workspace / Squad Composer';
     if (activePath === '/quality') return 'Workspace / Quality Hub';

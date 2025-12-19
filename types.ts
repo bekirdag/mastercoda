@@ -466,6 +466,28 @@ export interface Squad {
   };
 }
 
+// AG-06 Guardrail Types
+export interface InterventionLogEntry {
+  id: string;
+  timestamp: string;
+  agentId: string;
+  agentName: string;
+  action: string;
+  policyId: string;
+  policyName: string;
+  outcome: 'blocked' | 'redacted' | 'pending_approval';
+  context?: string; // The prompt/thought that triggered it
+}
+
+export interface GuardrailRule {
+  id: string;
+  category: 'dlp' | 'safety' | 'cost' | 'ethics';
+  label: string;
+  description: string;
+  enabled: boolean;
+  severity: 'low' | 'medium' | 'high';
+}
+
 // Orchestrator Types (EX-15)
 export type OrchNodeType = 'trigger' | 'router' | 'agent' | 'fallback';
 
