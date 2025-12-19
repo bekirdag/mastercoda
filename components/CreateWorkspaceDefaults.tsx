@@ -8,13 +8,12 @@ import {
   ActivityIcon,
   ChevronDownIcon,
   CloudIcon,
-  ServerIcon,
-  LoaderIcon
+  ServerIcon
 } from './Icons';
 
 interface CreateWorkspaceDefaultsProps {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (data: { agentId: string; qaProfile: string }) => void;
   projectSummary: {
     name?: string;
     path?: string;
@@ -40,15 +39,11 @@ const AGENTS: Agent[] = [
 const CreateWorkspaceDefaults: React.FC<CreateWorkspaceDefaultsProps> = ({ onBack, onNext, projectSummary }) => {
   const [selectedAgentId, setSelectedAgentId] = useState<string>('openai-gpt4o');
   const [qaProfile, setQaProfile] = useState<'unit' | 'integration' | 'manual'>('unit');
-  const [isInitializing, setIsInitializing] = useState(false);
 
   const selectedAgent = AGENTS.find(a => a.id === selectedAgentId);
 
-  const handleInitialize = async () => {
-    setIsInitializing(true);
-    // Simulate initialization delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    onNext();
+  const handleInitialize = () => {
+    onNext({ agentId: selectedAgentId, qaProfile });
   };
 
   return (
@@ -179,21 +174,15 @@ const CreateWorkspaceDefaults: React.FC<CreateWorkspaceDefaultsProps> = ({ onBac
 
         {/* Footer */}
         <div className="p-6 bg-slate-800/80 border-t border-slate-700 flex items-center justify-between mt-auto shrink-0">
-          <Button variant="ghost" onClick={onBack} disabled={isInitializing}>
+          <Button variant="ghost" onClick={onBack}>
             Back
           </Button>
           <Button 
             variant="primary" 
             onClick={handleInitialize}
-            disabled={isInitializing}
             className="min-w-[140px]"
           >
-            {isInitializing ? (
-                <span className="flex items-center">
-                    <LoaderIcon className="animate-spin mr-2" size={16} />
-                    Initializing...
-                </span>
-            ) : "Initialize Project"}
+            Initialize Project
           </Button>
         </div>
       </div>

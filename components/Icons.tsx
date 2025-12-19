@@ -40,7 +40,7 @@ export const LayoutGridIcon: React.FC<IconProps> = (props) => (
 
 export const SparklesIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
-    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L12 3Z" />
   </BaseIcon>
 );
 
@@ -261,5 +261,12 @@ export const ClockIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <circle cx="12" cy="12" r="10" />
     <polyline points="12 6 12 12 16 14" />
+  </BaseIcon>
+);
+
+export const ClipboardIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
   </BaseIcon>
 );

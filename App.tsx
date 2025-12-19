@@ -14,10 +14,11 @@ import UpdateRequired from './components/UpdateRequired';
 import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
 import CreateWorkspaceDetails from './components/CreateWorkspaceDetails';
 import CreateWorkspaceDefaults from './components/CreateWorkspaceDefaults';
+import InitializingWorkspace from './components/InitializingWorkspace';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -27,7 +28,15 @@ function App() {
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   
   // Temporary state to hold wizard data
-  const [newProjectData, setNewProjectData] = useState<{ path?: string; name?: string; key?: string; docdex?: string; gitignore?: boolean }>({});
+  const [newProjectData, setNewProjectData] = useState<{ 
+      path?: string; 
+      name?: string; 
+      key?: string; 
+      docdex?: string; 
+      gitignore?: boolean;
+      agentId?: string;
+      qaProfile?: string;
+  }>({});
 
   // Keyboard shortcut listener for Cmd+K and Drawer toggle (Cmd+J)
   useEffect(() => {
@@ -140,10 +149,21 @@ function App() {
     return (
       <CreateWorkspaceDefaults
         onBack={() => setCurrentStep('create-project-details')}
-        onNext={() => {
-          setCurrentStep('dashboard');
+        onNext={(defaults) => {
+          setNewProjectData(prev => ({ ...prev, ...defaults }));
+          setCurrentStep('initializing-workspace');
         }}
         projectSummary={newProjectData}
+      />
+    );
+  }
+
+  if (currentStep === 'initializing-workspace') {
+    return (
+      <InitializingWorkspace
+        config={newProjectData}
+        onNext={() => setCurrentStep('dashboard')}
+        onCancel={() => setCurrentStep('create-project-defaults')}
       />
     );
   }
