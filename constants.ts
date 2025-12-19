@@ -774,11 +774,20 @@ export const MOCK_EXTENSIONS: Extension[] = [
     description: 'Specialized agent for data analysis using pandas/numpy. Can generate complex visualizations and statistical models.',
     category: 'Agents',
     icon: '📊',
-    status: 'idle',
+    status: 'installed',
+    isEnabled: true,
+    startupTimeMs: 350,
+    memoryUsageMb: 42,
     version: 'v1.2.0',
     tags: ['python', 'data', 'analysis', 'agent'],
     license: 'MIT',
     repository: 'https://github.com/pandas-team/mcoda-python-agent',
+    permissions: [
+      { id: 'fs', label: 'File System', description: 'Read/Write to /src', revocable: false },
+      { id: 'net', label: 'Network', description: 'Outbound to api.openai.com', revocable: true }
+    ],
+    dependencies: ['Core-Utils'],
+    recentErrors: [],
     readme: `# Python Data Science Agent
 
 This extension provides a specialized AI agent capable of deep data exploration. It understands standard Python scientific libraries like Pandas, Numpy, Matplotlib, and Scikit-Learn.
@@ -816,6 +825,9 @@ This agent runs in a sandboxed Python environment. It cannot access your host fi
     category: 'Themes',
     icon: '🧛',
     status: 'installed',
+    isEnabled: true,
+    startupTimeMs: 12,
+    memoryUsageMb: 2,
     version: 'v2.4.1',
     tags: ['theme', 'dark', 'dracula'],
     license: 'MIT',
@@ -832,10 +844,17 @@ This agent runs in a sandboxed Python environment. It cannot access your host fi
     description: 'Full Rust LSP integration, including cargo tasks, unit test runner, and borrow checker visualization.',
     category: 'Languages',
     icon: '🦀',
-    status: 'updating',
+    status: 'installed',
+    isEnabled: false,
+    startupTimeMs: 120,
+    memoryUsageMb: 85,
     version: 'v0.9.8',
     tags: ['rust', 'language', 'lsp'],
-    license: 'Apache 2.0'
+    license: 'Apache 2.0',
+    permissions: [
+       { id: 'fs', label: 'File System', description: 'Read cargo.toml and src/', revocable: false },
+       { id: 'exec', label: 'Process Execution', description: 'Run rustc and cargo', revocable: false }
+    ]
   },
   {
     id: 'ext-vercel',
@@ -861,9 +880,13 @@ This agent runs in a sandboxed Python environment. It cannot access your host fi
     description: 'Analyzes your database schema and slow query logs to suggest indices and refactor expensive JOINs.',
     category: 'Agents',
     icon: '🗄️',
-    status: 'idle',
+    status: 'installed',
+    isEnabled: true,
+    startupTimeMs: 450,
+    memoryUsageMb: 120,
     version: 'v0.4.1',
-    tags: ['sql', 'database', 'optimization', 'agent']
+    tags: ['sql', 'database', 'optimization', 'agent'],
+    recentErrors: ['SQLITE_ERROR: no such column: task_id (line 42)']
   },
   {
     id: 'ext-go-lang',

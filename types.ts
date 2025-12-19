@@ -254,6 +254,13 @@ export interface EnvironmentStatus {
 export type ExtensionCategory = 'Agents' | 'Languages' | 'Themes' | 'Snippets';
 export type ExtensionInstallStatus = 'idle' | 'installing' | 'installed' | 'updating';
 
+export interface ExtensionPermission {
+  id: string;
+  label: string;
+  description: string;
+  revocable: boolean;
+}
+
 export interface Extension {
   id: string;
   title: string;
@@ -274,6 +281,14 @@ export interface Extension {
   repository?: string;
   tags: string[];
   configSchema?: { key: string; description: string; type: string; default: any }[];
+  
+  // EX-05 additions
+  isEnabled?: boolean;
+  startupTimeMs?: number;
+  memoryUsageMb?: number;
+  permissions?: ExtensionPermission[];
+  recentErrors?: string[];
+  dependencies?: string[];
 }
 
 // EX-04 Extension Builder Types

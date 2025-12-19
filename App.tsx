@@ -36,6 +36,7 @@ import Playbooks from './components/Playbooks';
 import QualityHub from './components/QualityHub';
 import ReleaseManager from './components/ReleaseManager';
 import Extensions from './components/Extensions'; 
+import ExtensionManager from './components/ExtensionManager'; // EX-05
 import ExtensionSettings from './components/ExtensionSettings';
 import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
 import { OmniDrawerState } from './types';
@@ -99,6 +100,13 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [taskDetailId]);
+
+  // Global navigation listener for extension shortcuts
+  useEffect(() => {
+    const handler = (e: any) => setActivePath(e.detail);
+    window.addEventListener('app-navigate', handler);
+    return () => window.removeEventListener('app-navigate', handler);
+  }, []);
 
   const handleTaskCreate = (task: any) => {
     console.log('Task Created Globally:', task);
@@ -193,10 +201,11 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/extensions/installed') return <ExtensionManager />; // EX-05
     if (activePath === '/extensions/builder') return <ExtensionBuilder />; // EX-04
     if (activePath.startsWith('/extensions/settings/')) {
         const extId = activePath.split('/').pop();
-        return <ExtensionSettings extensionId={extId || ''} onBack={() => setActivePath('/extensions')} />;
+        return <ExtensionSettings extensionId={extId || ''} onBack={() => setActivePath('/extensions/installed')} />;
     }
     if (activePath === '/playbooks') return <Playbooks />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
@@ -221,6 +230,7 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/extensions/installed') return 'Ecosystem / Extensions / Manager';
     if (activePath === '/extensions/builder') return 'Ecosystem / Extensions / Builder';
     if (activePath.startsWith('/extensions/settings/')) return 'Ecosystem / Extensions / Settings';
     if (activePath === '/playbooks') return 'Workspace / Playbooks';
@@ -234,7 +244,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/builder'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/installed', '/extensions/builder'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
