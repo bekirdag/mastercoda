@@ -1,4 +1,5 @@
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -7,6 +8,94 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_DICTIONARY: DictionaryTerm[] = [
+  {
+    id: 'dt-1',
+    term: 'Customer',
+    definition: 'An entity that purchases a subscription. Distinct from a "User" who logs in.',
+    category: 'business',
+    synonyms: ['Client', 'Tenant'],
+    owner: 'Sales Team',
+    usageExamples: ['A Customer can have many Users.', 'Customers are billed monthly.'],
+    includeInAiContext: true,
+    codeMappings: [
+      { type: 'class', label: 'Organization', path: 'src/models/Organization.ts' },
+      { type: 'table', label: 'subscriptions', path: 'db/schema.sql' }
+    ],
+    references: [{ id: 'p-auth-flow', title: 'Authentication Flow' }]
+  },
+  {
+    id: 'dt-2',
+    term: 'Session',
+    definition: 'A temporal technical interaction window. In business terms, this represents a single user visit.',
+    category: 'technical',
+    acronym: 'SES',
+    synonyms: ['Visit', 'Connection'],
+    owner: 'Engineering Team',
+    usageExamples: ['Sessions expire after 1 hour of inactivity.'],
+    includeInAiContext: true,
+    codeMappings: [
+      { type: 'class', label: 'SessionManager', path: 'src/auth/SessionManager.ts' },
+      { type: 'table', label: 'active_sessions', path: 'redis/store' }
+    ],
+    conflicts: [
+      { context: 'Sales', definition: 'A sales meeting or call with a lead.' },
+      { context: 'Engineering', definition: 'A stateful connection between client and server.' }
+    ]
+  },
+  {
+    id: 'dt-3',
+    term: 'ARR',
+    definition: 'Annual Recurring Revenue. The value of the recurring revenue components of a term subscriptions normalized to a single year.',
+    category: 'acronym',
+    acronym: 'ARR',
+    synonyms: ['Yearly Revenue'],
+    owner: 'Finance',
+    usageExamples: ['Our ARR goal for Q4 is $12M.'],
+    includeInAiContext: false,
+    codeMappings: [],
+    references: []
+  },
+  {
+    id: 'dt-4',
+    term: 'Backlog',
+    definition: 'A prioritized list of work for the development team that is derived from the roadmap and its requirements.',
+    category: 'business',
+    synonyms: ['Work Queue', 'Task List'],
+    owner: 'Product Team',
+    usageExamples: ['Refine the backlog before the sprint planning.'],
+    includeInAiContext: true,
+    codeMappings: [
+      { type: 'table', label: 'tasks', path: 'db/migrations/001_tasks.sql' }
+    ]
+  },
+  {
+    id: 'dt-5',
+    term: 'Churn',
+    definition: 'The rate at which customers stop doing business with an entity.',
+    category: 'business',
+    synonyms: ['Attrition', 'Turnover'],
+    owner: 'Product Team',
+    usageExamples: ['Reducing churn is our top priority this quarter.'],
+    includeInAiContext: false,
+    codeMappings: []
+  },
+  {
+    id: 'dt-6',
+    term: 'API',
+    definition: 'Application Programming Interface. A set of defined rules that enable different applications to communicate with each other.',
+    category: 'technical',
+    acronym: 'API',
+    synonyms: ['Endpoint', 'Interface'],
+    owner: 'Platform Team',
+    usageExamples: ['Document all public API endpoints.'],
+    includeInAiContext: true,
+    codeMappings: [
+      { type: 'file', label: 'OpenAPI Spec', path: 'docs/openapi.yaml' }
+    ]
+  }
+];
 
 export const MOCK_LEARNING_PATHS: LearningPath[] = [
   {

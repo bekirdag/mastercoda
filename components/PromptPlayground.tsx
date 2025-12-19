@@ -24,6 +24,7 @@ import {
   CheckCircleIcon,
   RefreshCwIcon
 } from './Icons';
+import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
 // Proxy for Copy icon 
 const CopyIcon: React.FC<any> = (props) => (
@@ -93,7 +94,6 @@ const PromptPlayground: React.FC = () => {
   const handleRun = async () => {
     if (!userPrompt.trim()) return;
 
-    // Initialize/Reset output for models
     const ids = isCompareMode ? ['A', 'B'] : ['A'];
     
     setResults(prev => {
@@ -104,19 +104,69 @@ const PromptPlayground: React.FC = () => {
         return next;
     });
 
-    // Simulate streaming for each model
     ids.forEach(async (id) => {
         const startTime = Date.now();
         const modelName = id === 'A' ? modelA : modelB;
         
-        // Mock responses for simulation
+        // Handle Gemini Models with real API
+        if (modelName.startsWith('gemini-')) {
+            try {
+                const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+                
+                // Construct injected prompt with variables
+                let finalPrompt = userPrompt;
+                variables.forEach(v => {
+                    if (v.key) finalPrompt = finalPrompt.replace(new RegExp(`{{${v.key}}}`, 'g'), v.value);
+                });
+
+                const stream = await ai.models.generateContentStream({
+                    model: modelName,
+                    contents: finalPrompt,
+                    config: {
+                        systemInstruction: systemPrompt,
+                        temperature: temp,
+                        topP: topP,
+                        maxOutputTokens: maxTokens,
+                    }
+                });
+
+                let fullText = "";
+                for await (const chunk of stream) {
+                    fullText += chunk.text || "";
+                    setResults(prev => ({
+                        ...prev,
+                        [id]: { ...prev[id], output: fullText }
+                    }));
+                }
+
+                setResults(prev => ({
+                    ...prev,
+                    [id]: { 
+                        ...prev[id], 
+                        status: 'complete', 
+                        latency: Date.now() - startTime,
+                        tokensIn: Math.floor(finalPrompt.length / 4),
+                        tokensOut: Math.floor(fullText.length / 4),
+                        cost: 0.002 // Est.
+                    }
+                }));
+            } catch (err) {
+                console.error(`Error running ${modelName}:`, err);
+                setResults(prev => ({
+                    ...prev,
+                    [id]: { ...prev[id], status: 'error', output: `Error: ${err instanceof Error ? err.message : String(err)}` }
+                }));
+            }
+            return;
+        }
+
+        // Fallback for non-Gemini models (Mock)
         const mockResponses: Record<string, string> = {
-            'gemini-3-pro-preview': "Based on your requirements, the best way to implement a custom hook for streaming would be using the `AbortController` and `fetch` API. Here is a clean implementation in " + (variables.find(v => v.key === 'language')?.value || 'code') + ":\n\n```typescript\nconst useStream = (url: string) => {\n  // Implementation details\n}\n```",
             'claude-3-5-sonnet': "Implementing streaming in React requires careful handling of side effects. I recommend using an async generator for clean flow control. \n\n```typescript\nasync function* streamReader(response) {\n  const reader = response.body.getReader();\n  // ...\n}\n```",
             'gpt-4o': "To handle real-time data in a professional dashboard, you should integrate SSE (Server-Sent Events) with a global state manager like Zustand."
         };
 
-        const responseText = mockResponses[modelName] || "This is a simulated response from the playground.";
+        const responseText = mockResponses[modelName] || "This is a simulated response from the playground for non-Gemini models.";
         const chunks = responseText.split(' ');
         
         let currentOutput = '';
@@ -158,13 +208,12 @@ const PromptPlayground: React.FC = () => {
          <div className="flex items-center space-x-6">
             <div className="flex items-center">
                <BeakerIcon className="mr-3 text-indigo-400" size={24} />
-               <h1 className="text-xl font-bold text-white tracking-tight">Prompt Lab</h1>
+               <h1 className="text-xl font-bold text-white tracking-tight uppercase">Prompt Lab</h1>
             </div>
 
             <div className="h-6 w-px bg-slate-800" />
 
             <div className="flex items-center space-x-4">
-               {/* Preset Select */}
                <div className="flex flex-col">
                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">Preset</span>
                   <select className="bg-transparent border-none text-xs font-bold text-indigo-400 outline-none p-0 cursor-pointer">
@@ -175,7 +224,6 @@ const PromptPlayground: React.FC = () => {
                   </select>
                </div>
 
-               {/* Mode Switch */}
                <div className="flex bg-slate-800 rounded p-1 border border-slate-700">
                   {(['chat', 'completion'] as PlaygroundMode[]).map(m => (
                      <button
@@ -192,13 +240,12 @@ const PromptPlayground: React.FC = () => {
                   ))}
                </div>
 
-               {/* Compare Toggle */}
                <button 
                   onClick={() => setIsCompareMode(!isCompareMode)}
                   className={`flex items-center px-3 py-1.5 rounded border transition-all ${
                     isCompareMode 
                     ? 'bg-indigo-600/10 border-indigo-500/50 text-indigo-400' 
-                    : 'bg-slate-800/50 border-slate-700 text-slate-500 hover:text-slate-300'
+                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200'
                   }`}
                >
                   <ActivityIcon size={14} className="mr-2" />
@@ -209,8 +256,8 @@ const PromptPlayground: React.FC = () => {
 
          <div className="flex items-center space-x-3">
             <Button variant="secondary" size="sm" icon={<RotateCwIcon size={14} />} onClick={() => setResults({
-                'A': { id: 'A', model: 'gemini-3-pro-preview', output: '', status: 'idle', latency: 0, tokensIn: 0, tokensOut: 0, cost: 0 },
-                'B': { id: 'B', model: 'claude-3-5-sonnet', output: '', status: 'idle', latency: 0, tokensIn: 0, tokensOut: 0, cost: 0 }
+                'A': { id: 'A', model: modelA, output: '', status: 'idle', latency: 0, tokensIn: 0, tokensOut: 0, cost: 0 },
+                'B': { id: 'B', model: modelB, output: '', status: 'idle', latency: 0, tokensIn: 0, tokensOut: 0, cost: 0 }
             })}>Clear</Button>
             <Button 
                variant="primary" 
@@ -228,11 +275,9 @@ const PromptPlayground: React.FC = () => {
       {/* 2. Main Three-Pane Workspace */}
       <div className="flex-1 flex overflow-hidden">
          
-         {/* LEFT PANE: Configuration */}
          <aside className="w-[320px] border-r border-slate-800 bg-slate-900/30 flex flex-col shrink-0">
             <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
                
-               {/* Model Selection */}
                <div className="space-y-4">
                   <div className="space-y-2">
                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Model A (Primary)</label>
@@ -256,13 +301,12 @@ const PromptPlayground: React.FC = () => {
                         >
                            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
                            <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                           <option value="llama3-70b">Llama 3 (Local)</option>
+                           <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
                         </select>
                      </div>
                   )}
                </div>
 
-               {/* System Prompt */}
                <div className="space-y-2">
                   <div className="flex items-center justify-between">
                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">System Instructions</label>
@@ -276,7 +320,6 @@ const PromptPlayground: React.FC = () => {
                   />
                </div>
 
-               {/* Parameters */}
                <div className="space-y-6 pt-4 border-t border-slate-800">
                   <div className="space-y-3">
                      <div className="flex justify-between items-center text-[10px] font-bold uppercase">
@@ -315,12 +358,8 @@ const PromptPlayground: React.FC = () => {
             </div>
          </aside>
 
-         {/* CENTER PANE: Interactions */}
          <main className="flex-1 flex flex-col bg-[#0f1117] overflow-hidden relative border-r border-slate-800">
-            
-            {/* Output Streams */}
             <div className={`flex-1 flex divide-x divide-slate-800 overflow-hidden ${isCompareMode ? '' : 'bg-slate-900/10'}`}>
-               {/* Result Column A */}
                <div className="flex-1 flex flex-col overflow-hidden animate-in fade-in duration-500 group/col">
                   <ResultHeader result={results['A']} isCompare={isCompareMode} onCopy={handleCopy} />
                   <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
@@ -340,7 +379,6 @@ const PromptPlayground: React.FC = () => {
                   <ResultMeta result={results['A']} />
                </div>
 
-               {/* Result Column B (Optional) */}
                {isCompareMode && (
                   <div className="flex-1 flex flex-col overflow-hidden animate-in slide-in-from-right-full duration-500 bg-slate-900/20 group/col">
                      <ResultHeader result={results['B']} isCompare={isCompareMode} onCopy={handleCopy} />
@@ -357,7 +395,6 @@ const PromptPlayground: React.FC = () => {
                )}
             </div>
 
-            {/* User Input Area */}
             <div className="shrink-0 p-6 bg-[#0f1117] border-t border-slate-800">
                <div className="max-w-4xl mx-auto space-y-4">
                   <div className="relative group">
@@ -410,7 +447,6 @@ const PromptPlayground: React.FC = () => {
             </div>
          </main>
 
-         {/* RIGHT PANE: Variables & Tools */}
          {isRightPaneOpen ? (
            <aside className="w-[300px] border-l border-slate-800 bg-slate-900/30 flex flex-col shrink-0 animate-in slide-in-from-right-4 duration-300">
               <div className="h-12 border-b border-slate-800 flex items-center bg-slate-900/50">
@@ -504,8 +540,6 @@ const PromptPlayground: React.FC = () => {
   );
 };
 
-// Sub-components
-
 const ResultHeader: React.FC<{ result: RunResult; isCompare: boolean; onCopy: (s: string) => void }> = ({ result, isCompare, onCopy }) => (
    <div className="h-10 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between px-4 shrink-0">
       <div className="flex items-center space-x-2">
@@ -540,6 +574,8 @@ const ResultMeta: React.FC<{ result: RunResult }> = ({ result }) => (
             <RotateCwIcon size={10} className="animate-spin mr-2 text-indigo-500" />
             GENERATING...
          </div>
+      ) : result.status === 'error' ? (
+         <span className="text-red-400 font-bold uppercase">Request Failed</span>
       ) : (
          <span>STANDBY</span>
       )}

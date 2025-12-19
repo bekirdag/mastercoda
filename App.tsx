@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -35,6 +36,7 @@ import ApiExplorer from './components/ApiExplorer'; // Added for DO-05
 import SystemTopology from './components/SystemTopology'; // Added for DO-06
 import DecisionLog from './components/DecisionLog'; // Added for DO-07
 import LearningPaths from './components/LearningPaths'; // Added for DO-08
+import DomainDictionary from './components/DomainDictionary'; // Added for DO-09
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
@@ -54,6 +56,7 @@ import ExtensionStacks from './components/ExtensionStacks'; // EX-06
 import ThemeStudio from './components/ThemeStudio'; // EX-07
 import SnippetStudio from './components/SnippetStudio'; // EX-08
 import KeymapManager from './components/KeymapManager'; // EX-09
+import PromptPlayground from './components/PromptPlayground'; // Added for Lab integration
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -218,9 +221,11 @@ function App() {
     if (activePath === '/extensions/firewall') return <NetworkFirewall />;
     if (activePath === '/docs/topology') return <SystemTopology />; // DO-06
     if (activePath === '/docs/adrs') return <DecisionLog />; // DO-07
+    if (activePath === '/docs/glossary') return <DomainDictionary />; // DO-09
     if (activePath === '/docs/learning') return <LearningPaths />; // DO-08
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/playground') return <PromptPlayground />; // Added Lab
     if (activePath === '/extensions/references') return <ReferenceLibrary />;
     if (activePath === '/extensions/models') return <ModelRegistry />;
     if (activePath === '/extensions/accounts') return <ServiceAccounts />;
@@ -263,9 +268,11 @@ function App() {
     if (activePath === '/extensions/firewall') return 'Workspace / Privacy Firewall';
     if (activePath === '/docs/topology') return 'Documentation / System Topology';
     if (activePath === '/docs/adrs') return 'Governance / Decision Log';
+    if (activePath === '/docs/glossary') return 'Documentation / Domain Dictionary';
     if (activePath === '/docs/learning') return 'Documentation / Learning Paths';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/playground') return 'Ecosystem / Prompt Lab';
     if (activePath === '/extensions/references') return 'Ecosystem / References';
     if (activePath === '/extensions/models') return 'Ecosystem / Brain Center';
     if (activePath === '/extensions/accounts') return 'Ecosystem / Service Accounts';
@@ -290,7 +297,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning'];
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export type OmniDrawerState = 'hidden' | 'collapsed' | 'open' | 'maximized';
@@ -194,6 +195,28 @@ export interface LearningPath {
   modules: PathModule[];
   progress: number; // 0-100
   estimatedTime: string;
+}
+
+// DO-09 Domain Dictionary Types
+export type DictionaryCategory = 'business' | 'technical' | 'acronym';
+
+export interface DictionaryTerm {
+  id: string;
+  term: string;
+  definition: string;
+  category: DictionaryCategory;
+  acronym?: string;
+  synonyms: string[];
+  owner?: string;
+  usageExamples: string[];
+  includeInAiContext: boolean;
+  codeMappings: {
+    type: 'file' | 'class' | 'table' | 'function';
+    label: string;
+    path: string;
+  }[];
+  references?: { id: string; title: string }[];
+  conflicts?: { context: string; definition: string }[];
 }
 
 // API Explorer Types (DO-05)

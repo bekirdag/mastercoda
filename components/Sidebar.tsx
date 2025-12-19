@@ -1,5 +1,7 @@
+
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon } from './Icons';
+// Fix: Removed non-existent LayoutGridGridIcon from imports
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -22,10 +24,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'topology', label: 'Topology', icon: <LayoutGridIcon size={20} className="text-emerald-400" />, path: '/docs/topology' }, // DO-06
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
     { id: 'adrs', label: 'Decision Log', icon: <HistoryIcon size={20} className="text-indigo-400" />, path: '/docs/adrs' }, // DO-07
+    { id: 'glossary', label: 'Domain Dictionary', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/glossary' }, // DO-09
     { id: 'apiexplorer', label: 'API Explorer', icon: <ZapIcon size={20} className="text-amber-400" />, path: '/docs/api-explorer' }, // DO-05
     { id: 'learning', label: 'Learning Paths', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/learning' }, // DO-08
     { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, // EX-12
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
+    { id: 'playground', label: 'Prompt Lab', icon: <BeakerIcon size={20} className="text-indigo-400" />, path: '/playground' },
     { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, // EX-10
     { id: 'accounts', label: 'Service Accounts', icon: <UserIcon size={20} />, path: '/extensions/accounts' }, // EX-11
     { id: 'snippets', label: 'Snippets', icon: <ScissorsIcon size={20} />, path: '/extensions/snippets' }, // EX-08
