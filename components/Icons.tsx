@@ -177,3 +177,12 @@ export const ZapIcon: React.FC<IconProps> = (props) => (
     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
   </BaseIcon>
 );
+
+export const PackageIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="m16.5 9.4-9-5.19" />
+    <path d="m21 16-9 5.19-9-5.19" />
+    <path d="m3.11 6 9 5.19 9-5.19" />
+    <path d="m12 11.19v10.39" />
+  </BaseIcon>
+);

@@ -5,10 +5,11 @@ import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
+import CliConfig from './components/CliConfig';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -41,7 +42,16 @@ function App() {
     return (
       <SystemCheck 
         onBack={() => setCurrentStep('intro')} 
-        onNext={() => setCurrentStep('dashboard')} 
+        onNext={() => setCurrentStep('cli-config')} 
+      />
+    );
+  }
+
+  if (currentStep === 'cli-config') {
+    return (
+      <CliConfig
+        onBack={() => setCurrentStep('system-check')}
+        onNext={() => setCurrentStep('dashboard')}
       />
     );
   }
