@@ -43,6 +43,7 @@ import AgentFleet from './components/AgentFleet'; // AG-01
 import AgentProfile from './components/AgentProfile'; // AG-02
 import AgentStudio from './components/AgentStudio'; // AG-03
 import AgentGym from './components/AgentGym'; // AG-04
+import SquadComposer from './components/SquadComposer'; // AG-05
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -224,6 +225,7 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
     if (activePath === '/agents/evals') return <AgentGym />; // AG-04
+    if (activePath === '/agents/squads') return <SquadComposer />; // AG-05
     if (activePath === '/extensions/firewall') return <NetworkFirewall />;
     if (activePath === '/docs/topology') return <SystemTopology />; // DO-06
     if (activePath === '/docs/adrs') return <DecisionLog />; // DO-07
@@ -283,6 +285,7 @@ function App() {
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/evals') return 'Workspace / Gymnasium';
+    if (activePath === '/agents/squads') return 'Workspace / Squad Composer';
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/extensions/firewall') return 'Workspace / Privacy Firewall';
     if (activePath === '/docs/topology') return 'Documentation / System Topology';

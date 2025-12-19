@@ -435,6 +435,37 @@ export interface EvalSuite {
   isLocked?: boolean;
 }
 
+// AG-05 Squad Types
+export type CollaborationProtocol = 'sequential' | 'hierarchical' | 'consensus';
+
+export interface SquadNode {
+  id: string;
+  agentId: string;
+  role: 'manager' | 'worker';
+  x: number;
+  y: number;
+}
+
+export interface SquadEdge {
+  id: string;
+  source: string;
+  target: string;
+  type: 'delegates' | 'peers';
+}
+
+export interface Squad {
+  id: string;
+  name: string;
+  description: string;
+  nodes: SquadNode[];
+  edges: SquadEdge[];
+  protocol: CollaborationProtocol;
+  managerSettings: {
+    delegationLogic: 'round-robin' | 'load-balanced';
+    approvalMode: 'auto' | 'human';
+  };
+}
+
 // Orchestrator Types (EX-15)
 export type OrchNodeType = 'trigger' | 'router' | 'agent' | 'fallback';
 

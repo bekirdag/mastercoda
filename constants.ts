@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,46 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_SQUADS: Squad[] = [
+  {
+    id: 'sq-refactor',
+    name: 'Refactor Team',
+    description: 'Specialized in decomposing monoliths and enforcing design patterns.',
+    protocol: 'hierarchical',
+    nodes: [
+      { id: 'n1', agentId: 'ag-primary', role: 'manager', x: 300, y: 50 },
+      { id: 'n2', agentId: 'ag-coder', role: 'worker', x: 150, y: 200 },
+      { id: 'n3', agentId: 'ag-qa', role: 'worker', x: 450, y: 200 }
+    ],
+    edges: [
+      { id: 'e1', source: 'n1', target: 'n2', type: 'delegates' },
+      { id: 'e2', source: 'n1', target: 'n3', type: 'delegates' },
+      { id: 'e3', source: 'n2', target: 'n3', type: 'peers' }
+    ],
+    managerSettings: {
+      delegationLogic: 'load-balanced',
+      approvalMode: 'human'
+    }
+  },
+  {
+    id: 'sq-release',
+    name: 'Release Manager',
+    description: 'Automates changelog generation, tagging, and deployment safety checks.',
+    protocol: 'sequential',
+    nodes: [
+      { id: 'n4', agentId: 'ag-primary', role: 'manager', x: 300, y: 50 },
+      { id: 'n5', agentId: 'ag-audit', role: 'worker', x: 300, y: 200 }
+    ],
+    edges: [
+      { id: 'e4', source: 'n4', target: 'n5', type: 'delegates' }
+    ],
+    managerSettings: {
+      delegationLogic: 'round-robin',
+      approvalMode: 'auto'
+    }
+  }
+];
 
 export const MOCK_EVAL_SUITES: EvalSuite[] = [
   {
