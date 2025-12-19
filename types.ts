@@ -267,4 +267,11 @@ export interface Extension {
   status: ExtensionInstallStatus;
   version: string;
   minCodaVersion?: string;
+  // EX-02 additions
+  readme?: string;
+  changelog?: { version: string; date: string; changes: string[] }[];
+  license?: string;
+  repository?: string;
+  tags: string[];
+  configSchema?: { key: string; description: string; type: string; default: any }[];
 }

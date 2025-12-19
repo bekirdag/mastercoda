@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Extension, ExtensionCategory } from '../types';
 import { MOCK_EXTENSIONS } from '../constants';
 import Button from './Button';
+import ExtensionDetail from './ExtensionDetail';
 import { 
   SearchIcon, 
   GridIcon, 
@@ -11,14 +12,12 @@ import {
   ChevronRightIcon, 
   SettingsIcon, 
   RefreshCwIcon, 
-  // Add missing RotateCwIcon import
   RotateCwIcon,
   ArrowUpIcon, 
   ActivityIcon,
   ShieldIcon,
   ZapIcon,
   FilterIcon
-  // Remove non-existent DownloadIcon import
 } from './Icons';
 
 // Proxy for Box icon
@@ -59,6 +58,7 @@ const Extensions: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<ExtensionCategory | 'All'>('All');
   const [sortBy, setSortBy] = useState<'Popular' | 'Trending' | 'Newest'>('Popular');
+  const [selectedExtId, setSelectedExtId] = useState<string | null>(null);
 
   const categories: (ExtensionCategory | 'All')[] = ['All', 'Agents', 'Languages', 'Themes', 'Snippets'];
 
@@ -69,6 +69,8 @@ const Extensions: React.FC = () => {
     const matchesCategory = activeCategory === 'All' || ext.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const selectedExtension = extensions.find(e => e.id === selectedExtId);
 
   const handleInstall = async (id: string) => {
     setExtensions(prev => prev.map(ext => 
@@ -81,9 +83,24 @@ const Extensions: React.FC = () => {
     setExtensions(prev => prev.map(ext => 
       ext.id === id ? { ...ext, status: 'installed' } : ext
     ));
-    
-    // Trigger "confetti" or success logic would go here
   };
+
+  const handleUninstall = (id: string) => {
+    setExtensions(prev => prev.map(ext => 
+      ext.id === id ? { ...ext, status: 'idle' } : ext
+    ));
+  };
+
+  if (selectedExtension) {
+     return (
+        <ExtensionDetail 
+           extension={selectedExtension} 
+           onClose={() => setSelectedExtId(null)}
+           onInstall={handleInstall}
+           onUninstall={handleUninstall}
+        />
+     );
+  }
 
   return (
     <div className="flex flex-col h-full bg-[#0f172a] text-slate-200 overflow-hidden font-sans">
@@ -172,7 +189,7 @@ const Extensions: React.FC = () => {
                <div className="pt-4 border-t border-slate-800 space-y-4">
                   <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2">Recommended</h3>
                   <div className="px-2 space-y-4">
-                     <div className="flex items-center space-x-3 group cursor-pointer">
+                     <div className="flex items-center space-x-3 group cursor-pointer" onClick={() => setSelectedExtId('ext-rust-lsp')}>
                         <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-xs border border-slate-700 group-hover:border-indigo-500/50 transition-colors">
                            🦀
                         </div>
@@ -193,7 +210,7 @@ const Extensions: React.FC = () => {
                
                {/* Featured Banner */}
                {activeCategory === 'All' && !searchQuery && (
-                  <div className="relative h-[250px] w-full rounded-2xl overflow-hidden border border-indigo-500/30 shadow-2xl group cursor-pointer">
+                  <div className="relative h-[250px] w-full rounded-2xl overflow-hidden border border-indigo-500/30 shadow-2xl group cursor-pointer" onClick={() => setSelectedExtId('ext-vercel')}>
                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-slate-900 to-slate-950" />
                      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
                      
@@ -223,6 +240,7 @@ const Extensions: React.FC = () => {
                         key={ext.id} 
                         ext={ext} 
                         onInstall={() => handleInstall(ext.id)}
+                        onClick={() => setSelectedExtId(ext.id)}
                      />
                   ))}
 
@@ -249,9 +267,12 @@ const Extensions: React.FC = () => {
   );
 };
 
-const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void }> = ({ ext, onInstall }) => {
+const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void; onClick: () => void }> = ({ ext, onInstall, onClick }) => {
    return (
-      <article className="group relative flex flex-col h-full bg-slate-800/40 border border-slate-700/50 rounded-xl p-5 hover:bg-slate-800 hover:border-indigo-500/50 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
+      <article 
+         onClick={onClick}
+         className="group relative flex flex-col h-full bg-slate-800/40 border border-slate-700/50 rounded-xl p-5 hover:bg-slate-800 hover:border-indigo-500/50 hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] cursor-pointer"
+      >
          {/* Card Header: Icon & Stats */}
          <div className="flex items-start justify-between mb-4">
             <div className="w-14 h-14 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-500">
@@ -263,7 +284,6 @@ const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void }> = ({ ex
                   <span className="text-[10px] font-bold font-mono">{ext.rating}</span>
                </div>
                <div className="flex items-center text-slate-600">
-                  {/* Proxy for Download Icon */}
                   <svg className="mr-1" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   <span className="text-[9px] font-mono">{ext.downloads}</span>
                </div>
@@ -293,7 +313,7 @@ const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void }> = ({ ex
             <span className="text-[9px] font-mono text-slate-600 uppercase tracking-tighter">{ext.version}</span>
             
             <div className="flex items-center">
-               <ExtensionButton status={ext.status} onClick={onInstall} />
+               <ExtensionButton status={ext.status} onClick={(e) => { e.stopPropagation(); onInstall(); }} />
                <button className="ml-2 p-1.5 text-slate-600 hover:text-white hover:bg-slate-700 rounded transition-colors opacity-0 group-hover:opacity-100">
                   <SettingsIcon size={14} />
                </button>
@@ -310,7 +330,7 @@ const ExtensionCard: React.FC<{ ext: Extension; onInstall: () => void }> = ({ ex
    );
 };
 
-const ExtensionButton: React.FC<{ status: Extension['status']; onClick: () => void }> = ({ status, onClick }) => {
+const ExtensionButton: React.FC<{ status: Extension['status']; onClick: (e: React.MouseEvent) => void }> = ({ status, onClick }) => {
    if (status === 'installed') {
       return (
          <button className="px-3 py-1 rounded bg-slate-700/50 text-slate-400 text-[10px] font-bold uppercase cursor-default border border-slate-700">

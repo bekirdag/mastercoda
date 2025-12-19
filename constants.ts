@@ -762,7 +762,7 @@ export const MOCK_RELEASES: Release[] = [
   },
 ];
 
-// EX-01 Mock Extensions
+// EX-01 Mock Extensions with EX-02 Details
 export const MOCK_EXTENSIONS: Extension[] = [
   {
     id: 'ext-py-agent',
@@ -775,7 +775,35 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'Agents',
     icon: '📊',
     status: 'idle',
-    version: 'v1.2.0'
+    version: 'v1.2.0',
+    tags: ['python', 'data', 'analysis', 'agent'],
+    license: 'MIT',
+    repository: 'https://github.com/pandas-team/mcoda-python-agent',
+    readme: `# Python Data Science Agent
+
+This extension provides a specialized AI agent capable of deep data exploration. It understands standard Python scientific libraries like Pandas, Numpy, Matplotlib, and Scikit-Learn.
+
+## Features
+- **Exploratory Data Analysis**: Automatically generate summary statistics and identify outliers.
+- **Visualisation Engine**: Ask the agent to plot complex data relationships in various formats.
+- **Model Training**: Decompose machine learning requirements into training pipelines.
+
+## Usage
+Simply invoke the agent via CLI:
+\`\`\`bash
+mcoda exec --agent py-data "Analyze the correlation between churn and tenure in users.csv"
+\`\`\`
+
+## Safety
+This agent runs in a sandboxed Python environment. It cannot access your host filesystem outside of the provided workspace root.`,
+    changelog: [
+      { version: 'v1.2.0', date: 'Oct 12, 2024', changes: ['Added support for Plotly interactive charts', 'Fixed NaN handling in core correlation logic'] },
+      { version: 'v1.1.0', date: 'Sept 15, 2024', changes: ['Initial public release', 'Support for Pandas 2.0+ schemas'] }
+    ],
+    configSchema: [
+      { key: 'pythonPath', description: 'Absolute path to the python interpreter', type: 'string', default: '/usr/bin/python3' },
+      { key: 'enableJupyter', description: 'Enable interactive notebook cell execution', type: 'boolean', default: false }
+    ]
   },
   {
     id: 'ext-dracula',
@@ -788,7 +816,11 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'Themes',
     icon: '🧛',
     status: 'installed',
-    version: 'v2.4.1'
+    version: 'v2.4.1',
+    tags: ['theme', 'dark', 'dracula'],
+    license: 'MIT',
+    readme: '# Dracula for Master Coda\n\nA dark theme for the cyberpunk orchestrator. Inspired by the legendary Dracula color palette.',
+    changelog: [{ version: 'v2.4.1', date: 'Aug 2, 2024', changes: ['Optimized indigo-400 contrast ratios'] }]
   },
   {
     id: 'ext-rust-lsp',
@@ -801,7 +833,9 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'Languages',
     icon: '🦀',
     status: 'updating',
-    version: 'v0.9.8'
+    version: 'v0.9.8',
+    tags: ['rust', 'language', 'lsp'],
+    license: 'Apache 2.0'
   },
   {
     id: 'ext-vercel',
@@ -814,7 +848,8 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'Snippets',
     icon: '▲',
     status: 'idle',
-    version: 'v1.0.2'
+    version: 'v1.0.2',
+    tags: ['vercel', 'deploy', 'deployment', 'cloud']
   },
   {
     id: 'ext-sql-agent',
@@ -827,7 +862,8 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'Agents',
     icon: '🗄️',
     status: 'idle',
-    version: 'v0.4.1'
+    version: 'v0.4.1',
+    tags: ['sql', 'database', 'optimization', 'agent']
   },
   {
     id: 'ext-go-lang',
@@ -840,6 +876,7 @@ export const MOCK_EXTENSIONS: Extension[] = [
     category: 'Languages',
     icon: '🐹',
     status: 'idle',
-    version: 'v1.1.0'
+    version: 'v1.1.0',
+    tags: ['go', 'golang', 'language']
   }
 ];
