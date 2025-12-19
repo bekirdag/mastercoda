@@ -1,4 +1,5 @@
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -374,5 +375,191 @@ export const updateUser = async (data: any) => {
     content: `import React from 'react';
 // Conflict resolved content placeholder
 export const Button = () => <button>Click me</button>;`
+  }
+];
+
+export const MOCK_DOC_FOLDERS: DocFolder[] = [
+  { id: 'f-specs', name: 'specs' },
+  { id: 'f-arch', name: 'architecture' },
+  { id: 'f-memory', name: 'memory' },
+  { id: 'f-api', name: 'api-reference' },
+];
+
+export const MOCK_DOC_PAGES: DocPage[] = [
+  {
+    id: 'p-auth-flow',
+    title: 'Authentication Flow',
+    folderId: 'f-specs',
+    content: `# Authentication Flow
+
+This document describes how users are authenticated in Master Coda.
+
+## Overview
+We use JWT-based authentication with RS256 signing.
+
+## Sequence Diagram
+\`\`\`mermaid
+sequenceDiagram
+    User->>Client: Login Credentials
+    Client->>AuthService: POST /api/login
+    AuthService->>DB: Validate User
+    DB-->>AuthService: User Valid
+    AuthService->>Client: Signed JWT
+    Client->>ProtectedAPI: Request + JWT
+    ProtectedAPI->>AuthService: Verify Token
+    AuthService-->>ProtectedAPI: Token OK
+    ProtectedAPI-->>Client: Data
+\`\`\`
+
+## Security Notes
+- Tokens expire in 1 hour.
+- Refresh tokens are stored in HttpOnly cookies.`,
+    updatedAt: '10m ago',
+    tags: ['auth', 'backend', 'security'],
+    linkedTasks: ['MC-1002', 'MC-1024'],
+    syncStatus: 'synced',
+    lastIndexed: '2m ago'
+  },
+  {
+    id: 'p-design-system',
+    title: 'Design System Guidelines',
+    folderId: 'f-specs',
+    content: `# Design System Migration
+
+We are currently moving all components to the new Tailwind-based system.
+
+## Principles
+1. Atomic Design
+2. Cyberpunk Aesthetics
+3. Performance first
+
+## Color Palette
+- **Slate-900**: Primary background
+- **Indigo-500**: Primary accent
+- **Emerald-500**: Success / Positive`,
+    updatedAt: '2h ago',
+    tags: ['ui', 'design', 'frontend'],
+    linkedTasks: ['MC-1001'],
+    syncStatus: 'synced',
+    lastIndexed: '1h ago'
+  },
+  {
+    id: 'p-agent-config',
+    title: 'Agent Memory Profile',
+    folderId: 'f-memory',
+    content: `# Agent Context: Project Brain
+
+This file serves as long-term memory for the Agent.
+
+## Project Scope
+Master Coda is an orchestrator for software engineering.
+
+## Preferred Tools
+- **CLI**: mcoda-v3
+- **Language**: TypeScript
+- **Testing**: Vitest
+
+## Architectural Decisions (ADR)
+- ADR-001: Use SQLite for local state.
+- ADR-002: Prefer event-driven communication.`,
+    updatedAt: '1d ago',
+    tags: ['ai', 'config', 'architecture'],
+    linkedTasks: ['MC-2000'],
+    syncStatus: 'pending',
+    lastIndexed: 'Yesterday'
+  },
+  {
+    id: 'p-api-v1',
+    title: 'API Reference v1',
+    folderId: 'f-api',
+    content: `# API v1 Reference
+
+Automatically generated from OpenAPI specs.
+
+## Endpoints
+
+### GET /api/v1/tasks
+List all tasks.
+
+### POST /api/v1/agent/thought
+Stream agent reasoning.
+
+## Models
+- **Task**: { id, title, status }
+- **AgentThought**: { id, message, timestamp }`,
+    updatedAt: '5h ago',
+    tags: ['api', 'reference'],
+    linkedTasks: [],
+    syncStatus: 'synced',
+    lastIndexed: '4h ago'
+  }
+];
+
+export const MOCK_AGENTS: AgentPersona[] = [
+  {
+    id: 'ag-primary',
+    name: 'Architect Prime',
+    role: 'Lead System Orchestrator',
+    status: 'online',
+    model: 'gemini-3-pro-preview',
+    provider: 'google',
+    avatarColor: 'indigo',
+    isPrimary: true,
+    systemPrompt: "You are Architect Prime, the lead orchestrator for Master Coda. Your goal is to analyze complex engineering requirements and decompose them into actionable tasks. Maintain a high-density, professional tone. Focus on system stability, scalability, and security.",
+    capabilities: [
+      { id: 'fs_write', label: 'File System (Write)', enabled: true, level: 'write' },
+      { id: 'shell', label: 'Terminal Access', enabled: true, level: 'exec' },
+      { id: 'search', label: 'Google Search', enabled: true, level: 'read' },
+      { id: 'memory', label: 'Long-term Memory', enabled: true, level: 'write' }
+    ],
+    metrics: {
+      tokensUsed: 1240500,
+      tasksCompleted: 142,
+      avgLatency: '1.2s'
+    }
+  },
+  {
+    id: 'ag-coder',
+    name: 'Logic Synth',
+    role: 'Implementation Specialist',
+    status: 'idle',
+    model: 'gemini-3-flash-preview',
+    provider: 'google',
+    avatarColor: 'emerald',
+    isPrimary: false,
+    systemPrompt: "You are Logic Synth. You excel at writing clean, modular, and well-tested code. Follow established design patterns and documentation standards strictly.",
+    capabilities: [
+      { id: 'fs_write', label: 'File System (Write)', enabled: true, level: 'write' },
+      { id: 'shell', label: 'Terminal Access', enabled: false, level: 'exec' },
+      { id: 'search', label: 'Google Search', enabled: true, level: 'read' },
+      { id: 'memory', label: 'Long-term Memory', enabled: false, level: 'write' }
+    ],
+    metrics: {
+      tokensUsed: 890200,
+      tasksCompleted: 412,
+      avgLatency: '0.4s'
+    }
+  },
+  {
+    id: 'ag-qa',
+    name: 'Audit Zero',
+    role: 'QA & Security Researcher',
+    status: 'offline',
+    model: 'gpt-4o',
+    provider: 'openai',
+    avatarColor: 'amber',
+    isPrimary: false,
+    systemPrompt: "You are Audit Zero. Your purpose is to find vulnerabilities, bugs, and edge cases. You are pedantic and thorough.",
+    capabilities: [
+      { id: 'fs_write', label: 'File System (Write)', enabled: false, level: 'write' },
+      { id: 'shell', label: 'Terminal Access', enabled: true, level: 'exec' },
+      { id: 'search', label: 'Google Search', enabled: true, level: 'read' },
+      { id: 'memory', label: 'Long-term Memory', enabled: true, level: 'write' }
+    ],
+    metrics: {
+      tokensUsed: 45000,
+      tasksCompleted: 12,
+      avgLatency: '1.8s'
+    }
   }
 ];

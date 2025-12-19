@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export type OmniDrawerState = 'hidden' | 'collapsed' | 'open' | 'maximized';
@@ -107,4 +108,49 @@ export interface ConflictedFile {
   path: string;
   status: 'unresolved' | 'resolved';
   content: string; // The raw content with conflict markers
+}
+
+// Documentation Types
+export interface DocPage {
+  id: string;
+  title: string;
+  content: string;
+  updatedAt: string;
+  tags: string[];
+  linkedTasks: string[];
+  syncStatus: 'synced' | 'pending' | 'error';
+  lastIndexed: string;
+  folderId?: string;
+}
+
+export interface DocFolder {
+  id: string;
+  name: string;
+  parentId?: string;
+}
+
+// Agent Management Types
+export type AgentStatus = 'online' | 'idle' | 'offline' | 'error';
+
+export interface AgentPersona {
+  id: string;
+  name: string;
+  role: string;
+  status: AgentStatus;
+  model: string;
+  provider: 'openai' | 'anthropic' | 'ollama' | 'google';
+  systemPrompt: string;
+  avatarColor: string;
+  isPrimary: boolean;
+  capabilities: {
+    id: string;
+    label: string;
+    enabled: boolean;
+    level: 'read' | 'write' | 'exec';
+  }[];
+  metrics: {
+    tokensUsed: number;
+    tasksCompleted: number;
+    avgLatency: string;
+  };
 }

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -26,6 +27,8 @@ import DatabaseMigration from './components/DatabaseMigration';
 import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorkspace';
 import CreateTaskModal from './components/CreateTaskModal';
 import ProjectSettings from './components/ProjectSettings';
+import Documentation from './components/Documentation';
+import Agents from './components/Agents';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -81,9 +84,6 @@ function App() {
 
   const handleTaskCreate = (task: any) => {
     console.log('Task Created Globally:', task);
-    // In a real app, this would dispatch this to a global store or context
-    // For now, we rely on the modal closing.
-    // We could trigger a refresh or toast here.
   };
 
   const handleExecuteTask = (taskId: string) => {
@@ -100,7 +100,6 @@ function App() {
     );
   }
 
-  // ... (Other wizard steps omitted for brevity, they remain unchanged in logic) ...
   if (currentStep === 'system-check') { return <SystemCheck onBack={() => setCurrentStep('intro')} onNext={() => setCurrentStep('cli-config')} />; }
   if (currentStep === 'cli-config') { return <CliConfig onBack={() => setCurrentStep('system-check')} onNext={() => setCurrentStep('secure-storage')} />; }
   if (currentStep === 'secure-storage') { return <SecureStorage onBack={() => setCurrentStep('cli-config')} onNext={() => setCurrentStep('connect-agent')} />; }
@@ -111,7 +110,7 @@ function App() {
     return (
       <RecentProjects 
         onOpenProject={(path) => {
-          setNewProjectData({ path }); // Store path for validation context
+          setNewProjectData({ path }); 
           setCurrentStep('validating-workspace');
         }}
         onCreateNew={() => setCurrentStep('create-project-location')}
@@ -158,27 +157,26 @@ function App() {
   if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
   if (currentStep === 'workspace-ready') { return <WorkspaceReady workspacePath={newProjectData.path} onNext={() => setCurrentStep('dashboard')} />; }
 
-  // Special Routes that take over the full screen or main area
   if (activePath === '/conflict') {
     return <ConflictResolver onBack={() => setActivePath('/source')} />;
   }
 
-  // Calculate padding based on drawer state
   const contentPaddingClass = 
     drawerState === 'open' ? 'pb-[300px]' : 
     drawerState === 'collapsed' ? 'pb-[32px]' : 
     drawerState === 'maximized' ? 'pb-0' : 
-    'pb-0'; // hidden
+    'pb-0'; 
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
+    if (activePath === '/agents') return <Agents />;
+    if (activePath === '/docs') return <Documentation />;
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
     if (activePath === '/settings') return <ProjectSettings />;
     
-    // Placeholder for other routes
     return (
       <div className="flex items-center justify-center h-full text-slate-500">
         <p>Section under construction: {activePath}</p>
@@ -191,6 +189,8 @@ function App() {
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Workspace / Code Review';
+    if (activePath === '/agents') return 'Workspace / Agents';
+    if (activePath === '/docs') return 'Workspace / Documentation';
     if (activePath === '/source') return 'Workspace / Source Control';
     if (activePath === '/settings') return 'Workspace / Settings';
     return `Workspace ${activePath}`;
@@ -199,7 +199,6 @@ function App() {
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
-      {/* Sidebar - Hide in Execution Mode if desired, but specification says Shell Context: Focus Shell. We'll keep it simple for now or collapse it. */}
       <Sidebar 
         isExpanded={activePath !== '/exec' && isSidebarExpanded} 
         setIsExpanded={setIsSidebarExpanded}
@@ -207,11 +206,9 @@ function App() {
         setActivePath={setActivePath}
       />
 
-      {/* Main Content Stage */}
       <main className="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
         
-        {/* Top Breadcrumbs / App Header */}
-        {activePath !== '/exec' && ( // Hide standard header in execution mode as it has its own
+        {activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' && ( 
           <header className="h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
             <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
                <span className="hover:text-slate-300 cursor-pointer transition-colors">Master Coda</span>
@@ -240,17 +237,14 @@ function App() {
           </header>
         )}
 
-        {/* Scrollable Content */}
-        <div className={`flex-1 overflow-auto custom-scrollbar ${activePath !== '/exec' ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            {renderContent()}
         </div>
 
-        {/* Omni Drawer - Bottom Layer */}
-        <OmniDrawer state={drawerState} onStateChange={setDrawerState} />
+        {activePath !== '/docs' && activePath !== '/agents' && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
 
       </main>
 
-      {/* Overlays */}
       <CommandPalette isOpen={isCmdKOpen} onClose={() => setIsCmdKOpen(false)} />
       <CreateTaskModal 
         isOpen={isCreateTaskOpen} 
