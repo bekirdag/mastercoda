@@ -1,8 +1,28 @@
 import { Task, LogEntry, Metric } from './types';
 
+// Helper to get dates relative to now for dynamic mock data
+const today = new Date();
+const formatDate = (daysOffset: number) => {
+  const d = new Date(today);
+  d.setDate(d.getDate() + daysOffset);
+  return d.toISOString().split('T')[0];
+};
+
 export const MOCK_TASKS: Task[] = [
   // Epic 1
-  { id: 'MC-1000', title: 'Core Architecture Overhaul', status: 'in-progress', priority: 'high', type: 'epic', updatedAt: '2 days ago', assignee: 'Alex' },
+  { 
+    id: 'MC-1000', 
+    title: 'Core Architecture Overhaul', 
+    status: 'in-progress', 
+    priority: 'high', 
+    type: 'epic', 
+    updatedAt: '2 days ago', 
+    assignee: 'Alex',
+    startDate: formatDate(-14),
+    dueDate: formatDate(14),
+    projectedEnd: formatDate(18), // Delayed by 4 days
+    progress: 45
+  },
   { id: 'MC-1001', title: 'Design System Migration', status: 'completed', priority: 'medium', type: 'story', parentId: 'MC-1000', points: 5, assignee: 'Sarah', updatedAt: '1 day ago' },
   { id: 'MC-1021', title: 'Typography Audit', status: 'completed', priority: 'low', type: 'task', parentId: 'MC-1001', points: 2, updatedAt: '1 day ago', dependencies: ['MC-1027'] },
   { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'completed', priority: 'low', type: 'bug', parentId: 'MC-1001', points: 1, updatedAt: '2 hours ago' },
@@ -12,14 +32,36 @@ export const MOCK_TASKS: Task[] = [
   { id: 'MC-1023', title: 'Security Patch Dependencies', status: 'review', priority: 'high', type: 'task', parentId: 'MC-1002', points: 2, assignee: 'Sarah', updatedAt: '09:15 AM' },
   
   // Epic 2
-  { id: 'MC-2000', title: 'AI Agent Integration', status: 'pending', priority: 'high', type: 'epic', updatedAt: '1 week ago', dependencies: ['MC-1000'] },
+  { 
+    id: 'MC-2000', 
+    title: 'AI Agent Integration', 
+    status: 'pending', 
+    priority: 'high', 
+    type: 'epic', 
+    updatedAt: '1 week ago', 
+    dependencies: ['MC-1000'],
+    startDate: formatDate(10), // Starts after MC-1000 roughly
+    dueDate: formatDate(45),
+    progress: 10
+  },
   { id: 'MC-2001', title: 'Gemini API Streaming', status: 'failed', priority: 'high', type: 'story', parentId: 'MC-2000', points: 13, assignee: 'Alex', updatedAt: 'Yesterday', dependencies: ['MC-1002'] },
   { id: 'MC-1022', title: 'Implement stream handler', status: 'failed', priority: 'high', type: 'task', parentId: 'MC-2001', points: 5, assignee: 'Alex', updatedAt: 'Yesterday' },
   
   { id: 'MC-2002', title: 'Agent Context Window', status: 'pending', priority: 'medium', type: 'story', parentId: 'MC-2000', points: 8, updatedAt: '2 days ago', dependencies: ['MC-2001'] },
   { id: 'MC-1020', title: 'Optimize docker build cache', status: 'completed', priority: 'medium', type: 'task', parentId: 'MC-2002', points: 3, updatedAt: '2 days ago' },
   
-  // Loose Tasks
+  // Loose Tasks / Epics
+  { 
+    id: 'MC-3000', 
+    title: 'Mobile App Alpha', 
+    status: 'pending', 
+    priority: 'medium', 
+    type: 'epic', 
+    updatedAt: '3 days ago',
+    startDate: formatDate(30),
+    dueDate: formatDate(60),
+    progress: 0
+  },
   { id: 'MC-1025', title: 'Setup GitHub Actions CI pipeline', status: 'qa', priority: 'high', type: 'story', points: 5, updatedAt: '1 hour ago', dependencies: ['MC-1023'] },
   { id: 'MC-1026', title: 'Write unit tests for Utils module', status: 'in-progress', priority: 'medium', type: 'task', points: 3, assignee: 'John', updatedAt: '30 mins ago' },
   { id: 'MC-1028', title: 'Code review for PR #42', status: 'review', priority: 'high', type: 'task', points: 1, assignee: 'Sarah', updatedAt: 'Just now', dependencies: ['MC-1026'] },

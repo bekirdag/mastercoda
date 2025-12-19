@@ -4,7 +4,7 @@ export type OmniDrawerState = 'hidden' | 'peek' | 'maximized';
 
 export type OmniTab = 'terminal' | 'thoughts' | 'history';
 
-export type PlanViewType = 'board' | 'list' | 'graph';
+export type PlanViewType = 'board' | 'list' | 'graph' | 'roadmap';
 
 export type TaskType = 'epic' | 'story' | 'task' | 'bug';
 
@@ -28,6 +28,12 @@ export interface Task {
   updatedAt: string;
   parentId?: string;
   dependencies?: string[]; // IDs of tasks that block this task
+  
+  // Roadmap specific fields
+  startDate?: string; // ISO Date YYYY-MM-DD
+  dueDate?: string;   // ISO Date YYYY-MM-DD
+  projectedEnd?: string; // ISO Date YYYY-MM-DD (AI prediction)
+  progress?: number; // 0-100 percentage
 }
 
 export interface LogEntry {

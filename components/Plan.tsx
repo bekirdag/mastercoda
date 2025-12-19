@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TaskBoard from './TaskBoard';
 import BacklogList from './BacklogList';
 import DependencyGraph from './DependencyGraph';
+import RoadmapView from './RoadmapView';
 import Button from './Button';
 import { Task, PlanViewType } from '../types';
 import { MOCK_TASKS } from '../constants';
@@ -14,6 +15,7 @@ import {
   TrashIcon,
   Edit2Icon,
   UserIcon,
+  CalendarIcon
 } from './Icons';
 
 const Plan: React.FC = () => {
@@ -131,6 +133,15 @@ const Plan: React.FC = () => {
                    >
                      <ActivityIcon size={14} />
                    </button>
+                   <button 
+                     onClick={() => setView('roadmap')}
+                     className={`p-1.5 rounded transition-colors ${
+                       view === 'roadmap' ? 'bg-slate-700 text-slate-200 shadow-sm' : 'text-slate-500 hover:text-slate-300'
+                     }`}
+                     title="Roadmap View"
+                   >
+                     <CalendarIcon size={14} />
+                   </button>
                </div>
                <Button variant="primary" size="sm" icon={<PlusIcon size={14} />}>New Item</Button>
              </>
@@ -144,6 +155,8 @@ const Plan: React.FC = () => {
            <TaskBoard tasks={filteredTasks} />
          ) : view === 'graph' ? (
            <DependencyGraph tasks={tasks} /> 
+         ) : view === 'roadmap' ? (
+            <RoadmapView tasks={filteredTasks} />
          ) : (
            <BacklogList 
               tasks={filteredTasks} 
