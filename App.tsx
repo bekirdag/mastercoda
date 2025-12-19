@@ -11,10 +11,11 @@ import ConnectAgent from './components/ConnectAgent';
 import PrivacySettings from './components/PrivacySettings';
 import RecentProjects from './components/RecentProjects';
 import UpdateRequired from './components/UpdateRequired';
+import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -92,7 +93,7 @@ function App() {
     return (
       <RecentProjects 
         onOpenProject={() => setCurrentStep('dashboard')}
-        onCreateNew={() => setCurrentStep('dashboard')}
+        onCreateNew={() => setCurrentStep('create-project-location')}
         onVersionMismatch={() => setCurrentStep('update-required')}
       />
     );
@@ -102,6 +103,19 @@ function App() {
     return (
       <UpdateRequired 
         onFixed={() => setCurrentStep('recent-projects')} 
+      />
+    );
+  }
+
+  if (currentStep === 'create-project-location') {
+    return (
+      <CreateWorkspaceLocation
+        onBack={() => setCurrentStep('recent-projects')}
+        onNext={(path) => {
+          console.log('Selected path:', path);
+          // Placeholder for ON-10
+          setCurrentStep('dashboard');
+        }}
       />
     );
   }
