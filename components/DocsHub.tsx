@@ -19,7 +19,9 @@ import {
   ZapIcon,
   LockIcon,
   BookOpenIcon,
-  HistoryIcon
+  HistoryIcon,
+  RotateCwIcon,
+  CheckCircleIcon
 } from './Icons';
 
 const DocsHub: React.FC = () => {
@@ -43,6 +45,11 @@ const DocsHub: React.FC = () => {
     await new Promise(r => setTimeout(r, 1800));
     setAiAnswer(`Based on the **Core Backend** specs and **Engineering Standards**: \n\nWe handle 404s by throwing a custom \`ResourceNotFoundException\` which is intercepted by the global \`ApiExceptionFilter\`. This ensuring all error responses follow the JSend specification.`);
     setIsAskingAI(false);
+  };
+
+  const handleCreateNew = () => {
+    const evt = new CustomEvent('app-navigate', { detail: '/docs/edit/new' });
+    window.dispatchEvent(evt);
   };
 
   return (
@@ -151,7 +158,10 @@ const DocsHub: React.FC = () => {
                {drafts.map(doc => (
                   <DocListItem key={doc.id} doc={doc} />
                ))}
-               <button className="w-full mt-2 py-2 border border-dashed border-slate-700 rounded-lg text-[10px] font-bold text-slate-500 hover:text-indigo-400 hover:border-indigo-500 transition-all uppercase tracking-widest">
+               <button 
+                  onClick={handleCreateNew}
+                  className="w-full mt-2 py-2 border border-dashed border-slate-700 rounded-lg text-[10px] font-bold text-slate-500 hover:text-indigo-400 hover:border-indigo-500 transition-all uppercase tracking-widest"
+               >
                   + Create New Document
                </button>
             </QuickGridColumn>
@@ -260,24 +270,6 @@ const SourceCard: React.FC<{ source: DocSource }> = ({ source }) => (
          </button>
       </div>
    </div>
-);
-
-const RotateCwIcon: React.FC<any> = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={props.size || 20}
-    height={props.size || 20}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-    <path d="M21 3v5h-5" />
-  </svg>
 );
 
 export default DocsHub;

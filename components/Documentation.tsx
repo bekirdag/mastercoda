@@ -25,7 +25,6 @@ import {
   MessageSquareIcon,
   ShareIcon,
   GlobeIcon,
-  // Fix: Added missing ShieldIcon import to resolve error on line 264
   ShieldIcon
 } from './Icons';
 
@@ -66,6 +65,11 @@ const Documentation: React.FC = () => {
     const url = `${window.location.origin}/docs/view/${activePageId}#${id}`;
     navigator.clipboard.writeText(url);
     alert('Link copied to clipboard');
+  };
+
+  const handleEditRedirect = () => {
+    const evt = new CustomEvent('app-navigate', { detail: `/docs/edit/${activePageId}` });
+    window.dispatchEvent(evt);
   };
 
   return (
@@ -132,7 +136,7 @@ const Documentation: React.FC = () => {
              <div className="flex items-center space-x-1">
                 <ActionIcon icon={<StarIcon size={14} />} title="Star" />
                 <ActionIcon icon={<ShareIcon size={14} />} title="Share Link" />
-                <ActionIcon icon={<Edit2Icon size={14} />} title="Edit Document" onClick={() => setIsEditing(true)} />
+                <ActionIcon icon={<Edit2Icon size={14} />} title="Edit Document" onClick={handleEditRedirect} />
              </div>
           </div>
         </header>

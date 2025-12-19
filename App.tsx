@@ -30,6 +30,7 @@ import TaskDetailView from './components/TaskDetailView';
 import ProjectSettings from './components/ProjectSettings';
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; // Added for DO-01
+import DocEditor from './components/DocEditor'; // Added for DO-03
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
@@ -231,8 +232,9 @@ function App() {
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
     if (activePath === '/agents') return <Agents />;
-    if (activePath === '/docs') return <DocsHub />; // Changed to DocsHub for DO-01 entry
-    if (activePath === '/docs/view') return <Documentation />; // Legacy or detailed view
+    if (activePath === '/docs') return <DocsHub />; 
+    if (activePath === '/docs/view') return <Documentation />; 
+    if (activePath.startsWith('/docs/edit')) return <DocEditor onBack={() => setActivePath('/docs')} />;
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
     if (activePath === '/settings') return <ProjectSettings />;
     
@@ -268,19 +270,20 @@ function App() {
     if (activePath === '/review') return 'Workspace / Code Review';
     if (activePath === '/agents') return 'Workspace / Agents';
     if (activePath === '/docs') return 'Workspace / Documentation Hub';
+    if (activePath.startsWith('/docs/edit')) return 'Workspace / Document Editor';
     if (activePath === '/source') return 'Workspace / Source Control';
     if (activePath === '/settings') return 'Workspace / Settings';
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator'];
-  const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator'];
+  const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
       <Sidebar 
-        isExpanded={activePath !== '/exec' && isSidebarExpanded} 
+        isExpanded={activePath !== '/exec' && !activePath.startsWith('/docs/edit') && isSidebarExpanded} 
         setIsExpanded={setIsSidebarExpanded}
         activePath={activePath}
         setActivePath={setActivePath}
