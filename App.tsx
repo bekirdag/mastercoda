@@ -3,10 +3,12 @@ import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
 import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
+import IntroCarousel from './components/IntroCarousel';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
 function App() {
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [drawerState, setDrawerState] = useState<OmniDrawerState>('peek');
   const [activePath, setActivePath] = useState('/');
@@ -27,6 +29,10 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  if (showOnboarding) {
+    return <IntroCarousel onFinish={() => setShowOnboarding(false)} />;
+  }
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
