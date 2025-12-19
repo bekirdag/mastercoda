@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -664,6 +664,59 @@ export const MOCK_AI_PROVIDERS: AIProvider[] = [
       { id: 'codellama:7b', name: 'CodeLlama 7B', contextWindow: 16384, type: 'chat' },
       { id: 'mistral:v0.3', name: 'Mistral v0.3', contextWindow: 32768, type: 'chat' }
     ]
+  }
+];
+
+// EX-11 Service Accounts Mock
+export const MOCK_SERVICE_ACCOUNTS: ServiceAccount[] = [
+  {
+    id: 'sa-gh-1',
+    providerName: 'GitHub',
+    providerId: 'github',
+    username: 'alice-dev',
+    email: 'alice@example.com',
+    status: 'connected',
+    scopes: ['repo', 'read:user', 'gist', 'workflow'],
+    lastVerified: '2m ago',
+    authorizedExtensions: [
+      { id: 'ext-gitlens', name: 'GitLens Helper', accessLevel: 'Read/Write Repos', lastUsed: 'Just now' },
+      { id: 'ext-pr-bot', name: 'PR Review Agent', accessLevel: 'Read Repos', lastUsed: '1h ago' }
+    ]
+  },
+  {
+    id: 'sa-aws-1',
+    providerName: 'AWS',
+    providerId: 'aws',
+    username: 'mcoda-deploy-iam',
+    status: 'expired',
+    scopes: ['s3:*', 'lambda:InvokeFunction'],
+    lastVerified: '1d ago',
+    authorizedExtensions: [
+      { id: 'ext-lambda-exec', name: 'Lambda Orchestrator', accessLevel: 'Full Access', lastUsed: 'Yesterday' }
+    ]
+  },
+  {
+    id: 'sa-vercel-1',
+    providerName: 'Vercel',
+    providerId: 'vercel',
+    username: 'alice-personal',
+    status: 'connected',
+    scopes: ['deployments:read', 'projects:write'],
+    lastVerified: '5h ago',
+    authorizedExtensions: [
+      { id: 'ext-vercel', name: 'Deploy to Vercel', accessLevel: 'Manage Projects', lastUsed: '2h ago' }
+    ]
+  },
+  {
+    id: 'sa-jira-1',
+    providerName: 'Jira Cloud',
+    providerId: 'jira',
+    username: 'alice_eng',
+    status: 'error',
+    scopes: ['read:jira-work', 'write:jira-work'],
+    lastVerified: '2d ago',
+    authorizedExtensions: [],
+    isManual: true
   }
 ];
 

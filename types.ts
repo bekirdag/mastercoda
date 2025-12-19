@@ -176,6 +176,28 @@ export interface AIProvider {
   icon: string | React.ReactNode;
 }
 
+// EX-11 Service Account Types
+export interface AuthorizedExtension {
+  id: string;
+  name: string;
+  accessLevel: string;
+  lastUsed: string;
+  icon?: string;
+}
+
+export interface ServiceAccount {
+  id: string;
+  providerName: string;
+  providerId: 'github' | 'aws' | 'vercel' | 'jira' | 'google-cloud';
+  username: string;
+  email?: string;
+  status: 'connected' | 'expired' | 'error' | 'connecting';
+  scopes: string[];
+  authorizedExtensions: AuthorizedExtension[];
+  isManual?: boolean;
+  lastVerified: string;
+}
+
 // WS-14 Notification Types
 export type NotificationCategory = 'agent' | 'system' | 'mention';
 export type NotificationStatus = 'unread' | 'read' | 'archived';
