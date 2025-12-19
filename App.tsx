@@ -41,6 +41,8 @@ import ExtensionSettings from './components/ExtensionSettings';
 import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
 import ExtensionStacks from './components/ExtensionStacks'; // EX-06
 import ThemeStudio from './components/ThemeStudio'; // EX-07
+import SnippetStudio from './components/SnippetStudio'; // EX-08
+import KeymapManager from './components/KeymapManager'; // EX-09
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -203,6 +205,8 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/extensions/snippets') return <SnippetStudio />; // EX-08
+    if (activePath === '/extensions/keymaps') return <KeymapManager />; // EX-09
     if (activePath === '/extensions/stacks') return <ExtensionStacks />; // EX-06
     if (activePath === '/extensions/themes') return <ThemeStudio />; // EX-07
     if (activePath === '/extensions/installed') return <ExtensionManager />; // EX-05
@@ -234,6 +238,8 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/extensions/snippets') return 'Ecosystem / Extensions / Snippets';
+    if (activePath === '/extensions/keymaps') return 'Ecosystem / Extensions / Keymaps';
     if (activePath === '/extensions/stacks') return 'Ecosystem / Extensions / Stacks';
     if (activePath === '/extensions/themes') return 'Ecosystem / Personalization / Theme Studio';
     if (activePath === '/extensions/installed') return 'Ecosystem / Extensions / Manager';
@@ -250,7 +256,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
@@ -294,11 +300,11 @@ function App() {
           </header>
         )}
 
-        <div className={`flex-1 overflow-auto custom-scrollbar ${(!skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/')) ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${showHeader ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            {renderContent()}
         </div>
 
-        {(!skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/')) && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
+        {showHeader && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
 
       </main>
 

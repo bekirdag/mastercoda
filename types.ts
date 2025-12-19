@@ -251,7 +251,7 @@ export interface EnvironmentStatus {
 }
 
 // EX-01 Extension Types
-export type ExtensionCategory = 'Agents' | 'Languages' | 'Themes' | 'Snippets';
+export type ExtensionCategory = 'Agents' | 'Languages' | 'Themes' | 'Snippets' | 'Keymaps';
 export type ExtensionInstallStatus = 'idle' | 'installing' | 'installed' | 'updating';
 
 export interface ExtensionPermission {
@@ -289,6 +289,24 @@ export interface Extension {
   permissions?: ExtensionPermission[];
   recentErrors?: string[];
   dependencies?: string[];
+}
+
+// EX-09 Keymap Types
+export interface Keybinding {
+  id: string;
+  commandId: string;
+  commandLabel: string;
+  key: string; // e.g. "ctrl+shift+p"
+  source: string; // "System", "Prettier", "Vim"
+  when: string; // Context condition
+  isDefault?: boolean;
+  hasConflict?: boolean;
+}
+
+export interface KeymapProfile {
+  id: string;
+  name: string;
+  description: string;
 }
 
 // EX-04 Extension Builder Types
@@ -353,4 +371,19 @@ export interface IconPack {
   name: string;
   author: string;
   iconMap: Record<string, string>; // ext -> emoji/path
+}
+
+// EX-08 Snippet Types
+export type SnippetSource = 'local' | 'team' | 'extension';
+
+export interface Snippet {
+  id: string;
+  name: string;
+  prefix: string;
+  body: string;
+  description: string;
+  scope: string; // Comma separated languages
+  source: SnippetSource;
+  isLocked?: boolean;
+  updatedAt: string;
 }

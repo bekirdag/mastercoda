@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -367,6 +367,7 @@ export const MOCK_BRANCHES: GitRef[] = [
   { id: 'b2', name: 'main', type: 'local', active: false, commitId: 'd8e7f6' },
   { id: 'b3', name: 'hotfix/ui-glitch', type: 'local', active: false, commitId: 'a1b2c3' },
   { id: 'r1', name: 'origin/main', type: 'remote', active: false, commitId: 'd8e7f6' },
+  { id: 'r2', name: 'origin/feature/login-auth', type: 'remote', active: false, commitId: 'b4d3e1' },
   { id: 'r2', name: 'origin/feature/login-auth', type: 'remote', active: false, commitId: 'b4d3e1' },
   { id: 't1', name: 'v1.0.0', type: 'tag', active: false, commitId: 'a1b2c3' },
 ];
@@ -993,4 +994,69 @@ export const MOCK_THEMES: ThemeDefinition[] = [
 export const MOCK_ICON_SETS: IconPack[] = [
   { id: 'material', name: 'Material Icons', author: 'Google', iconMap: { 'ts': 'TypeScript', 'js': 'JavaScript', 'json': 'JSON' } },
   { id: 'vscode', name: 'VSCode Default', author: 'Microsoft', iconMap: { 'ts': 'TS', 'js': 'JS', 'json': '{}' } },
+];
+
+export const MOCK_SNIPPETS: Snippet[] = [
+  {
+    id: 'sn-1',
+    name: 'React Functional Component',
+    prefix: 'rfc',
+    scope: 'typescriptreact,javascriptreact',
+    body: "export const ${1:ComponentName} = () => {\n  return (\n    <div>$0</div>\n  );\n};",
+    description: 'Generates a React functional component',
+    source: 'local',
+    updatedAt: '2h ago'
+  },
+  {
+    id: 'sn-2',
+    name: 'Console Log Label',
+    prefix: 'cll',
+    scope: 'typescript,javascript',
+    body: "console.log('$1: ', $1);$0",
+    description: 'Logs a value with its variable name label',
+    source: 'team',
+    updatedAt: '1d ago'
+  },
+  {
+    id: 'sn-3',
+    name: 'Use State Hook',
+    prefix: 'us',
+    scope: 'typescriptreact',
+    body: "const [${1:state}, set${1/(.*)/${1:/capitalize}/}] = useState($0);",
+    description: 'React useState hook with automatic setter naming',
+    source: 'extension',
+    isLocked: true,
+    updatedAt: '3d ago'
+  },
+  {
+    id: 'sn-4',
+    name: 'TODO Comment',
+    prefix: 'todo',
+    scope: '',
+    body: "// TODO ($TM_FILENAME): $1",
+    description: 'Filename-aware TODO reminder',
+    source: 'local',
+    updatedAt: 'Just now'
+  }
+];
+
+// EX-09 Keymap Data
+export const MOCK_KEYBINDINGS: Keybinding[] = [
+  { id: 'kb-1', commandId: 'workbench.action.showCommands', commandLabel: 'Show Command Palette', key: 'meta+k', source: 'System', when: 'global', isDefault: true },
+  { id: 'kb-2', commandId: 'editor.action.format', commandLabel: 'Format Document', key: 'shift+alt+f', source: 'Prettier', when: 'editorTextFocus', isDefault: true },
+  { id: 'kb-3', commandId: 'agent.action.refactor', commandLabel: 'AI: Refactor Code', key: 'meta+shift+r', source: 'Architect Prime', when: 'editorHasSelection' },
+  { id: 'kb-4', commandId: 'terminal.focus', commandLabel: 'Terminal: Focus', key: 'ctrl+`', source: 'System', when: 'global', isDefault: true },
+  { id: 'kb-5', commandId: 'workbench.action.search', commandLabel: 'Search: Files', key: 'meta+p', source: 'System', when: 'global', isDefault: true },
+  { id: 'kb-6', commandId: 'vim.mode.normal', commandLabel: 'Vim: Normal Mode', key: 'escape', source: 'Vim Extension', when: 'editorFocus' },
+  { id: 'kb-7', commandId: 'conflict.demo', commandLabel: 'Conflicting Command', key: 'meta+k', source: 'AI Agent', when: 'global', hasConflict: true },
+  { id: 'kb-8', commandId: 'editor.action.save', commandLabel: 'Save File', key: 'meta+s', source: 'System', when: 'global', isDefault: true },
+  { id: 'kb-9', commandId: 'editor.action.copy', commandLabel: 'Copy', key: 'meta+c', source: 'System', when: 'global', isDefault: true },
+  { id: 'kb-10', commandId: 'editor.action.paste', commandLabel: 'Paste', key: 'meta+v', source: 'System', when: 'global', isDefault: true },
+];
+
+export const MOCK_KEYMAP_PROFILES: KeymapProfile[] = [
+  { id: 'def', name: 'Default (Master Coda)', description: 'The standard high-productivity layout' },
+  { id: 'vim', name: 'Vim Emulation', description: 'Modal editing for power users' },
+  { id: 'vsc', name: 'Visual Studio Code', description: 'Familiar shortcuts for VS Code migrants' },
+  { id: 'ij', name: 'IntelliJ IDEA', description: 'Refactoring-heavy shortcuts from JetBrains' },
 ];

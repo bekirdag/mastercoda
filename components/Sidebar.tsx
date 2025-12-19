@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -20,6 +20,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
+    { id: 'snippets', label: 'Snippets', icon: <ScissorsIcon size={20} />, path: '/extensions/snippets' }, // EX-08
+    { id: 'keymaps', label: 'Keymaps', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-indigo-500 rounded-sm"/></div>, path: '/extensions/keymaps' }, // EX-09
     { id: 'stacks', label: 'Stacks', icon: <PackageIcon size={20} />, path: '/extensions/stacks' }, // EX-06
     { id: 'themes', label: 'Theme Studio', icon: <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500" />, path: '/extensions/themes' }, // EX-07
     { id: 'manager', label: 'Ext Manager', icon: <SettingsIcon size={20} />, path: '/extensions/installed' }, // EX-05
