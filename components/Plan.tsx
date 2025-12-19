@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TaskBoard from './TaskBoard';
 import BacklogList from './BacklogList';
+import DependencyGraph from './DependencyGraph';
 import Button from './Button';
 import { Task, PlanViewType } from '../types';
 import { MOCK_TASKS } from '../constants';
@@ -10,16 +11,14 @@ import {
   ListIcon, 
   PlusIcon, 
   ActivityIcon,
-  FilterIcon,
   TrashIcon,
   Edit2Icon,
   UserIcon,
-  CheckCircleIcon
 } from './Icons';
 
 const Plan: React.FC = () => {
   const [view, setView] = useState<PlanViewType>('list');
-  const [tasks, setTasks] = useState<Task[]>(MOCK_TASKS);
+  const [tasks] = useState<Task[]>(MOCK_TASKS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set());
 
@@ -123,7 +122,13 @@ const Plan: React.FC = () => {
                    >
                      <ListIcon size={14} />
                    </button>
-                   <button className="p-1.5 rounded text-slate-500 hover:text-slate-300" title="Graph View (Disabled)">
+                   <button 
+                     onClick={() => setView('graph')}
+                     className={`p-1.5 rounded transition-colors ${
+                       view === 'graph' ? 'bg-slate-700 text-slate-200 shadow-sm' : 'text-slate-500 hover:text-slate-300'
+                     }`}
+                     title="Graph View"
+                   >
                      <ActivityIcon size={14} />
                    </button>
                </div>
@@ -137,6 +142,8 @@ const Plan: React.FC = () => {
       <div className="flex-1 overflow-hidden relative">
          {view === 'board' ? (
            <TaskBoard tasks={filteredTasks} />
+         ) : view === 'graph' ? (
+           <DependencyGraph tasks={tasks} /> 
          ) : (
            <BacklogList 
               tasks={filteredTasks} 

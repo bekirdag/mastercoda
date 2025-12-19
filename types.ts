@@ -27,6 +27,7 @@ export interface Task {
   assignee?: string;
   updatedAt: string;
   parentId?: string;
+  dependencies?: string[]; // IDs of tasks that block this task
 }
 
 export interface LogEntry {
