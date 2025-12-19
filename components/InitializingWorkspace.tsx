@@ -33,6 +33,7 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
   const [logs, setLogs] = useState<LogLine[]>([]);
   const [status, setStatus] = useState<'running' | 'success' | 'error'>('running');
   const [progress, setProgress] = useState(0);
+  const [currentStepLabel, setCurrentStepLabel] = useState('Initializing environment...');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
 
@@ -53,49 +54,60 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
 
     const runInit = async () => {
       // Step 1: Start
-      addLog(`Initializing workspace for project "${config.name}"...`);
+      setCurrentStepLabel(`Target: ${config.path}`);
+      addLog(`Spawn: mcoda init --workspace-root "${config.path}" --json`);
       setProgress(5);
-      await new Promise(r => setTimeout(r, 600));
+      await new Promise(r => setTimeout(r, 800));
 
       // Step 2: Path Validation
       if (!mounted) return;
-      addLog(`Validating path permissions at ${config.path}...`);
+      setCurrentStepLabel('Validating filesystem permissions...');
+      addLog(`Validating write access...`);
+      await new Promise(r => setTimeout(r, 600));
       setProgress(15);
-      await new Promise(r => setTimeout(r, 800));
-
+      
       // Step 3: Directory Creation
       if (!mounted) return;
-      addLog(`Creating .mcoda directory structure...`, 'success');
+      setCurrentStepLabel('Scaffolding directory structure...');
+      addLog(`Created .mcoda directory`, 'success');
+      addLog(`Created .mcoda/logs directory`, 'success');
       setProgress(30);
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 700));
 
       // Step 4: DB Init
       if (!mounted) return;
+      setCurrentStepLabel('Initializing SQLite database...');
       addLog(`Initializing SQLite database at .mcoda/mcoda.db...`);
+      await new Promise(r => setTimeout(r, 1000));
+      addLog(`Applied 14 migrations`, 'success');
       setProgress(50);
-      await new Promise(r => setTimeout(r, 1200));
 
       // Step 5: Config Write
       if (!mounted) return;
-      addLog(`Writing configuration: Agent=${config.agentId}, QA=${config.qaProfile}`);
+      setCurrentStepLabel('Writing workspace configuration...');
+      addLog(`Writing config.json: Agent=${config.agentId}, QA=${config.qaProfile}`);
       setProgress(70);
       await new Promise(r => setTimeout(r, 600));
 
       // Step 6: Gitignore
       if (config.gitignore) {
         if (!mounted) return;
-        addLog(`Git repository detected. Adding .mcoda to .gitignore...`);
+        setCurrentStepLabel('Updating .gitignore...');
+        addLog(`Git repository detected. Added .mcoda to .gitignore.`);
         await new Promise(r => setTimeout(r, 400));
       }
 
       // Step 7: Cryptography
       if (!mounted) return;
+      setCurrentStepLabel('Generating encryption keys...');
       addLog(`Generating 256-bit workspace encryption keys...`);
       setProgress(90);
       await new Promise(r => setTimeout(r, 800));
+      addLog(`Keys stored in secure storage.`);
 
       // Step 8: Finalize
       if (!mounted) return;
+      setCurrentStepLabel('Finalizing setup...');
       addLog(`Workspace initialized successfully.`, 'success');
       setProgress(100);
       setStatus('success');
@@ -103,7 +115,7 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
       // Auto-navigate after success
       setTimeout(() => {
         if (mounted) onNext();
-      }, 1500);
+      }, 1200);
     };
 
     runInit();
@@ -114,7 +126,6 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
   const copyLogs = () => {
     const text = logs.map(l => `[${l.time}] ${l.type.toUpperCase()}: ${l.msg}`).join('\n');
     navigator.clipboard.writeText(text);
-    // Could add toast here
   };
 
   return (
@@ -143,8 +154,8 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
                  status === 'success' ? 'Initialization Complete' : 
                  'Initialization Failed'}
             </h1>
-            <p className="text-slate-400 mt-2 text-sm font-mono">
-                {status === 'running' ? `Target: ${config.path}` : 
+            <p className="text-slate-400 mt-2 text-sm font-mono h-5">
+                {status === 'running' ? currentStepLabel : 
                  status === 'success' ? 'Redirecting to dashboard...' : 
                  'Check logs for details'}
             </p>
@@ -154,12 +165,14 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
         <div className="relative bg-[#0f1117] border-y border-slate-800 h-[400px] flex flex-col">
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-2 bg-[#15171e] border-b border-slate-800 text-xs">
-                 <div className="flex items-center text-slate-500">
-                    <TerminalIcon size={12} className="mr-2" />
-                    <span className="font-mono">mcoda init --json</span>
+                 <div className="flex items-center text-slate-500 truncate max-w-[400px]">
+                    <TerminalIcon size={12} className="mr-2 shrink-0" />
+                    <span className="font-mono truncate" title={`mcoda init --workspace-root "${config.path}" --json`}>
+                        mcoda init --workspace-root "{config.path}" --json
+                    </span>
                  </div>
-                 <div className="flex items-center space-x-3">
-                    <label className="flex items-center text-slate-500 hover:text-slate-300 cursor-pointer">
+                 <div className="flex items-center space-x-3 shrink-0">
+                    <label className="flex items-center text-slate-500 hover:text-slate-300 cursor-pointer select-none">
                         <input type="checkbox" checked={autoScroll} onChange={(e) => setAutoScroll(e.target.checked)} className="mr-1.5 accent-indigo-500 rounded-sm w-3 h-3" />
                         Auto-scroll
                     </label>
@@ -220,6 +233,7 @@ const InitializingWorkspace: React.FC<InitializingWorkspaceProps> = ({ onNext, o
                     <Button 
                         variant="secondary" 
                         onClick={onCancel}
+                        disabled={status !== 'running' && status !== 'error'}
                     >
                         {status === 'error' ? 'Back to Settings' : 'Cancel'}
                     </Button>
