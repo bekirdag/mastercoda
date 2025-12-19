@@ -467,3 +467,34 @@ export const MaximizeIcon: React.FC<IconProps> = (props) => (
     <line x1="3" y1="21" x2="10" y2="14" />
   </BaseIcon>
 );
+
+export const EyeIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </BaseIcon>
+);
+
+export const GitCommitIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="12" cy="12" r="4" />
+    <line x1="1.05" y1="12" x2="7" y2="12" />
+    <line x1="17.01" y1="12" x2="22.96" y2="12" />
+  </BaseIcon>
+);
+
+export const CheckSquareIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <polyline points="9 11 12 14 22 4" />
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+  </BaseIcon>
+);
+
+export const DiffIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14 2z" />
+    <path d="M10 10h4" />
+    <path d="M10 14h4" />
+    <path d="M12 12v4" />
+  </BaseIcon>
+);

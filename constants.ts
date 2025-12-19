@@ -1,4 +1,4 @@
-import { Task, LogEntry, Metric, AgentLogEntry } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -181,4 +181,122 @@ export const MOCK_SERVER_LOGS = [
   "[10:42:05] [Watcher] src/App.tsx changed. Rebuilding...",
   "[10:42:06] [webpack] Asset main.js 4.2MiB [emitted] (name: main)",
   "[10:42:06] [webpack] compiled with 1 warning",
+];
+
+export const MOCK_FILE_CHANGES: FileChange[] = [
+  {
+    id: 'f1',
+    path: 'src/components/Button.tsx',
+    status: 'modified',
+    additions: 12,
+    deletions: 4,
+    selected: true,
+    viewed: false,
+    contentOriginal: `import React from 'react';
+
+interface ButtonProps {
+  variant: 'primary' | 'secondary';
+  label: string;
+}
+
+export const Button = ({ variant, label }) => {
+  return (
+    <button className={variant}>
+      {label}
+    </button>
+  );
+};`,
+    contentModified: `import React from 'react';
+import { Loader } from './Loader';
+
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'ghost';
+  label: string;
+  loading?: boolean;
+}
+
+export const Button = ({ variant, label, loading }) => {
+  return (
+    <button className={\`btn \${variant}\`} disabled={loading}>
+      {loading ? <Loader /> : label}
+    </button>
+  );
+};`
+  },
+  {
+    id: 'f2',
+    path: 'src/components/Loader.tsx',
+    status: 'added',
+    additions: 15,
+    deletions: 0,
+    selected: true,
+    viewed: false,
+    contentOriginal: '',
+    contentModified: `import React from 'react';
+
+export const Loader = () => (
+  <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+  </svg>
+);`
+  },
+  {
+    id: 'f3',
+    path: 'src/legacy/OldButton.js',
+    status: 'deleted',
+    additions: 0,
+    deletions: 24,
+    selected: true,
+    viewed: true,
+    contentOriginal: `// Deprecated: Use src/components/Button.tsx
+import React from 'react';
+
+const OldButton = () => {
+   return <button>Click me</button>;
+}
+
+export default OldButton;`,
+    contentModified: ''
+  },
+  {
+    id: 'f4',
+    path: 'src/utils/helpers.ts',
+    status: 'modified',
+    additions: 2,
+    deletions: 1,
+    selected: true,
+    viewed: false,
+    contentOriginal: `export const formatDate = (date: Date) => {
+  return date.toISOString();
+};`,
+    contentModified: `export const formatDate = (date: Date) => {
+  // Use locale string for UI
+  return date.toLocaleDateString();
+};`
+  },
+  {
+    id: 'f5',
+    path: 'package.json',
+    status: 'modified',
+    additions: 1,
+    deletions: 0,
+    selected: false,
+    viewed: false,
+    contentOriginal: `{
+  "name": "master-coda",
+  "version": "0.1.0",
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+}`,
+    contentModified: `{
+  "name": "master-coda",
+  "version": "0.1.0",
+  "dependencies": {
+    "react": "^18.2.0",
+    "lucide-react": "^0.263.1"
+  }
+}`
+  }
 ];

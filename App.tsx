@@ -5,6 +5,7 @@ import CommandPalette from './components/CommandPalette';
 import Dashboard from './components/Dashboard';
 import Plan from './components/Plan';
 import Execution from './components/Execution';
+import Review from './components/Review';
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
 import CliConfig from './components/CliConfig';
@@ -165,6 +166,7 @@ function App() {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
+    if (activePath === '/review') return <Review />;
     
     // Placeholder for other routes
     return (
@@ -178,6 +180,7 @@ function App() {
     if (activePath === '/') return 'Workspace / Dashboard';
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
+    if (activePath === '/review') return 'Workspace / Code Review';
     return `Workspace ${activePath}`;
   };
 

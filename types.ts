@@ -10,6 +10,8 @@ export type TaskType = 'epic' | 'story' | 'task' | 'bug';
 
 export type TaskStatus = 'pending' | 'in-progress' | 'review' | 'qa' | 'completed' | 'failed';
 
+export type FileChangeStatus = 'modified' | 'added' | 'deleted';
+
 export interface NavItem {
   id: string;
   label: string;
@@ -63,4 +65,16 @@ export interface AgentLogEntry {
   timestamp: string;
   details?: string; // For collapsible content like thoughts or diffs
   collapsed?: boolean;
+}
+
+export interface FileChange {
+  id: string;
+  path: string;
+  status: FileChangeStatus;
+  additions: number;
+  deletions: number;
+  contentOriginal: string;
+  contentModified: string;
+  selected: boolean;
+  viewed: boolean;
 }
