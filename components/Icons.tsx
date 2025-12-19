@@ -121,6 +121,12 @@ export const CheckCircleIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
+export const CheckIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <polyline points="20 6 9 17 4 12" />
+  </BaseIcon>
+);
+
 export const ActivityIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />

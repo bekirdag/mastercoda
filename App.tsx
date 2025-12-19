@@ -12,10 +12,11 @@ import PrivacySettings from './components/PrivacySettings';
 import RecentProjects from './components/RecentProjects';
 import UpdateRequired from './components/UpdateRequired';
 import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
+import CreateWorkspaceDetails from './components/CreateWorkspaceDetails';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -23,6 +24,9 @@ function App() {
   const [drawerState, setDrawerState] = useState<OmniDrawerState>('peek');
   const [activePath, setActivePath] = useState('/');
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
+  
+  // Temporary state to hold wizard data
+  const [newProjectData, setNewProjectData] = useState<{ path?: string; name?: string; key?: string }>({});
 
   // Keyboard shortcut listener for Cmd+K and Drawer toggle (Cmd+J)
   useEffect(() => {
@@ -112,8 +116,21 @@ function App() {
       <CreateWorkspaceLocation
         onBack={() => setCurrentStep('recent-projects')}
         onNext={(path) => {
-          console.log('Selected path:', path);
-          // Placeholder for ON-10
+          setNewProjectData(prev => ({ ...prev, path }));
+          setCurrentStep('create-project-details');
+        }}
+      />
+    );
+  }
+
+  if (currentStep === 'create-project-details') {
+    return (
+      <CreateWorkspaceDetails
+        onBack={() => setCurrentStep('create-project-location')}
+        onNext={(details) => {
+          setNewProjectData(prev => ({ ...prev, ...details }));
+          // Placeholder for Step 3 (Defaults) or Dashboard for now
+          // Assuming next request will implement Step 3
           setCurrentStep('dashboard');
         }}
       />
