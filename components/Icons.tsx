@@ -214,3 +214,38 @@ export const ServerIcon: React.FC<IconProps> = (props) => (
     <line x1="6" y1="18" x2="6.01" y2="18" />
   </BaseIcon>
 );
+
+export const PlusIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </BaseIcon>
+);
+
+export const FolderIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+  </BaseIcon>
+);
+
+export const HelpCircleIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </BaseIcon>
+);
+
+export const XIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </BaseIcon>
+);
+
+export const ClockIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </BaseIcon>
+);

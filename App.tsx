@@ -9,10 +9,11 @@ import CliConfig from './components/CliConfig';
 import SecureStorage from './components/SecureStorage';
 import ConnectAgent from './components/ConnectAgent';
 import PrivacySettings from './components/PrivacySettings';
+import RecentProjects from './components/RecentProjects';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -81,7 +82,16 @@ function App() {
     return (
       <PrivacySettings
         onBack={() => setCurrentStep('connect-agent')}
-        onNext={() => setCurrentStep('dashboard')}
+        onNext={() => setCurrentStep('recent-projects')}
+      />
+    );
+  }
+
+  if (currentStep === 'recent-projects') {
+    return (
+      <RecentProjects 
+        onOpenProject={() => setCurrentStep('dashboard')}
+        onCreateNew={() => setCurrentStep('dashboard')}
       />
     );
   }
