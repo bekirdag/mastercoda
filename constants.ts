@@ -613,3 +613,44 @@ export const MOCK_AGENTS: AgentPersona[] = [
     }
   }
 ];
+
+// WS-15 Mock Data
+export const MOCK_VELOCITY_DATA = [
+  { name: 'Sprint 12', human: 12, agent: 8 },
+  { name: 'Sprint 13', human: 14, agent: 15 },
+  { name: 'Sprint 14', human: 10, agent: 22 },
+  { name: 'Sprint 15', human: 18, agent: 30 },
+  { name: 'Sprint 16', human: 15, agent: 28 },
+  { name: 'Sprint 17', human: 20, agent: 45 },
+];
+
+export const MOCK_TOKEN_USAGE = [
+  { date: formatDate(-13), tokens: 45000, budget: 100000 },
+  { date: formatDate(-12), tokens: 52000, budget: 100000 },
+  { date: formatDate(-11), tokens: 38000, budget: 100000 },
+  { date: formatDate(-10), tokens: 85000, budget: 100000 },
+  { date: formatDate(-9), tokens: 92000, budget: 100000 },
+  { date: formatDate(-8), tokens: 110000, budget: 100000 },
+  { date: formatDate(-7), tokens: 42000, budget: 100000 },
+  { date: formatDate(-6), tokens: 31000, budget: 100000 },
+  { date: formatDate(-5), tokens: 56000, budget: 100000 },
+  { date: formatDate(-4), tokens: 78000, budget: 100000 },
+  { date: formatDate(-3), tokens: 88000, budget: 100000 },
+  { date: formatDate(-2), tokens: 105000, budget: 100000 },
+  { date: formatDate(-1), tokens: 94000, budget: 100000 },
+  { date: formatDate(0), tokens: 62000, budget: 100000 },
+];
+
+export const MOCK_OUTCOME_DATA = [
+  { name: 'Success (First Try)', value: 65, color: '#10b981' },
+  { name: 'Success (After Retry)', value: 20, color: '#f59e0b' },
+  { name: 'Failed / Aborted', value: 15, color: '#ef4444' },
+];
+
+export const MOCK_FAILURE_REASONS = [
+  { reason: 'Rate Limit Exceeded (OpenAI)', count: 12 },
+  { reason: 'Linter Error (Prettier)', count: 4 },
+  { reason: 'Context Window Exceeded', count: 2 },
+  { reason: 'Test Timeout', count: 2 },
+  { reason: 'User Interruption', count: 1 },
+];

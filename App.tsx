@@ -31,6 +31,7 @@ import ProjectSettings from './components/ProjectSettings';
 import Documentation from './components/Documentation';
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
+import Analytics from './components/Analytics'; // WS-15
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -178,6 +179,7 @@ function App() {
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/inbox') return <Inbox />;
+    if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
@@ -196,6 +198,7 @@ function App() {
   const getBreadcrumb = () => {
     if (activePath === '/') return 'Workspace / Dashboard';
     if (activePath === '/inbox') return 'Workspace / Inbox';
+    if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Workspace / Code Review';

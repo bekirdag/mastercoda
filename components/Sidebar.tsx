@@ -16,6 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
   const navItems = [
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
+    { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' }, // WS-15 Entry
     { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
     { id: 'review', label: 'Review', icon: <EyeIcon size={20} />, path: '/review' },
