@@ -23,6 +23,27 @@ const BaseIcon: React.FC<IconProps> = ({ size = 20, strokeWidth = 1.5, children,
   </svg>
 );
 
+export const BellIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+  </BaseIcon>
+);
+
+export const CheckCheckIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="m2 12 5 5L20 4" />
+    <path d="m7 21 5-5" />
+    <path d="m15 21 5-5" />
+  </BaseIcon>
+);
+
+export const MessageCircleIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </BaseIcon>
+);
+
 export const CreditCardIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <rect width="20" height="14" x="2" y="5" rx="2" />
@@ -649,10 +670,6 @@ export const GlobeIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
-/**
- * Fix: Added BeakerIcon to components/Icons.tsx to resolve the missing export error
- * in components/PromptPlayground.tsx.
- */
 export const BeakerIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <path d="M4.5 3h15" />
@@ -661,10 +678,6 @@ export const BeakerIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
-/**
- * Fix: Added StarIcon to components/Icons.tsx to resolve the missing export error
- * in components/DocsHub.tsx and components/ModelRegistry.tsx.
- */
 export const StarIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />

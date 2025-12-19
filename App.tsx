@@ -28,52 +28,55 @@ import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorksp
 import CreateTaskModal from './components/CreateTaskModal';
 import TaskDetailView from './components/TaskDetailView';
 import ProjectSettings from './components/ProjectSettings';
-import GlobalPreferences from './components/GlobalPreferences'; // Added SY-01
-import BillingSettings from './components/BillingSettings'; // Added SY-03
+import GlobalPreferences from './components/GlobalPreferences'; 
+import BillingSettings from './components/BillingSettings'; 
+import AboutUpdates from './components/AboutUpdates'; // SY-06
 import Documentation from './components/Documentation';
-import DocsHub from './components/DocsHub'; // Added for DO-01
-import DocEditor from './components/DocEditor'; // Added for DO-03
-import DocSiteManager from './components/DocSiteManager'; // Added for DO-04
-import ApiExplorer from './components/ApiExplorer'; // Added for DO-05
-import SystemTopology from './components/SystemTopology'; // Added for DO-06
-import DecisionLog from './components/DecisionLog'; // Added for DO-07
-import LearningPaths from './components/LearningPaths'; // Added for DO-08
-import DomainDictionary from './components/DomainDictionary'; // Added for DO-09
-import DocsAnalytics from './components/DocsAnalytics'; // Added for DO-10
+import DocsHub from './components/DocsHub'; 
+import DocEditor from './components/DocEditor'; 
+import DocSiteManager from './components/DocSiteManager'; 
+import ApiExplorer from './components/ApiExplorer'; 
+import SystemTopology from './components/SystemTopology'; 
+import DecisionLog from './components/DecisionLog'; 
+import LearningPaths from './components/LearningPaths'; 
+import DomainDictionary from './components/DomainDictionary'; 
+import DocsAnalytics from './components/DocsAnalytics'; 
 import Agents from './components/Agents';
-import AgentFleet from './components/AgentFleet'; // AG-01
-import AgentProfile from './components/AgentProfile'; // AG-02
-import AgentStudio from './components/AgentStudio'; // AG-03
-import AgentGym from './components/AgentGym'; // AG-04
-import SquadComposer from './components/SquadComposer'; // AG-05
-import AgentGuardrails from './components/AgentGuardrails'; // AG-06
-import MissionControl from './components/MissionControl'; // AG-07
-import AgentAnalytics from './components/AgentAnalytics'; // AG-10
-import KnowledgeManager from './components/KnowledgeManager'; // AG-08
-import SkillStudio from './components/SkillStudio'; // AG-09
-import AgentTraining from './components/AgentTraining'; // AG-11
-import PluginMarketplace from './components/PluginMarketplace'; // AG-12
-import Inbox from './components/Inbox';
+import AgentFleet from './components/AgentFleet'; 
+import AgentProfile from './components/AgentProfile'; 
+import AgentStudio from './components/AgentStudio'; 
+import AgentGym from './components/AgentGym'; 
+import SquadComposer from './components/SquadComposer'; 
+import AgentGuardrails from './components/AgentGuardrails'; 
+import MissionControl from './components/MissionControl'; 
+import AgentAnalytics from './components/AgentAnalytics'; 
+import KnowledgeManager from './components/KnowledgeManager'; 
+import SkillStudio from './components/SkillStudio'; 
+import AgentTraining from './components/AgentTraining'; 
+import PluginMarketplace from './components/PluginMarketplace'; 
+import NotificationCenter from './components/NotificationCenter'; // SY-04
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
 import QualityHub from './components/QualityHub';
 import ReleaseManager from './components/ReleaseManager';
 import Extensions from './components/Extensions'; 
-import ModelRegistry from './components/ModelRegistry'; // EX-10
-import ServiceAccounts from './components/ServiceAccounts'; // EX-11
-import ReferenceLibrary from './components/ReferenceLibrary'; // EX-12
-import NetworkFirewall from './components/NetworkFirewall'; // EX-14
-import AgentOrchestrator from './components/AgentOrchestrator'; // EX-15
-import ExtensionManager from './components/ExtensionManager'; // EX-05
+import ModelRegistry from './components/ModelRegistry'; 
+import ServiceAccounts from './components/ServiceAccounts'; 
+import ReferenceLibrary from './components/ReferenceLibrary'; 
+import NetworkFirewall from './components/NetworkFirewall'; 
+import AgentOrchestrator from './components/AgentOrchestrator'; 
+import ExtensionManager from './components/ExtensionManager'; 
 import ExtensionSettings from './components/ExtensionSettings';
-import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
-import ExtensionStacks from './components/ExtensionStacks'; // EX-06
-import ThemeStudio from './components/ThemeStudio'; // EX-07
-import SnippetStudio from './components/SnippetStudio'; // EX-08
-import KeymapManager from './components/KeymapManager'; // EX-09
-import PromptPlayground from './components/PromptPlayground'; // Added for Lab integration
+import ExtensionBuilder from './components/ExtensionBuilder'; 
+import ExtensionStacks from './components/ExtensionStacks'; 
+import ThemeStudio from './components/ThemeStudio'; 
+import SnippetStudio from './components/SnippetStudio'; 
+import KeymapManager from './components/KeymapManager'; 
+import PromptPlayground from './components/PromptPlayground'; 
+import HelpSupport from './components/HelpSupport'; // SY-05
 import { OmniDrawerState } from './types';
-import { CommandIcon } from './components/Icons';
+import { CommandIcon, BellIcon } from './components/Icons';
+import { MOCK_NOTIFICATIONS } from './constants';
 
 type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'database-migration' | 'invalid-workspace' | 'dashboard';
 
@@ -86,6 +89,8 @@ function App() {
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [taskDetailId, setTaskDetailId] = useState<string | null>(null);
   
+  const unreadCount = MOCK_NOTIFICATIONS.filter(n => n.status === 'unread').length;
+
   // Execution Context
   const [executionTaskId, setExecutionTaskId] = useState<string | null>(null);
 
@@ -111,13 +116,18 @@ function App() {
         e.preventDefault();
         setIsCmdKOpen(prev => !prev);
       }
+      // Cmd+Shift+N: Notifications
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'n') {
+        e.preventDefault();
+        setActivePath('/notifications');
+      }
       // Cmd+J: Toggle Terminal (Standard -> Collapsed -> Standard)
       if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
         e.preventDefault();
         setDrawerState(prev => prev === 'open' ? 'collapsed' : 'open');
       }
       // Cmd+N: New Task (Global)
-      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'n') {
         e.preventDefault();
         setIsCreateTaskOpen(true);
       }
@@ -223,7 +233,7 @@ function App() {
   if (currentStep === 'database-migration') { return <DatabaseMigration onComplete={() => setCurrentStep('dashboard')} onCancel={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
-  if (currentStep === 'create-project-details') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(details: any) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
+  if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details: any) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
   if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults: any) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
   if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
   if (currentStep === 'workspace-ready') { return <WorkspaceReady workspacePath={newProjectData.path} onNext={() => setCurrentStep('dashboard')} />; }
@@ -240,28 +250,31 @@ function App() {
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
-    if (activePath === '/inbox') return <Inbox />;
+    if (activePath === '/notifications') return <NotificationCenter />; // SY-04
+    if (activePath === '/help') return <HelpSupport />; // SY-05
+    if (activePath === '/system/about') return <AboutUpdates />; // SY-06
+    if (activePath === '/inbox') return <NotificationCenter />; // Backwards compatibility / same context
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
-    if (activePath === '/agents/governance') return <AgentGuardrails />; // AG-06
-    if (activePath === '/agents/missions') return <MissionControl />; // AG-07
-    if (activePath === '/agents/training') return <AgentTraining />; // AG-11
-    if (activePath === '/agents/plugins') return <PluginMarketplace />; // AG-12
-    if (activePath === '/agents/knowledge') return <KnowledgeManager />; // AG-08
-    if (activePath === '/agents/skills') return <SkillStudio />; // AG-09
-    if (activePath === '/agents/evals') return <AgentGym />; // AG-04
-    if (activePath === '/agents/squads') return <SquadComposer />; // AG-05
+    if (activePath === '/agents/governance') return <AgentGuardrails />; 
+    if (activePath === '/agents/missions') return <MissionControl />; 
+    if (activePath === '/agents/training') return <AgentTraining />; 
+    if (activePath === '/agents/plugins') return <PluginMarketplace />; 
+    if (activePath === '/agents/knowledge') return <KnowledgeManager />; 
+    if (activePath === '/agents/skills') return <SkillStudio />; 
+    if (activePath === '/agents/evals') return <AgentGym />; 
+    if (activePath === '/agents/squads') return <SquadComposer />; 
     if (activePath === '/extensions/firewall') return <NetworkFirewall />;
-    if (activePath === '/docs/topology') return <SystemTopology />; // DO-06
-    if (activePath === '/docs/adrs') return <DecisionLog />; // DO-07
-    if (activePath === '/docs/glossary') return <DomainDictionary />; // DO-09
-    if (activePath === '/docs/learning') return <LearningPaths />; // DO-08
-    if (activePath === '/docs/analytics') return <DocsAnalytics />; // DO-10
+    if (activePath === '/docs/topology') return <SystemTopology />; 
+    if (activePath === '/docs/adrs') return <DecisionLog />; 
+    if (activePath === '/docs/glossary') return <DomainDictionary />; 
+    if (activePath === '/docs/learning') return <LearningPaths />; 
+    if (activePath === '/docs/analytics') return <DocsAnalytics />; 
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
-    if (activePath === '/playground') return <PromptPlayground />; // Added Lab
+    if (activePath === '/playground') return <PromptPlayground />; 
     if (activePath === '/extensions/references') return <ReferenceLibrary />;
     if (activePath === '/extensions/models') return <ModelRegistry />;
     if (activePath === '/extensions/accounts') return <ServiceAccounts />;
@@ -279,7 +292,7 @@ function App() {
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
-    if (activePath === '/agents/fleet') return <AgentFleet />; // AG-01
+    if (activePath === '/agents/fleet') return <AgentFleet />; 
     if (activePath.startsWith('/agents/') && activePath.endsWith('/profile')) {
       const parts = activePath.split('/');
       const agentId = parts[2];
@@ -295,10 +308,10 @@ function App() {
     if (activePath === '/docs/view') return <Documentation />; 
     if (activePath.startsWith('/docs/edit')) return <DocEditor onBack={() => setActivePath('/docs')} />;
     if (activePath === '/docs/manage/site-config') return <DocSiteManager />;
-    if (activePath === '/docs/api-explorer') return <ApiExplorer />; // DO-05
+    if (activePath === '/docs/api-explorer') return <ApiExplorer />; 
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
-    if (activePath === '/settings') return <GlobalPreferences />; // Map SY-01 to global gear
-    if (activePath === '/settings/billing') return <BillingSettings />; // Added SY-03
+    if (activePath === '/settings') return <GlobalPreferences />; 
+    if (activePath === '/settings/billing') return <BillingSettings />; 
     if (activePath === '/settings/project') return <ProjectSettings />;
     
     return (
@@ -310,7 +323,9 @@ function App() {
 
   const getBreadcrumb = () => {
     if (activePath === '/') return 'Workspace / Dashboard';
-    if (activePath === '/inbox') return 'Workspace / Inbox';
+    if (activePath === '/notifications' || activePath === '/inbox') return 'System / Notification Center';
+    if (activePath === '/help') return 'System / Help & Support';
+    if (activePath === '/system/about') return 'System / About Master Coda';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
@@ -362,7 +377,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
@@ -384,11 +399,11 @@ function App() {
                <span>/</span>
                <span className="text-slate-200">{getBreadcrumb()}</span>
             </div>
-            <div className="ml-auto flex items-center space-x-2">
+            <div className="ml-auto flex items-center space-x-3">
                <button 
                  onClick={() => setIsCreateTaskOpen(true)}
                  className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
-                 title="Create new task"
+                 title="Create new task (Cmd+N)"
                >
                   <span className="font-bold">+</span>
                   <span className="ml-1 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘N</span>
@@ -401,6 +416,18 @@ function App() {
                   <CommandIcon size={10} />
                   <span>Search</span>
                   <span className="ml-2 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘K</span>
+               </button>
+
+               <div className="h-4 w-px bg-slate-800 mx-1" />
+
+               <button 
+                 onClick={() => setActivePath('/notifications')}
+                 className={`relative p-1.5 rounded-lg transition-all ${activePath === '/notifications' ? 'bg-indigo-600/10 text-indigo-400' : 'text-slate-500 hover:text-white hover:bg-slate-800'}`}
+               >
+                  <BellIcon size={18} />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-900 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+                  )}
                </button>
             </div>
           </header>

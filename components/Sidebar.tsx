@@ -1,7 +1,6 @@
 
 import React from 'react';
-// Fix: Added missing CrownIcon to the imports
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -16,38 +15,38 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
 
   const navItems = [
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
-    { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
+    { id: 'notifications', label: 'Notifications', icon: <BellIcon size={20} />, path: '/notifications', badge: unreadCount },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
-    { id: 'roi', label: 'Agent ROI', icon: <div className="relative"><ZapIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /></div>, path: '/agents/analytics' }, // AG-10
-    { id: 'missions', label: 'Mission Control', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/missions' }, // AG-07
-    { id: 'plugins', label: 'Integrations', icon: <LinkIcon size={20} className="text-indigo-400" />, path: '/agents/plugins' }, // AG-12
-    { id: 'training', label: 'Fine-Tuning', icon: <div className="relative"><SparklesIcon size={20} className="text-indigo-400" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/training' }, // AG-11
-    { id: 'knowledge', label: 'Knowledge Base', icon: <DatabaseIcon size={20} className="text-indigo-400" />, path: '/agents/knowledge' }, // AG-08
-    { id: 'skills', label: 'Skill Studio', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-4 bg-indigo-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-5 bg-indigo-500 rounded-sm"/></div>, path: '/agents/skills' }, // AG-09
-    { id: 'orchestrator', label: 'Orchestrator', icon: <div className="relative"><ActivityIcon size={20} className="text-indigo-400" /><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full" /></div>, path: '/extensions/orchestrator' }, // EX-15
-    { id: 'guardrails', label: 'Safety Hub', icon: <ShieldIcon size={20} className="text-red-400" />, path: '/agents/governance' }, // AG-06
-    { id: 'gym', label: 'The Gymnasium', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/evals' }, // AG-04
-    { id: 'squads', label: 'Squads', icon: <div className="relative"><CrownIcon size={20} className="text-indigo-300" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/squads' }, // AG-05
+    { id: 'roi', label: 'Agent ROI', icon: <div className="relative"><ZapIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /></div>, path: '/agents/analytics' }, 
+    { id: 'missions', label: 'Mission Control', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/missions' }, 
+    { id: 'plugins', label: 'Integrations', icon: <LinkIcon size={20} className="text-indigo-400" />, path: '/agents/plugins' }, 
+    { id: 'training', label: 'Fine-Tuning', icon: <div className="relative"><SparklesIcon size={20} className="text-indigo-400" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/training' }, 
+    { id: 'knowledge', label: 'Knowledge Base', icon: <DatabaseIcon size={20} className="text-indigo-400" />, path: '/agents/knowledge' }, 
+    { id: 'skills', label: 'Skill Studio', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-4 bg-indigo-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-5 bg-indigo-500 rounded-sm"/></div>, path: '/agents/skills' }, 
+    { id: 'orchestrator', label: 'Orchestrator', icon: <div className="relative"><ActivityIcon size={20} className="text-indigo-400" /><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full" /></div>, path: '/extensions/orchestrator' }, 
+    { id: 'guardrails', label: 'Safety Hub', icon: <ShieldIcon size={20} className="text-red-400" />, path: '/agents/governance' }, 
+    { id: 'gym', label: 'The Gymnasium', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/evals' }, 
+    { id: 'squads', label: 'Squads', icon: <div className="relative"><CrownIcon size={20} className="text-indigo-300" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/squads' }, 
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
-    { id: 'firewall', label: 'Privacy Firewall', icon: <GlobeIcon size={20} />, path: '/extensions/firewall' }, // EX-14
-    { id: 'topology', label: 'Topology', icon: <LayoutGridIcon size={20} className="text-emerald-400" />, path: '/docs/topology' }, // DO-06
+    { id: 'firewall', label: 'Privacy Firewall', icon: <GlobeIcon size={20} />, path: '/extensions/firewall' }, 
+    { id: 'topology', label: 'Topology', icon: <LayoutGridIcon size={20} className="text-emerald-400" />, path: '/docs/topology' }, 
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
-    { id: 'adrs', label: 'Decision Log', icon: <HistoryIcon size={20} className="text-indigo-400" />, path: '/docs/adrs' }, // DO-07
-    { id: 'glossary', label: 'Domain Dictionary', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/glossary' }, // DO-09
-    { id: 'apiexplorer', label: 'API Explorer', icon: <ZapIcon size={20} className="text-amber-400" />, path: '/docs/api-explorer' }, // DO-05
-    { id: 'learning', label: 'Learning Paths', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/learning' }, // DO-08
-    { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, // EX-12
-    { id: 'doc-health', label: 'Doc Health', icon: <HistoryIcon size={20} className="text-red-400" />, path: '/docs/analytics' }, // DO-10
+    { id: 'adrs', label: 'Decision Log', icon: <HistoryIcon size={20} className="text-indigo-400" />, path: '/docs/adrs' }, 
+    { id: 'glossary', label: 'Domain Dictionary', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/glossary' }, 
+    { id: 'apiexplorer', label: 'API Explorer', icon: <ZapIcon size={20} className="text-amber-400" />, path: '/docs/api-explorer' }, 
+    { id: 'learning', label: 'Learning Paths', icon: <BookOpenIcon size={20} className="text-indigo-400" />, path: '/docs/learning' }, 
+    { id: 'references', label: 'References', icon: <BookOpenIcon size={20} />, path: '/extensions/references' }, 
+    { id: 'doc-health', label: 'Doc Health', icon: <HistoryIcon size={20} className="text-red-400" />, path: '/docs/analytics' }, 
     { id: 'extensions', label: 'Marketplace', icon: <GridIcon size={20} />, path: '/extensions' }, 
     { id: 'playground', label: 'Prompt Lab', icon: <BeakerIcon size={20} className="text-indigo-400" />, path: '/playground' },
-    { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, // EX-10
-    { id: 'accounts', label: 'Service Accounts', icon: <UserIcon size={20} />, path: '/extensions/accounts' }, // EX-11
-    { id: 'snippets', label: 'Snippets', icon: <ScissorsIcon size={14} />, path: '/extensions/snippets' }, // EX-08
-    { id: 'keymaps', label: 'Keymaps', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-indigo-500 rounded-sm"/></div>, path: '/settings/keybindings' }, // SY-02
-    { id: 'stacks', label: 'Stacks', icon: <PackageIcon size={20} />, path: '/extensions/stacks' }, // EX-06
-    { id: 'themes', label: 'Theme Studio', icon: <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500" />, path: '/extensions/themes' }, // EX-07
-    { id: 'manager', label: 'Ext Manager', icon: <SettingsIcon size={20} />, path: '/extensions/installed' }, // EX-05
-    { id: 'builder', label: 'Ext Builder', icon: <CodeIcon size={20} />, path: '/extensions/builder' }, // EX-04 Entry
+    { id: 'models', label: 'Brain Center', icon: <CpuIcon size={20} />, path: '/extensions/models' }, 
+    { id: 'accounts', label: 'Service Accounts', icon: <UserIcon size={20} />, path: '/extensions/accounts' }, 
+    { id: 'snippets', label: 'Snippets', icon: <ScissorsIcon size={14} />, path: '/extensions/snippets' }, 
+    { id: 'keymaps', label: 'Keymaps', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-3 bg-indigo-500 rounded-sm"/></div>, path: '/settings/keybindings' }, 
+    { id: 'stacks', label: 'Stacks', icon: <PackageIcon size={20} />, path: '/extensions/stacks' }, 
+    { id: 'themes', label: 'Theme Studio', icon: <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500" />, path: '/extensions/themes' }, 
+    { id: 'manager', label: 'Ext Manager', icon: <SettingsIcon size={20} />, path: '/extensions/installed' }, 
+    { id: 'builder', label: 'Ext Builder', icon: <CodeIcon size={20} />, path: '/extensions/builder' }, 
     { id: 'playbooks', label: 'Playbooks', icon: <BookOpenIcon size={20} />, path: '/playbooks' },
     { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
@@ -55,6 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'agents', label: 'Agents', icon: <SparklesIcon size={20} />, path: '/agents/fleet' },
     { id: 'source', label: 'Source Control', icon: <GitBranchIcon size={20} />, path: '/source' },
     { id: 'docs', label: 'Documentation', icon: <FileTextIcon size={20} />, path: '/docs' },
+    { id: 'help', label: 'Help & Support', icon: <HelpCircleIcon size={20} />, path: '/help' },
   ];
 
   return (
@@ -118,6 +118,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
 
       {/* Bottom Actions */}
       <div className="p-2 border-t border-slate-700">
+        <button 
+          onClick={() => setActivePath('/system/about')}
+          className={`flex items-center w-full px-2 py-2 rounded-md transition-colors mb-1 ${
+            activePath === '/system/about' 
+              ? 'text-indigo-400 bg-indigo-600/10' 
+              : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700/50'
+          }`}
+        >
+          {/* Fix: Added missing RotateCwIcon to imports to fix 'Cannot find name' error */}
+          <RotateCwIcon size={20} />
+          <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+            Updates
+          </span>
+        </button>
         <button 
           onClick={() => setActivePath('/settings/billing')}
           className={`flex items-center w-full px-2 py-2 rounded-md transition-colors ${
