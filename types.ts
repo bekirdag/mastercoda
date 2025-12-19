@@ -275,3 +275,21 @@ export interface Extension {
   tags: string[];
   configSchema?: { key: string; description: string; type: string; default: any }[];
 }
+
+// EX-04 Extension Builder Types
+export interface DevExtensionProject {
+  id: string;
+  name: string;
+  path: string;
+  version: string;
+  status: 'linked' | 'missing' | 'error';
+  manifest: {
+    publisher: string;
+    activationEvents: string[];
+    contributions: {
+      commands?: { command: string; title: string }[];
+      views?: { id: string; name: string }[];
+      configuration?: Record<string, any>;
+    };
+  };
+}

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -19,7 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
     { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' },
-    { id: 'extensions', label: 'Extensions', icon: <GridIcon size={20} />, path: '/extensions' }, // EX-01 Entry
+    { id: 'extensions', label: 'Extensions', icon: <GridIcon size={20} />, path: '/extensions' }, 
+    { id: 'builder', label: 'Ext Builder', icon: <CodeIcon size={20} />, path: '/extensions/builder' }, // EX-04 Entry
     { id: 'playbooks', label: 'Playbooks', icon: <BookOpenIcon size={20} />, path: '/playbooks' },
     { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },

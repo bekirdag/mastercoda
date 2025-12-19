@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -34,8 +35,9 @@ import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
 import QualityHub from './components/QualityHub';
 import ReleaseManager from './components/ReleaseManager';
-import Extensions from './components/Extensions'; // EX-01
-import ExtensionSettings from './components/ExtensionSettings'; // EX-03
+import Extensions from './components/Extensions'; 
+import ExtensionSettings from './components/ExtensionSettings';
+import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -190,7 +192,8 @@ function App() {
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
-    if (activePath === '/extensions') return <Extensions />; // EX-01
+    if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/extensions/builder') return <ExtensionBuilder />; // EX-04
     if (activePath.startsWith('/extensions/settings/')) {
         const extId = activePath.split('/').pop();
         return <ExtensionSettings extensionId={extId || ''} onBack={() => setActivePath('/extensions')} />;
@@ -218,6 +221,7 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/extensions/builder') return 'Ecosystem / Extensions / Builder';
     if (activePath.startsWith('/extensions/settings/')) return 'Ecosystem / Extensions / Settings';
     if (activePath === '/playbooks') return 'Workspace / Playbooks';
     if (activePath === '/plan') return 'Workspace / Plan';
@@ -230,7 +234,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/builder'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
