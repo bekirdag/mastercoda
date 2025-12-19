@@ -21,7 +21,8 @@ import {
   BookOpenIcon,
   HistoryIcon,
   RotateCwIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  GlobeIcon
 } from './Icons';
 
 const DocsHub: React.FC = () => {
@@ -49,6 +50,11 @@ const DocsHub: React.FC = () => {
 
   const handleCreateNew = () => {
     const evt = new CustomEvent('app-navigate', { detail: '/docs/edit/new' });
+    window.dispatchEvent(evt);
+  };
+
+  const handleManageSite = () => {
+    const evt = new CustomEvent('app-navigate', { detail: '/docs/manage/site-config' });
     window.dispatchEvent(evt);
   };
 
@@ -98,20 +104,28 @@ const DocsHub: React.FC = () => {
                   </div>
                   
                   {/* Scope Pills */}
-                  <div className="px-4 pb-4 flex items-center space-x-2">
-                     {scopes.map(s => (
-                        <button 
-                           key={s}
-                           onClick={() => setActiveScope(s)}
-                           className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
-                              activeScope === s 
-                              ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400' 
-                              : 'bg-slate-900/50 border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-600'
-                           }`}
-                        >
-                           {s}
-                        </button>
-                     ))}
+                  <div className="px-4 pb-4 flex items-center justify-between">
+                     <div className="flex items-center space-x-2">
+                        {scopes.map(s => (
+                           <button 
+                              key={s}
+                              onClick={() => setActiveScope(s)}
+                              className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                                 activeScope === s 
+                                 ? 'bg-indigo-500/10 border-indigo-500 text-indigo-400' 
+                                 : 'bg-slate-900/50 border-slate-700 text-slate-500 hover:text-slate-300 hover:border-slate-600'
+                              }`}
+                           >
+                              {s}
+                           </button>
+                        ))}
+                     </div>
+                     <button 
+                        onClick={handleManageSite}
+                        className="flex items-center text-[10px] font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest transition-all"
+                     >
+                        <GlobeIcon size={12} className="mr-1.5" /> Manage Public Site
+                     </button>
                   </div>
                </div>
 

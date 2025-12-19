@@ -31,6 +31,7 @@ import ProjectSettings from './components/ProjectSettings';
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; // Added for DO-01
 import DocEditor from './components/DocEditor'; // Added for DO-03
+import DocSiteManager from './components/DocSiteManager'; // Added for DO-04
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
@@ -235,6 +236,7 @@ function App() {
     if (activePath === '/docs') return <DocsHub />; 
     if (activePath === '/docs/view') return <Documentation />; 
     if (activePath.startsWith('/docs/edit')) return <DocEditor onBack={() => setActivePath('/docs')} />;
+    if (activePath === '/docs/manage/site-config') return <DocSiteManager />;
     if (activePath === '/source') return <SourceControl onConflictSimulate={() => setActivePath('/conflict')} />;
     if (activePath === '/settings') return <ProjectSettings />;
     
@@ -271,12 +273,13 @@ function App() {
     if (activePath === '/agents') return 'Workspace / Agents';
     if (activePath === '/docs') return 'Workspace / Documentation Hub';
     if (activePath.startsWith('/docs/edit')) return 'Workspace / Document Editor';
+    if (activePath === '/docs/manage/site-config') return 'Workspace / Documentation / Site Manager';
     if (activePath === '/source') return 'Workspace / Source Control';
     if (activePath === '/settings') return 'Workspace / Settings';
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator'];
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

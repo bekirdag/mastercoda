@@ -155,6 +155,23 @@ export interface DocComment {
   replies?: DocComment[];
 }
 
+export interface DocSiteConfig {
+  siteName: string;
+  description: string;
+  access: 'public' | 'password' | 'sso';
+  primaryColor: string;
+  customCss: string;
+  navigation: DocSiteNavItem[];
+  versions: { tag: string; status: 'active' | 'legacy' }[];
+}
+
+export interface DocSiteNavItem {
+  id: string;
+  label: string;
+  type: 'file' | 'folder';
+  children?: DocSiteNavItem[];
+}
+
 // Agent Management Types
 export type AgentStatus = 'online' | 'idle' | 'offline' | 'error';
 
