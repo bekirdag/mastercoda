@@ -31,7 +31,8 @@ import ProjectSettings from './components/ProjectSettings';
 import Documentation from './components/Documentation';
 import Agents from './components/Agents';
 import Inbox from './components/Inbox';
-import Analytics from './components/Analytics'; // WS-15
+import Analytics from './components/Analytics';
+import Playbooks from './components/Playbooks'; // WS-16
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -180,6 +181,7 @@ function App() {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/inbox') return <Inbox />;
     if (activePath === '/analytics') return <Analytics />;
+    if (activePath === '/playbooks') return <Playbooks />; // WS-16
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
@@ -199,6 +201,7 @@ function App() {
     if (activePath === '/') return 'Workspace / Dashboard';
     if (activePath === '/inbox') return 'Workspace / Inbox';
     if (activePath === '/analytics') return 'Workspace / Insights';
+    if (activePath === '/playbooks') return 'Workspace / Playbooks';
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Workspace / Code Review';
@@ -208,6 +211,8 @@ function App() {
     if (activePath === '/settings') return 'Workspace / Settings';
     return `Workspace ${activePath}`;
   };
+
+  const showHeader = activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' && activePath !== '/playbooks';
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -221,7 +226,7 @@ function App() {
 
       <main className="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
         
-        {activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' && ( 
+        {showHeader && ( 
           <header className="h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
             <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
                <span className="hover:text-slate-300 cursor-pointer transition-colors">Master Coda</span>
@@ -250,11 +255,11 @@ function App() {
           </header>
         )}
 
-        <div className={`flex-1 overflow-auto custom-scrollbar ${activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' && activePath !== '/playbooks' ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            {renderContent()}
         </div>
 
-        {activePath !== '/docs' && activePath !== '/agents' && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
+        {activePath !== '/docs' && activePath !== '/agents' && activePath !== '/playbooks' && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
 
       </main>
 

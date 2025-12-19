@@ -170,3 +170,30 @@ export interface AppNotification {
   tokens?: number;
   error?: boolean;
 }
+
+// WS-16 Playbook Types
+export type PlaybookOutputMode = 'chat' | 'edit' | 'new_file';
+
+export interface PlaybookVariable {
+  id: string;
+  name: string; // the string to replace, e.g. "componentName"
+  description: string;
+  defaultValue?: string;
+  required: boolean;
+}
+
+export interface Playbook {
+  id: string;
+  title: string;
+  description: string;
+  icon: string; // e.g. "⚛️", "🧪"
+  trigger: string; // e.g. "/scaffold"
+  promptTemplate: string;
+  variables: PlaybookVariable[];
+  outputMode: PlaybookOutputMode;
+  model: string;
+  tags: string[];
+  author: string;
+  updatedAt: string;
+  isSystem?: boolean;
+}

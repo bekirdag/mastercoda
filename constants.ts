@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -301,7 +301,7 @@ export const Loader = () => (
     selected: true,
     viewed: true,
     contentOriginal: `// Deprecated: Use src/components/Button.tsx
-import React from 'react';
+import React aspiration 'react';
 
 const OldButton = () => {
    return <button>Click me</button>;
@@ -653,4 +653,57 @@ export const MOCK_FAILURE_REASONS = [
   { reason: 'Context Window Exceeded', count: 2 },
   { reason: 'Test Timeout', count: 2 },
   { reason: 'User Interruption', count: 1 },
+];
+
+export const MOCK_PLAYBOOKS: Playbook[] = [
+  {
+    id: 'pb-1',
+    title: 'React Component',
+    description: 'Scaffolds a functional component with Props interface, index export, and .test.tsx file.',
+    icon: '⚛️',
+    trigger: '/scaffold',
+    promptTemplate: "You are a senior dev. Take the component name `{{componentName}}` and generate a professional React component folder structure. Include a Props interface, the main TSX file using Tailwind, and a Vitest test file.",
+    variables: [
+      { id: 'v1', name: 'componentName', description: 'Name of the component in PascalCase', required: true }
+    ],
+    outputMode: 'new_file',
+    model: 'gemini-3-pro-preview',
+    tags: ['frontend', 'scaffold'],
+    author: 'Sarah',
+    updatedAt: '2d ago',
+    isSystem: true
+  },
+  {
+    id: 'pb-2',
+    title: 'Write Unit Tests',
+    description: 'Generates comprehensive unit tests for a specific file or code snippet.',
+    icon: '🧪',
+    trigger: '/test',
+    promptTemplate: "Analyze the following code: `{{selectedCode}}`. Generate a test file using Vitest and React Testing Library that covers edge cases, success paths, and error states.",
+    variables: [
+      { id: 'v2', name: 'selectedCode', description: 'The code to be tested', required: true }
+    ],
+    outputMode: 'chat',
+    model: 'gemini-3-pro-preview',
+    tags: ['testing', 'qa'],
+    author: 'Alex',
+    updatedAt: '1w ago',
+    isSystem: true
+  },
+  {
+    id: 'pb-3',
+    title: 'Performance Refactor',
+    description: 'Identifies bottlenecks and refactors code for optimal performance.',
+    icon: '⚡',
+    trigger: '/perf',
+    promptTemplate: "Review this code for performance issues: `{{selectedCode}}`. Specifically look for unnecessary re-renders, expensive loops, or O(n^2) operations. Provide a refactored version.",
+    variables: [
+      { id: 'v3', name: 'selectedCode', description: 'The code block to refactor', required: true }
+    ],
+    outputMode: 'edit',
+    model: 'gemini-3-pro-preview',
+    tags: ['refactor', 'perf'],
+    author: 'Architect Prime',
+    updatedAt: 'Yesterday'
+  }
 ];

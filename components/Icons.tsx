@@ -563,7 +563,6 @@ export const ArchiveIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
-// Add missing LinkIcon export to fix compilation error in Documentation.tsx
 export const LinkIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
@@ -571,9 +570,15 @@ export const LinkIcon: React.FC<IconProps> = (props) => (
   </BaseIcon>
 );
 
-// Add missing MessageSquareIcon export to fix compilation error in TaskDetailView.tsx
 export const MessageSquareIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </BaseIcon>
+);
+
+export const BookOpenIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
   </BaseIcon>
 );
