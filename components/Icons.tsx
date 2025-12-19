@@ -625,3 +625,15 @@ export const ScissorsIcon: React.FC<IconProps> = (props) => (
     <line x1="8.12" y1="8.12" x2="12" y2="12" />
   </BaseIcon>
 );
+
+/**
+ * Fix: Added BeakerIcon to components/Icons.tsx to resolve the missing export error
+ * in components/PromptPlayground.tsx.
+ */
+export const BeakerIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M4.5 3h15" />
+    <path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3" />
+    <path d="M6 14h12" />
+  </BaseIcon>
+);
