@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export type OmniDrawerState = 'hidden' | 'collapsed' | 'open' | 'maximized';
@@ -152,6 +153,28 @@ export interface AgentPersona {
     tasksCompleted: number;
     avgLatency: string;
   };
+}
+
+// Orchestrator Types (EX-15)
+export type OrchNodeType = 'trigger' | 'router' | 'agent' | 'fallback';
+
+export interface OrchestratorNode {
+  id: string;
+  type: OrchNodeType;
+  label: string;
+  description?: string;
+  x: number;
+  y: number;
+  data: Record<string, any>;
+  status?: 'active' | 'warning' | 'ghost';
+}
+
+export interface OrchestratorEdge {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+  isHighlighted?: boolean;
 }
 
 // Model Registry Types (EX-10)

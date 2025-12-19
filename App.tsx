@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -39,6 +40,7 @@ import ModelRegistry from './components/ModelRegistry'; // EX-10
 import ServiceAccounts from './components/ServiceAccounts'; // EX-11
 import ReferenceLibrary from './components/ReferenceLibrary'; // EX-12
 import NetworkFirewall from './components/NetworkFirewall'; // EX-14
+import AgentOrchestrator from './components/AgentOrchestrator'; // EX-15
 import ExtensionManager from './components/ExtensionManager'; // EX-05
 import ExtensionSettings from './components/ExtensionSettings';
 import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
@@ -207,6 +209,7 @@ function App() {
     if (activePath === '/inbox') return <Inbox />;
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/quality') return <QualityHub />;
+    if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />; // EX-15
     if (activePath === '/extensions/firewall') return <NetworkFirewall />; // EX-14
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
@@ -243,6 +246,7 @@ function App() {
     if (activePath === '/') return 'Workspace / Dashboard';
     if (activePath === '/inbox') return 'Workspace / Inbox';
     if (activePath === '/analytics') return 'Workspace / Insights';
+    if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/extensions/firewall') return 'Workspace / Privacy Firewall';
     if (activePath === '/releases') return 'Workspace / Releases';
@@ -268,7 +272,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (

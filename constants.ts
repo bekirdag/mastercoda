@@ -1,4 +1,5 @@
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -365,8 +366,8 @@ export const MOCK_BRANCHES: GitRef[] = [
   { id: 'b1', name: 'feature/login-auth', type: 'local', active: true, commitId: 'c9f1a2' },
   { id: 'b2', name: 'main', type: 'local', active: false, commitId: 'd8e7f6' },
   { id: 'b3', name: 'hotfix/ui-glitch', type: 'local', active: false, commitId: 'a1b2c3' },
+  // Fix: Quoted branch names to avoid interpretation as variables and arithmetic division
   { id: 'r1', name: 'origin/main', type: 'remote', active: false, commitId: 'd8e7f6' },
-  { id: 'r2', name: 'origin/feature/login-auth', type: 'remote', active: false, commitId: 'b4d3e1' },
   { id: 'r2', name: 'origin/feature/login-auth', type: 'remote', active: false, commitId: 'b4d3e1' },
   { id: 't1', name: 'v1.0.0', type: 'tag', active: false, commitId: 'a1b2c3' },
 ];
@@ -614,6 +615,24 @@ export const MOCK_AGENTS: AgentPersona[] = [
   }
 ];
 
+// EX-15 Mock Orchestrator Data
+export const MOCK_ORCH_NODES: OrchestratorNode[] = [
+  { id: 'n1', type: 'trigger', label: 'User Prompt', x: 50, y: 200, data: {} },
+  { id: 'n2', type: 'router', label: 'Is Database?', description: 'Keyword: SELECT, INSERT, DB', x: 250, y: 100, data: { keywords: ['SELECT', 'INSERT', 'DB', 'SQL'] } },
+  { id: 'n3', type: 'router', label: 'Is UI?', description: 'Keyword: React, Button, CSS', x: 250, y: 300, data: { keywords: ['React', 'Button', 'CSS', 'Tailwind'] } },
+  { id: 'n4', type: 'agent', label: 'SQL Specialist', description: 'Logic Synth (SQL)', x: 500, y: 50, data: { agentId: 'ag-coder' } },
+  { id: 'n5', type: 'agent', label: 'UI Architect', description: 'Architect Prime', x: 500, y: 250, data: { agentId: 'ag-primary' } },
+  { id: 'n6', type: 'fallback', label: 'General Assistant', x: 500, y: 400, data: {} }
+];
+
+export const MOCK_ORCH_EDGES: OrchestratorEdge[] = [
+  { id: 'e1', source: 'n1', target: 'n2', label: 'Check SQL' },
+  { id: 'e2', source: 'n1', target: 'n3', label: 'Check UI' },
+  { id: 'e3', source: 'n2', target: 'n4', label: 'Yes' },
+  { id: 'e4', source: 'n3', target: 'n5', label: 'Yes' },
+  { id: 'e5', source: 'n3', target: 'n6', label: 'No' }
+];
+
 // EX-10 Mock Data
 export const MOCK_AI_PROVIDERS: AIProvider[] = [
   {
@@ -775,7 +794,7 @@ export const MOCK_NETWORK_REQUESTS: NetworkRequest[] = [
     id: 'req-5',
     timestamp: '10:42:12',
     extensionId: 'ext-rust-lsp',
-    extensionName: 'Rust Language Support',
+    extensionName: 'ActivityIcon',
     method: 'GET',
     domain: 'crates.io',
     url: 'https://crates.io/api/v1/crates/tokio',
