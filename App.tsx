@@ -6,10 +6,11 @@ import Dashboard from './components/Dashboard';
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
 import CliConfig from './components/CliConfig';
+import SecureStorage from './components/SecureStorage';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -51,6 +52,15 @@ function App() {
     return (
       <CliConfig
         onBack={() => setCurrentStep('system-check')}
+        onNext={() => setCurrentStep('secure-storage')}
+      />
+    );
+  }
+
+  if (currentStep === 'secure-storage') {
+    return (
+      <SecureStorage
+        onBack={() => setCurrentStep('cli-config')}
         onNext={() => setCurrentStep('dashboard')}
       />
     );
