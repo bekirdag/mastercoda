@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,57 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_TRAINING_EXAMPLES: TrainingExample[] = [
+  {
+    id: 'tx-1',
+    timestamp: '2h ago',
+    prompt: 'Write a function to connect to Redis.',
+    rejectedOutput: 'import redis from "redis";\nconst client = redis.createClient();',
+    acceptedOutput: 'import { createClient } from "redis";\n// Company standard: Use standalone client with telemetry\nconst client = createClient({\n  url: process.env.REDIS_URL\n});',
+    status: 'pending'
+  },
+  {
+    id: 'tx-2',
+    timestamp: '5h ago',
+    prompt: 'Scaffold a new React component for a data table.',
+    rejectedOutput: 'export const Table = () => {\n  return <table>...</table>;\n};',
+    acceptedOutput: 'import { Table, TableBody, TableCell } from "@/components/ui/table";\n\nexport const DataTable = () => {\n  return (\n    <Table>\n      <TableBody>...</TableBody>\n    </Table>\n  );\n};',
+    status: 'pending'
+  },
+  {
+    id: 'tx-3',
+    timestamp: 'Yesterday',
+    prompt: 'Update the auth middleware for JWT rotation.',
+    rejectedOutput: 'const rotate = (token) => jwt.sign(payload, secret);',
+    acceptedOutput: 'const rotateToken = async (oldToken: string) => {\n  const decoded = jwt.decode(oldToken);\n  return await authProvider.sign(decoded.sub, { rotation: true });\n};',
+    status: 'curated',
+    reason: 'Corrected to use company auth provider instead of raw jwt lib.'
+  }
+];
+
+export const MOCK_MODEL_VERSIONS: ModelVersion[] = [
+  {
+    id: 'mv-1',
+    tag: 'v1.2-refactor',
+    baseModel: 'Llama 3 8B',
+    datasetSize: 1540,
+    accuracy: 94.2,
+    status: 'active',
+    createdAt: '3 days ago',
+    cost: 4.50
+  },
+  {
+    id: 'mv-2',
+    tag: 'v1.1-baseline',
+    baseModel: 'Mistral 7B',
+    datasetSize: 800,
+    accuracy: 88.5,
+    status: 'archived',
+    createdAt: '12 days ago',
+    cost: 2.10
+  }
+];
 
 export const MOCK_SKILLS: Skill[] = [
   {
@@ -1493,6 +1544,25 @@ export const MOCK_FLEET_ACTIVITY: FleetActivity[] = [
   { id: 'fa3', timestamp: '10:01:45', agentName: 'Architect Prime', message: 'flagged "Missing params" in README', type: 'warn' },
   { id: 'fa4', timestamp: '10:02:10', agentName: 'Audit Zero', message: 'security scan failed: context overflow', type: 'error' },
   { id: 'fa5', timestamp: '10:02:45', agentName: 'Grace', message: 'Test login.spec.ts passed', type: 'success' }
+];
+
+// AG-10 Analytics Mock Data
+export const MOCK_AGENT_USAGE: AgentUsageData[] = [
+  { id: 'ag-primary', agentName: 'Architect Prime', model: 'gemini-3-pro-preview', calls: 1240, tokensIn: 20000000, tokensOut: 5000000, cost: 12.50, avgLatency: '1.2s' },
+  { id: 'ag-coder', agentName: 'Logic Synth', model: 'gemini-3-flash-preview', calls: 3412, tokensIn: 15000000, tokensOut: 8000000, cost: 4.12, avgLatency: '0.4s' },
+  { id: 'ag-qa', agentName: 'Grace', model: 'claude-3-5-sonnet', calls: 850, tokensIn: 12000000, tokensOut: 2000000, cost: 15.20, avgLatency: '1.5s' },
+  { id: 'ag-audit', agentName: 'Audit Zero', model: 'gpt-4o', calls: 412, tokensIn: 5000000, tokensOut: 1200000, cost: 8.40, avgLatency: '1.8s' },
+  { id: 'ag-local', agentName: 'Local Dev', model: 'llama-3-local', calls: 1560, tokensIn: 8000000, tokensOut: 3000000, cost: 0.00, avgLatency: '0.1s' },
+];
+
+export const MOCK_DAILY_COSTS: DailyUsageStat[] = [
+  { date: formatDate(-6), tokens: 1200000, requests: 450, cost: 1.20, provider: 'google' },
+  { date: formatDate(-5), tokens: 1800000, requests: 620, cost: 1.85, provider: 'google' },
+  { date: formatDate(-4), tokens: 2400000, requests: 840, cost: 2.40, provider: 'anthropic' },
+  { date: formatDate(-3), tokens: 1100000, requests: 390, cost: 1.10, provider: 'openai' },
+  { date: formatDate(-2), tokens: 3200000, requests: 1200, cost: 4.50, provider: 'google' },
+  { date: formatDate(-1), tokens: 2800000, requests: 950, cost: 3.20, provider: 'google' },
+  { date: formatDate(0), tokens: 900000, requests: 310, cost: 0.95, provider: 'google' },
 ];
 
 // EX-15 Mock Orchestrator Data

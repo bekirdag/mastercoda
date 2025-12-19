@@ -24,6 +24,41 @@ export type RagSyncStatus = 'synced' | 'indexing' | 'stale' | 'error';
 export type SkillCategory = 'system' | 'integration' | 'custom';
 export type SkillLanguage = 'python' | 'typescript' | 'http';
 
+// Fine-Tuning / RLHF Types (AG-11)
+export type TrainingStatus = 'idle' | 'running' | 'completed' | 'failed';
+export type FeedbackType = 'rejected' | 'edited' | 'starred';
+
+export interface TrainingExample {
+  id: string;
+  timestamp: string;
+  prompt: string;
+  rejectedOutput: string;
+  acceptedOutput: string;
+  status: 'pending' | 'curated' | 'discarded';
+  reason?: string;
+}
+
+export interface ModelVersion {
+  id: string;
+  tag: string;
+  baseModel: string;
+  datasetSize: number;
+  accuracy: number;
+  status: 'active' | 'archived';
+  createdAt: string;
+  cost: number;
+}
+
+export interface FineTuningJob {
+  id: string;
+  status: TrainingStatus;
+  progress: number;
+  currentLoss: number;
+  epochs: number;
+  eta: string;
+  logs: string[];
+}
+
 export interface SkillArgument {
   name: string;
   type: string;
@@ -155,6 +190,26 @@ export interface Mission {
   blockerReason?: string;
   prompt?: string;
   artifacts?: { name: string; path: string }[];
+}
+
+// Analytics ROI Types (AG-10)
+export interface AgentUsageData {
+  id: string;
+  agentName: string;
+  model: string;
+  calls: number;
+  tokensIn: number;
+  tokensOut: number;
+  cost: number;
+  avgLatency: string;
+}
+
+export interface DailyUsageStat {
+  date: string;
+  tokens: number;
+  requests: number;
+  cost: number;
+  provider: string;
 }
 
 // Version Control Types
@@ -410,10 +465,7 @@ export interface AdrRecord {
 export type AgentStatus = 'online' | 'idle' | 'offline' | 'error' | 'rate-limited';
 
 export interface AgentCapability {
-  id: string;
-  label: string;
-  enabled: boolean;
-  level: 'read' | 'write' | 'exec';
+  id: string; label: string; enabled: boolean; level: 'read' | 'write' | 'exec';
 }
 
 export interface AgentPersona {

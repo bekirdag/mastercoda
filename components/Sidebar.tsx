@@ -18,7 +18,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
+    { id: 'roi', label: 'Agent ROI', icon: <div className="relative"><ZapIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /></div>, path: '/agents/analytics' }, // AG-10
     { id: 'missions', label: 'Mission Control', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/missions' }, // AG-07
+    { id: 'training', label: 'Fine-Tuning', icon: <div className="relative"><SparklesIcon size={20} className="text-indigo-400" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/training' }, // AG-11
     { id: 'knowledge', label: 'Knowledge Base', icon: <DatabaseIcon size={20} className="text-indigo-400" />, path: '/agents/knowledge' }, // AG-08
     { id: 'skills', label: 'Skill Studio', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-4 bg-indigo-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-5 bg-indigo-500 rounded-sm"/></div>, path: '/agents/skills' }, // AG-09
     { id: 'orchestrator', label: 'Orchestrator', icon: <div className="relative"><ActivityIcon size={20} className="text-indigo-400" /><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full" /></div>, path: '/extensions/orchestrator' }, // EX-15
