@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Task, TaskType } from '../types';
 import Badge from './Badge';
@@ -19,6 +20,7 @@ interface BacklogListProps {
   selectedIds: Set<string>;
   onSelectionChange: (ids: Set<string>) => void;
   onExecuteTask?: (taskId: string) => void;
+  onTaskClick?: (taskId: string) => void;
 }
 
 interface TreeNode {
@@ -27,7 +29,7 @@ interface TreeNode {
   depth: number;
 }
 
-const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelectionChange, onExecuteTask }) => {
+const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelectionChange, onExecuteTask, onTaskClick }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(['MC-1000', 'MC-1002'])); // Default expand top epics for demo
 
   // --- Hierarchy Builders ---
@@ -116,6 +118,7 @@ const BacklogList: React.FC<BacklogListProps> = ({ tasks, selectedIds, onSelecti
             isExpanded={expandedIds.has(node.data.id)}
             onExpand={() => toggleExpand(node.data.id)}
             onSelect={(multi) => toggleSelection(node.data.id, multi)}
+            onClick={() => onTaskClick && onTaskClick(node.data.id)}
             onExecute={() => onExecuteTask && onExecuteTask(node.data.id)}
           />
         ))}
@@ -148,8 +151,9 @@ const Row: React.FC<{
   isExpanded: boolean; 
   onExpand: () => void;
   onSelect: (multi: boolean) => void;
+  onClick: () => void;
   onExecute: () => void;
-}> = ({ node, isSelected, isExpanded, onExpand, onSelect, onExecute }) => {
+}> = ({ node, isSelected, isExpanded, onExpand, onSelect, onClick, onExecute }) => {
   const { data, children, depth } = node;
   const hasChildren = children.length > 0;
 
@@ -162,9 +166,18 @@ const Row: React.FC<{
     }
   };
 
+  const handleRowClick = (e: React.MouseEvent) => {
+    // If clicking on selection area or expander, handle differently
+    onSelect(e.metaKey || e.ctrlKey);
+    // Open detail
+    if (!e.metaKey && !e.ctrlKey) {
+      onClick();
+    }
+  };
+
   return (
     <div 
-      onClick={(e) => onSelect(e.metaKey || e.ctrlKey)}
+      onClick={handleRowClick}
       className={`flex items-center h-10 px-4 border-b border-slate-800 hover:bg-slate-800/50 transition-colors group cursor-pointer ${
         isSelected ? 'bg-indigo-900/30 hover:bg-indigo-900/40' : depth % 2 !== 0 ? 'bg-slate-800/20' : ''
       }`}
@@ -175,7 +188,7 @@ const Row: React.FC<{
       </div>
 
       {/* ID */}
-      <div className={`w-24 shrink-0 font-mono text-xs ${isSelected ? 'text-indigo-300' : 'text-slate-500 group-hover:text-slate-400'}`}>
+      <div className={`w-24 shrink-0 font-mono text-xs ${isSelected ? 'text-indigo-300' : 'text-slate-500 group-hover:text-indigo-400 transition-colors'}`}>
         {data.id}
       </div>
 

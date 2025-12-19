@@ -26,6 +26,7 @@ import ValidatingWorkspace from './components/ValidatingWorkspace';
 import DatabaseMigration from './components/DatabaseMigration';
 import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorkspace';
 import CreateTaskModal from './components/CreateTaskModal';
+import TaskDetailView from './components/TaskDetailView';
 import ProjectSettings from './components/ProjectSettings';
 import Documentation from './components/Documentation';
 import Agents from './components/Agents';
@@ -41,6 +42,7 @@ function App() {
   const [activePath, setActivePath] = useState('/');
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
+  const [taskDetailId, setTaskDetailId] = useState<string | null>(null);
   
   // Execution Context
   const [executionTaskId, setExecutionTaskId] = useState<string | null>(null);
@@ -77,10 +79,14 @@ function App() {
         e.preventDefault();
         setIsCreateTaskOpen(true);
       }
+      // Esc: Close Detail
+      if (e.key === 'Escape' && taskDetailId) {
+        setTaskDetailId(null);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [taskDetailId]);
 
   const handleTaskCreate = (task: any) => {
     console.log('Task Created Globally:', task);
@@ -88,6 +94,7 @@ function App() {
 
   const handleExecuteTask = (taskId: string) => {
     setExecutionTaskId(taskId);
+    setTaskDetailId(null); // Close detail when starting execution
     setActivePath('/exec');
   };
 
@@ -169,7 +176,7 @@ function App() {
 
   const renderContent = () => {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
-    if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} />;
+    if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
     if (activePath === '/agents') return <Agents />;
@@ -250,6 +257,13 @@ function App() {
         isOpen={isCreateTaskOpen} 
         onClose={() => setIsCreateTaskOpen(false)} 
         onCreate={handleTaskCreate}
+      />
+
+      {/* WS-13 Task Detail View */}
+      <TaskDetailView 
+        taskId={taskDetailId} 
+        onClose={() => setTaskDetailId(null)}
+        onExecute={handleExecuteTask}
       />
       
     </div>

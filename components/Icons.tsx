@@ -554,3 +554,10 @@ export const LinkIcon: React.FC<IconProps> = (props) => (
     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
   </BaseIcon>
 );
+
+// Add missing MessageSquareIcon export to fix compilation error in TaskDetailView.tsx
+export const MessageSquareIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </BaseIcon>
+);

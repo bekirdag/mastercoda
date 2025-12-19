@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Task } from '../types';
 import { 
@@ -11,6 +12,7 @@ import {
 
 interface DependencyGraphProps {
   tasks: Task[];
+  onTaskClick?: (taskId: string) => void;
 }
 
 interface Node {
@@ -28,7 +30,7 @@ interface Edge {
   isCritical?: boolean;
 }
 
-const DependencyGraph: React.FC<DependencyGraphProps> = ({ tasks }) => {
+const DependencyGraph: React.FC<DependencyGraphProps> = ({ tasks, onTaskClick }) => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const [isDraggingNode, setIsDraggingNode] = useState<string | null>(null);
@@ -433,6 +435,7 @@ const DependencyGraph: React.FC<DependencyGraphProps> = ({ tasks }) => {
                   width: '180px',
                   height: '80px'
                 }}
+                onDoubleClick={() => onTaskClick && onTaskClick(node.id)}
                 className={`absolute bg-slate-800 rounded-lg shadow-lg flex flex-col transition-shadow hover:shadow-[0_0_20px_rgba(0,0,0,0.5)] border-l-4 group ${
                    node.data.status === 'completed' ? 'border-emerald-500' :
                    node.data.status === 'in-progress' ? 'border-indigo-500' :

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import TaskBoard from './TaskBoard';
 import BacklogList from './BacklogList';
@@ -21,9 +22,10 @@ import {
 interface PlanProps {
   onCreateTask?: () => void;
   onExecuteTask?: (taskId: string) => void;
+  onTaskClick?: (taskId: string) => void;
 }
 
-const Plan: React.FC<PlanProps> = ({ onCreateTask, onExecuteTask }) => {
+const Plan: React.FC<PlanProps> = ({ onCreateTask, onExecuteTask, onTaskClick }) => {
   const [view, setView] = useState<PlanViewType>('list');
   const [tasks] = useState<Task[]>(MOCK_TASKS);
   const [searchQuery, setSearchQuery] = useState('');
@@ -164,17 +166,18 @@ const Plan: React.FC<PlanProps> = ({ onCreateTask, onExecuteTask }) => {
       {/* Main Content Area */}
       <div className="flex-1 overflow-hidden relative">
          {view === 'board' ? (
-           <TaskBoard tasks={filteredTasks} onExecuteTask={onExecuteTask} />
+           <TaskBoard tasks={filteredTasks} onExecuteTask={onExecuteTask} onTaskClick={onTaskClick} />
          ) : view === 'graph' ? (
-           <DependencyGraph tasks={tasks} /> 
+           <DependencyGraph tasks={tasks} onTaskClick={onTaskClick} /> 
          ) : view === 'roadmap' ? (
-            <RoadmapView tasks={filteredTasks} />
+            <RoadmapView tasks={filteredTasks} onTaskClick={onTaskClick} />
          ) : (
            <BacklogList 
               tasks={filteredTasks} 
               selectedIds={selectedTaskIds}
               onSelectionChange={handleSelectionChange}
               onExecuteTask={onExecuteTask}
+              onTaskClick={onTaskClick}
            />
          )}
       </div>

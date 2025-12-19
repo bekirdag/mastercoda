@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { Task } from '../types';
 import { 
@@ -12,12 +13,13 @@ import Button from './Button';
 
 interface RoadmapViewProps {
   tasks: Task[];
+  onTaskClick?: (taskId: string) => void;
 }
 
 const CELL_WIDTH = 40; // px per day
 const ROW_HEIGHT = 48; // px
 
-const RoadmapView: React.FC<RoadmapViewProps> = ({ tasks }) => {
+const RoadmapView: React.FC<RoadmapViewProps> = ({ tasks, onTaskClick }) => {
   const [timeScale, setTimeScale] = useState<'day' | 'week' | 'month'>('week');
   const [showProjections, setShowProjections] = useState(false);
   const leftPaneRef = useRef<HTMLDivElement>(null);
@@ -170,6 +172,7 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ tasks }) => {
                 {roadmapItems.map(task => (
                     <div 
                         key={task.id} 
+                        onClick={() => onTaskClick && onTaskClick(task.id)}
                         className="flex items-center px-4 border-b border-slate-800 hover:bg-slate-700/30 transition-colors group cursor-pointer"
                         style={{ height: ROW_HEIGHT }}
                     >
@@ -279,6 +282,7 @@ const RoadmapView: React.FC<RoadmapViewProps> = ({ tasks }) => {
 
                                 {/* Main Bar */}
                                 <div 
+                                    onClick={() => onTaskClick && onTaskClick(task.id)}
                                     className={`absolute h-6 top-1/2 -translate-y-1/2 rounded shadow-sm flex items-center overflow-hidden transition-all hover:brightness-110 cursor-pointer ${
                                         task.progress === 100 ? 'bg-emerald-600' : 'bg-indigo-600'
                                     }`}

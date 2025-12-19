@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Task } from '../types';
 import { 
@@ -14,6 +15,7 @@ import {
 interface TaskBoardProps {
   tasks: Task[];
   onExecuteTask?: (taskId: string) => void;
+  onTaskClick?: (taskId: string) => void;
 }
 
 const COLUMN_CONFIG = [
@@ -24,7 +26,7 @@ const COLUMN_CONFIG = [
   { id: 'completed', title: 'Done', color: 'border-emerald-500' }
 ];
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onExecuteTask }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onExecuteTask, onTaskClick }) => {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
   const getTasksByStatus = (status: string) => {
@@ -85,6 +87,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onExecuteTask }) => {
                          task={task} 
                          onDragStart={(e) => handleDragStart(e, task.id)}
                          onExecute={() => onExecuteTask && onExecuteTask(task.id)}
+                         onClick={() => onTaskClick && onTaskClick(task.id)}
                        />
                      ))
                    )}
@@ -97,11 +100,12 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onExecuteTask }) => {
   );
 };
 
-const TaskCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent) => void; onExecute: () => void }> = ({ task, onDragStart, onExecute }) => (
+const TaskCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent) => void; onExecute: () => void; onClick: () => void }> = ({ task, onDragStart, onExecute, onClick }) => (
   <div 
     draggable
     onDragStart={onDragStart}
-    className="bg-slate-800 p-3 rounded-md border border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-slate-600 transition-all cursor-move group select-none relative"
+    onClick={onClick}
+    className="bg-slate-800 p-3 rounded-md border border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-slate-600 transition-all cursor-pointer group select-none relative"
   >
     {/* Action Overlay for Execution */}
     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
