@@ -8,10 +8,11 @@ import SystemCheck from './components/SystemCheck';
 import CliConfig from './components/CliConfig';
 import SecureStorage from './components/SecureStorage';
 import ConnectAgent from './components/ConnectAgent';
+import PrivacySettings from './components/PrivacySettings';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
-type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'dashboard';
+type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'dashboard';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('intro');
@@ -71,6 +72,15 @@ function App() {
     return (
       <ConnectAgent
         onBack={() => setCurrentStep('secure-storage')}
+        onNext={() => setCurrentStep('privacy-settings')}
+      />
+    );
+  }
+
+  if (currentStep === 'privacy-settings') {
+    return (
+      <PrivacySettings
+        onBack={() => setCurrentStep('connect-agent')}
         onNext={() => setCurrentStep('dashboard')}
       />
     );
