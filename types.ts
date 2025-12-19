@@ -24,6 +24,35 @@ export type RagSyncStatus = 'synced' | 'indexing' | 'stale' | 'error';
 export type SkillCategory = 'system' | 'integration' | 'custom';
 export type SkillLanguage = 'python' | 'typescript' | 'http';
 
+// Plugin Marketplace Types (AG-12)
+export type PluginStatus = 'idle' | 'installing' | 'installed' | 'error';
+export type PluginCategory = 'Productivity' | 'Database' | 'Dev Tools' | 'Communication';
+export type PluginAuthMethod = 'OAuth2' | 'API Key' | 'PAT';
+
+export interface PluginTool {
+  name: string;
+  description: string;
+}
+
+export interface Plugin {
+  id: string;
+  title: string;
+  author: string;
+  verified: boolean;
+  downloads: string;
+  rating: number;
+  description: string;
+  category: PluginCategory;
+  icon: string | React.ReactNode;
+  status: PluginStatus;
+  version: string;
+  updateAvailable?: string;
+  authMethod: PluginAuthMethod;
+  tools: PluginTool[];
+  healthStatus?: 'healthy' | 'stale' | 'error';
+  recentChanges?: string;
+}
+
 // Fine-Tuning / RLHF Types (AG-11)
 export type TrainingStatus = 'idle' | 'running' | 'completed' | 'failed';
 export type FeedbackType = 'rejected' | 'edited' | 'starred';

@@ -50,6 +50,7 @@ import AgentAnalytics from './components/AgentAnalytics'; // AG-10
 import KnowledgeManager from './components/KnowledgeManager'; // AG-08
 import SkillStudio from './components/SkillStudio'; // AG-09
 import AgentTraining from './components/AgentTraining'; // AG-11
+import PluginMarketplace from './components/PluginMarketplace'; // AG-12
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -234,6 +235,7 @@ function App() {
     if (activePath === '/agents/governance') return <AgentGuardrails />; // AG-06
     if (activePath === '/agents/missions') return <MissionControl />; // AG-07
     if (activePath === '/agents/training') return <AgentTraining />; // AG-11
+    if (activePath === '/agents/plugins') return <PluginMarketplace />; // AG-12
     if (activePath === '/agents/knowledge') return <KnowledgeManager />; // AG-08
     if (activePath === '/agents/skills') return <SkillStudio />; // AG-09
     if (activePath === '/agents/evals') return <AgentGym />; // AG-04
@@ -300,6 +302,7 @@ function App() {
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
     if (activePath === '/agents/training') return 'Workspace / Fine-Tuning';
+    if (activePath === '/agents/plugins') return 'Agents / Integrations';
     if (activePath === '/agents/knowledge') return 'Workspace / Knowledge Base';
     if (activePath === '/agents/skills') return 'Agents / Skill Studio';
     if (activePath === '/agents/evals') return 'Workspace / Gymnasium';
@@ -341,7 +344,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training'];
+  const skipDrawerPaths = ['/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

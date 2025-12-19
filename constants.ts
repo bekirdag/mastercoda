@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,105 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_PLUGINS: Plugin[] = [
+  {
+    id: 'p-github',
+    title: 'GitHub Adapter',
+    author: 'Master Coda Official',
+    verified: true,
+    downloads: '2.4k',
+    rating: 4.9,
+    description: 'Read repos, create issues, and open PRs directly from agent reasoning.',
+    category: 'Dev Tools',
+    icon: '🐙',
+    status: 'installed',
+    version: 'v2.1.0',
+    authMethod: 'PAT',
+    healthStatus: 'healthy',
+    tools: [
+      { name: 'github.get_pr', description: 'Fetch PR details' },
+      { name: 'github.create_issue', description: 'Open a new issue' },
+      { name: 'github.merge', description: 'Merge a pull request' }
+    ]
+  },
+  {
+    id: 'p-slack',
+    title: 'Slack Adapter',
+    author: 'Master Coda Official',
+    verified: true,
+    downloads: '1.8k',
+    rating: 4.7,
+    description: 'Broadcast updates, alert on failures, and coordinate with teams.',
+    category: 'Communication',
+    icon: '💬',
+    status: 'installed',
+    version: 'v1.0.0',
+    updateAvailable: 'v1.2.0',
+    recentChanges: 'Added support for Thread Replies.',
+    authMethod: 'OAuth2',
+    healthStatus: 'healthy',
+    tools: [
+      { name: 'slack.post_message', description: 'Send message to channel' },
+      { name: 'slack.list_channels', description: 'Get available channels' }
+    ]
+  },
+  {
+    id: 'p-jira',
+    title: 'Jira Enterprise',
+    author: 'Atlassian',
+    verified: true,
+    downloads: '850',
+    rating: 4.2,
+    description: 'Sync tasks, update sprint status, and manage epics in Jira Cloud.',
+    category: 'Productivity',
+    icon: '🟦',
+    status: 'idle',
+    version: 'v0.9.5',
+    authMethod: 'API Key',
+    tools: [
+      { name: 'jira.create_ticket', description: 'Generate Jira ticket' },
+      { name: 'jira.update_status', description: 'Transition ticket state' }
+    ]
+  },
+  {
+    id: 'p-linear',
+    title: 'Linear Connect',
+    author: 'Linear Team',
+    verified: true,
+    downloads: '1.2k',
+    rating: 4.8,
+    description: 'High-performance issue tracking for agents. Minimal latency.',
+    category: 'Productivity',
+    icon: 'Ⓛ',
+    status: 'idle',
+    version: 'v1.4.0',
+    authMethod: 'API Key',
+    tools: [
+      { name: 'linear.create_issue', description: 'Open Linear issue' },
+      { name: 'linear.fetch_cycle', description: 'Get current cycle info' }
+    ]
+  },
+  {
+    id: 'p-postgres',
+    title: 'PostgreSQL Bridge',
+    author: 'DB Kings',
+    verified: false,
+    downloads: '420',
+    rating: 4.5,
+    description: 'Safe SQL execution, schema inspection, and data migration tools.',
+    category: 'Database',
+    icon: '🐘',
+    status: 'installed',
+    version: 'v1.1.2',
+    authMethod: 'API Key',
+    healthStatus: 'stale',
+    tools: [
+      { name: 'sql.run_query', description: 'Execute read-only query' },
+      { name: 'sql.get_schema', description: 'Introspect table structure' }
+    ]
+  }
+];
 
 export const MOCK_TRAINING_EXAMPLES: TrainingExample[] = [
   {
