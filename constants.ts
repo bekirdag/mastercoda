@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -733,4 +733,31 @@ export const MOCK_FLAKY_TESTS: FlakyTest[] = [
   { id: 't4', name: 'AuthFlow > handle invalid password', failRate: 15, lastRunStatus: 'fail' },
   { id: 't6', name: 'Agentic > process streaming tokens', failRate: 42, lastRunStatus: 'fail' },
   { id: 'f-1', name: 'E2E > Checkout Flow', failRate: 8, lastRunStatus: 'pass' },
+];
+
+// WS-18 Mock Data
+export const MOCK_ENVIRONMENTS: EnvironmentStatus[] = [
+  { id: 'env-1', name: 'Staging', status: 'healthy', version: 'v1.2.0-beta.4', lastDeploy: '1 hour ago', author: 'Alice', uptime: '99.5%' },
+  { id: 'env-2', name: 'Production', status: 'healthy', version: 'v1.1.5', lastDeploy: '3 days ago', author: 'Alex', uptime: '99.99%' },
+];
+
+export const MOCK_RELEASES: Release[] = [
+  { 
+    id: 'rel-1', 
+    tag: 'v1.1.5', 
+    date: 'Oct 12, 2024', 
+    author: 'Alex', 
+    changelog: '### Fixes\n- Resolved race condition in token refresh\n- Fixed CSS overflow in sidebar', 
+    commitHash: 'a1b2c3d', 
+    status: 'published' 
+  },
+  { 
+    id: 'rel-2', 
+    tag: 'v1.1.4', 
+    date: 'Oct 5, 2024', 
+    author: 'Sarah', 
+    changelog: '### Features\n- Added initial dashboard layout\n- Integrated Auth module', 
+    commitHash: 'f5g6h7i', 
+    status: 'published' 
+  },
 ];

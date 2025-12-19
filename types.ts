@@ -226,3 +226,26 @@ export interface FlakyTest {
   failRate: number;
   lastRunStatus: TestStatus;
 }
+
+// WS-18 Release Manager Types
+export type VersionType = 'patch' | 'minor' | 'major';
+
+export interface Release {
+  id: string;
+  tag: string;
+  date: string;
+  author: string;
+  changelog: string;
+  commitHash: string;
+  status: 'published' | 'draft';
+}
+
+export interface EnvironmentStatus {
+  id: string;
+  name: string;
+  status: 'healthy' | 'warning' | 'error' | 'deploying';
+  version: string;
+  lastDeploy: string;
+  author: string;
+  uptime?: string;
+}

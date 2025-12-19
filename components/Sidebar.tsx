@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -17,8 +17,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
-    { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' }, // WS-17 Entry
-    { id: 'playbooks', label: 'Playbooks', icon: <BookOpenIcon size={20} />, path: '/playbooks' }, // WS-16 Entry
+    { id: 'quality', label: 'Quality', icon: <ShieldIcon size={20} />, path: '/quality' },
+    { id: 'releases', label: 'Releases', icon: <RocketIcon size={20} />, path: '/releases' }, // WS-18 Entry
+    { id: 'playbooks', label: 'Playbooks', icon: <BookOpenIcon size={20} />, path: '/playbooks' },
     { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
     { id: 'review', label: 'Review', icon: <EyeIcon size={20} />, path: '/review' },

@@ -33,7 +33,8 @@ import Agents from './components/Agents';
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
-import QualityHub from './components/QualityHub'; // WS-17
+import QualityHub from './components/QualityHub';
+import ReleaseManager from './components/ReleaseManager'; // WS-18
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -88,9 +89,7 @@ function App() {
         setTaskDetailId(null);
       }
       // G then T: Go Tests (Quality Hub)
-      // This is a sequential shortcut, simplified here
       if (e.key === 't' && !['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
-        // Just T for simplicity in this prototype
         setActivePath('/quality');
       }
     };
@@ -188,7 +187,8 @@ function App() {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/inbox') return <Inbox />;
     if (activePath === '/analytics') return <Analytics />;
-    if (activePath === '/quality') return <QualityHub />; // WS-17
+    if (activePath === '/quality') return <QualityHub />;
+    if (activePath === '/releases') return <ReleaseManager />; // WS-18
     if (activePath === '/playbooks') return <Playbooks />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
@@ -210,6 +210,7 @@ function App() {
     if (activePath === '/inbox') return 'Workspace / Inbox';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/quality') return 'Workspace / Quality Hub';
+    if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/playbooks') return 'Workspace / Playbooks';
     if (activePath === '/plan') return 'Workspace / Plan';
     if (activePath === '/exec') return `Workspace / Execute / ${executionTaskId || 'Select Task'}`;
@@ -221,7 +222,8 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const showHeader = activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' && activePath !== '/playbooks' && activePath !== '/quality';
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases'];
+  const showHeader = !skipDrawerPaths.includes(activePath);
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -264,11 +266,11 @@ function App() {
           </header>
         )}
 
-        <div className={`flex-1 overflow-auto custom-scrollbar ${activePath !== '/exec' && activePath !== '/docs' && activePath !== '/agents' && activePath !== '/playbooks' && activePath !== '/quality' ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+        <div className={`flex-1 overflow-auto custom-scrollbar ${!skipDrawerPaths.includes(activePath) ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
            {renderContent()}
         </div>
 
-        {activePath !== '/docs' && activePath !== '/agents' && activePath !== '/playbooks' && activePath !== '/quality' && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
+        {!skipDrawerPaths.includes(activePath) && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
 
       </main>
 
@@ -279,7 +281,6 @@ function App() {
         onCreate={handleTaskCreate}
       />
 
-      {/* WS-13 Task Detail View */}
       <TaskDetailView 
         taskId={taskDetailId} 
         onClose={() => setTaskDetailId(null)}
