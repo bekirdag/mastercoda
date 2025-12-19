@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -1164,4 +1164,78 @@ export const MOCK_KEYMAP_PROFILES: KeymapProfile[] = [
   { id: 'vim', name: 'Vim Emulation', description: 'Modal editing for power users' },
   { id: 'vsc', name: 'Visual Studio Code', description: 'Familiar shortcuts for VS Code migrants' },
   { id: 'ij', name: 'IntelliJ IDEA', description: 'Refactoring-heavy shortcuts from JetBrains' },
+];
+
+// EX-12 Mock DocSets
+export const MOCK_DOCSETS: DocSet[] = [
+  {
+    id: 'ds-react',
+    name: 'React',
+    version: 'v18.2',
+    icon: '⚛️',
+    category: 'Active Project',
+    status: 'downloaded',
+    versions: ['v18.2', 'v17.0', 'v16.8'],
+    chapters: [
+      {
+        id: 'r-hooks',
+        title: 'Built-in Hooks',
+        children: [
+          { 
+            id: 'r-useeffect', 
+            title: 'useEffect', 
+            content: '# useEffect\n\n`useEffect` is a React Hook that lets you synchronize a component with an external system.',
+            headers: [
+              { id: 'h1', text: 'Usage', level: 2 },
+              { id: 'h2', text: 'Examples', level: 2 },
+              { id: 'h3', text: 'Troubleshooting', level: 2 }
+            ]
+          },
+          { id: 'r-usestate', title: 'useState', content: '# useState\n\n`useState` is a React Hook that lets you add a state variable to your component.' }
+        ]
+      },
+      {
+        id: 'r-components',
+        title: 'Components',
+        children: [
+          { id: 'r-memo', title: 'memo', content: '# memo\n\n`memo` lets you skip re-rendering a component when its props are unchanged.' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ds-tailwind',
+    name: 'Tailwind CSS',
+    version: 'v3.4',
+    icon: '🎨',
+    category: 'Active Project',
+    status: 'update_available',
+    versions: ['v3.4', 'v3.3', 'v3.0'],
+    chapters: [
+      { id: 't-layout', title: 'Layout', children: [{ id: 't-flex', title: 'Flexbox', content: '# Flexbox\n\nUtilities for controlling how flex items both grow and shrink.' }] },
+      { id: 't-colors', title: 'Colors', children: [{ id: 't-bg', title: 'Background Color', content: '# Background Color\n\nUtilities for controlling the background color of an element.' }] }
+    ]
+  },
+  {
+    id: 'ds-python',
+    name: 'Python',
+    version: '3.12',
+    icon: '🐍',
+    category: 'Installed Extension',
+    status: 'downloaded',
+    versions: ['3.12', '3.11', '3.10'],
+    chapters: [
+      { id: 'py-types', title: 'Built-in Types', children: [{ id: 'py-list', title: 'Lists', content: '# Lists\n\nLists are mutable sequences, typically used to store collections of homogeneous items.' }] }
+    ]
+  },
+  {
+    id: 'ds-aws',
+    name: 'AWS SDK (JS)',
+    version: 'v3',
+    icon: '☁️',
+    category: 'Installed Extension',
+    status: 'not_downloaded',
+    versions: ['v3', 'v2'],
+    chapters: []
+  }
 ];

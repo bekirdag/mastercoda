@@ -430,3 +430,23 @@ export interface Snippet {
   isLocked?: boolean;
   updatedAt: string;
 }
+
+// EX-12 Reference Library Types
+export interface DocChapter {
+  id: string;
+  title: string;
+  content?: string; // Only if it's a leaf node
+  children?: DocChapter[];
+  headers?: { id: string; text: string; level: number }[];
+}
+
+export interface DocSet {
+  id: string;
+  name: string;
+  version: string;
+  icon: string | React.ReactNode;
+  category: 'Active Project' | 'Installed Extension';
+  status: 'downloaded' | 'update_available' | 'not_downloaded';
+  versions: string[];
+  chapters: DocChapter[];
+}

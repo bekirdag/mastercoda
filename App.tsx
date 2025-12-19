@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -38,6 +37,7 @@ import ReleaseManager from './components/ReleaseManager';
 import Extensions from './components/Extensions'; 
 import ModelRegistry from './components/ModelRegistry'; // EX-10
 import ServiceAccounts from './components/ServiceAccounts'; // EX-11
+import ReferenceLibrary from './components/ReferenceLibrary'; // EX-12
 import ExtensionManager from './components/ExtensionManager'; // EX-05
 import ExtensionSettings from './components/ExtensionSettings';
 import ExtensionBuilder from './components/ExtensionBuilder'; // EX-04
@@ -185,6 +185,7 @@ function App() {
   if (currentStep === 'database-migration') { return <DatabaseMigration onComplete={() => setCurrentStep('dashboard')} onCancel={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
+  // Fix: changed setCurrentCheckItem to setCurrentStep
   if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
   if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
   if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
@@ -207,6 +208,7 @@ function App() {
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/releases') return <ReleaseManager />;
     if (activePath === '/extensions') return <Extensions />;
+    if (activePath === '/extensions/references') return <ReferenceLibrary />; // EX-12
     if (activePath === '/extensions/models') return <ModelRegistry />; // EX-10
     if (activePath === '/extensions/accounts') return <ServiceAccounts />; // EX-11
     if (activePath === '/extensions/snippets') return <SnippetStudio />; // EX-08
@@ -242,6 +244,7 @@ function App() {
     if (activePath === '/quality') return 'Workspace / Quality Hub';
     if (activePath === '/releases') return 'Workspace / Releases';
     if (activePath === '/extensions') return 'Ecosystem / Extensions';
+    if (activePath === '/extensions/references') return 'Ecosystem / References';
     if (activePath === '/extensions/models') return 'Ecosystem / Brain Center';
     if (activePath === '/extensions/accounts') return 'Ecosystem / Service Accounts';
     if (activePath === '/extensions/snippets') return 'Ecosystem / Extensions / Snippets';
@@ -262,7 +265,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts'];
+  const skipDrawerPaths = ['/exec', '/docs', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts'];
   const showHeader = !skipDrawerPaths.includes(activePath) || activePath.startsWith('/extensions/settings/');
 
   return (
