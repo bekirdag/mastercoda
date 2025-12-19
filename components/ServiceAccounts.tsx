@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ServiceAccount, AuthorizedExtension } from '../types';
 import { MOCK_SERVICE_ACCOUNTS } from '../constants';
@@ -23,7 +22,6 @@ import {
   ServerIcon,
   DatabaseIcon,
   MoreVerticalIcon,
-  /* Import missing TrashIcon */
   TrashIcon
 } from './Icons';
 
@@ -47,7 +45,8 @@ const ServiceAccounts: React.FC = () => {
     setAccounts(prev => prev.map(a => a.id === id ? { ...a, status: 'connected', lastVerified: 'Just now' } : a));
   };
 
-  const revokeExtension = (accId: string, extId: string) => {
+  const handleRevokeExtension = (accId: string, extId: string) => {
+     // The AccessManagerModal handles the visual "shake" before closing or updating
      setAccounts(prev => prev.map(a => {
         if (a.id === accId) {
             return {
@@ -62,7 +61,7 @@ const ServiceAccounts: React.FC = () => {
   return (
     <div className="p-8 max-w-[900px] mx-auto space-y-10 animate-in fade-in duration-500 pb-32 font-sans">
       
-      {/* 1. Identity Header Hero */}
+      {/* 1. Identity Header Hero (EX-11 Section) */}
       <section className="bg-slate-800 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl relative group">
          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-slate-800 to-slate-900 -z-10" />
          <div className="p-8 flex flex-col md:flex-row items-center gap-8">
@@ -91,14 +90,14 @@ const ServiceAccounts: React.FC = () => {
 
             <div className="flex flex-col gap-2 shrink-0">
                <Button variant="primary" size="sm" onClick={() => setIsSyncOn(!isSyncOn)}>
-                  {isSyncOn ? 'Disable Sync' : 'Enable Sync'}
+                  {isSyncOn ? 'Manage Sync Settings' : 'Enable Sync'}
                </Button>
                <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300">Sign Out</Button>
             </div>
          </div>
       </section>
 
-      {/* 2. Connected Services List */}
+      {/* 2. Connected Services List (EX-11 Section) */}
       <section className="space-y-6">
          <div className="flex items-center justify-between px-2">
             <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest flex items-center">
@@ -128,7 +127,7 @@ const ServiceAccounts: React.FC = () => {
          </div>
       </section>
 
-      {/* 3. Manual Tokens Section (PATs) */}
+      {/* 3. Manual Tokens Section (PATs) (EX-11 Section) */}
       <section className="space-y-4">
          <div className="flex items-center justify-between px-2">
             <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Personal Access Tokens</h2>
@@ -150,7 +149,7 @@ const ServiceAccounts: React.FC = () => {
          </div>
       </section>
 
-      {/* 4. Security Footnote */}
+      {/* 4. Security Footnote (EX-11 Footer) */}
       <footer className="pt-10 flex items-start gap-4 p-8 bg-indigo-900/5 border border-indigo-500/10 rounded-2xl">
          <LockIcon size={20} className="text-indigo-400 shrink-0 mt-1" />
          <div className="text-xs text-slate-500 leading-relaxed">
@@ -161,12 +160,12 @@ const ServiceAccounts: React.FC = () => {
          </div>
       </footer>
 
-      {/* Access Manager Modal */}
+      {/* Access Manager Modal (EX-11 Manage Access) */}
       {managingAccount && (
          <AccessManagerModal 
             acc={managingAccount} 
             onClose={() => setManagingId(null)} 
-            onRevoke={(extId) => revokeExtension(managingAccount.id, extId)}
+            onRevoke={(extId) => handleRevokeExtension(managingAccount.id, extId)}
          />
       )}
 
@@ -244,6 +243,17 @@ const AccountCard: React.FC<{
 };
 
 const AccessManagerModal: React.FC<{ acc: ServiceAccount, onClose: () => void, onRevoke: (id: string) => void }> = ({ acc, onClose, onRevoke }) => {
+   const [revokingId, setRevokingId] = useState<string | null>(null);
+
+   const handleRevokeClick = (id: string) => {
+      setRevokingId(id);
+      // Wait for shake animation specified in EX-11
+      setTimeout(() => {
+         onRevoke(id);
+         setRevokingId(null);
+      }, 500);
+   };
+
    return (
       <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300">
          <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden animate-in zoom-in-95 duration-200">
@@ -267,7 +277,10 @@ const AccessManagerModal: React.FC<{ acc: ServiceAccount, onClose: () => void, o
                   <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Authorized Extensions</h4>
                   <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
                      {acc.authorizedExtensions.map(ext => (
-                        <div key={ext.id} className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex items-center justify-between group hover:border-indigo-500/30 transition-all">
+                        <div 
+                           key={ext.id} 
+                           className={`bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex items-center justify-between group hover:border-indigo-500/30 transition-all ${revokingId === ext.id ? 'shake' : ''}`}
+                        >
                            <div className="flex items-center space-x-4">
                               <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-700 flex items-center justify-center text-sm">
                                  {ext.icon || '🔧'}
@@ -278,7 +291,7 @@ const AccessManagerModal: React.FC<{ acc: ServiceAccount, onClose: () => void, o
                               </div>
                            </div>
                            <button 
-                             onClick={() => onRevoke(ext.id)}
+                             onClick={() => handleRevokeClick(ext.id)}
                              className="text-[10px] font-bold text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-all uppercase tracking-tighter"
                            >
                               Revoke
