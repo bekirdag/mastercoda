@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -21,6 +20,7 @@ import WorkspaceReady from './components/WorkspaceReady';
 import ValidatingWorkspace from './components/ValidatingWorkspace';
 import DatabaseMigration from './components/DatabaseMigration';
 import InvalidWorkspace, { WorkspaceErrorType } from './components/InvalidWorkspace';
+import CreateTaskModal from './components/CreateTaskModal';
 import { OmniDrawerState } from './types';
 import { CommandIcon } from './components/Icons';
 
@@ -32,6 +32,7 @@ function App() {
   const [drawerState, setDrawerState] = useState<OmniDrawerState>('peek');
   const [activePath, setActivePath] = useState('/');
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   
   // Validation Error State for ON-16
   const [validationError, setValidationError] = useState<{ type: WorkspaceErrorType; path: string } | null>(null);
@@ -50,18 +51,32 @@ function App() {
   // Keyboard shortcut listener for Cmd+K and Drawer toggle (Cmd+J)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd+K: Command Palette
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setIsCmdKOpen(prev => !prev);
       }
+      // Cmd+J: Toggle Terminal
       if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
         e.preventDefault();
         setDrawerState(prev => prev === 'hidden' ? 'peek' : 'hidden');
+      }
+      // Cmd+N: New Task (Global)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+        e.preventDefault();
+        setIsCreateTaskOpen(true);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  const handleTaskCreate = (task: any) => {
+    console.log('Task Created Globally:', task);
+    // In a real app, we would dispatch this to a global store or context
+    // For now, we rely on the modal closing.
+    // We could trigger a refresh or toast here.
+  };
 
   if (currentStep === 'intro') {
     return (
@@ -249,8 +264,8 @@ function App() {
       : 'pb-8';
 
   const renderContent = () => {
-    if (activePath === '/') return <Dashboard />;
-    if (activePath === '/plan') return <Plan />; // Updated from TaskBoard
+    if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
+    if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} />;
     
     // Placeholder for other routes
     return (
@@ -287,8 +302,18 @@ function App() {
              <span>/</span>
              <span className="text-slate-200">{getBreadcrumb()}</span>
           </div>
-          <div className="ml-auto">
-             {/* Hint for keyboard shortcuts */}
+          <div className="ml-auto flex items-center space-x-2">
+             {/* New Task Hint */}
+             <button 
+               onClick={() => setIsCreateTaskOpen(true)}
+               className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
+               title="Create new task"
+             >
+                <span className="font-bold">+</span>
+                <span className="ml-1 bg-slate-700 px-1 rounded text-[10px] font-mono border border-slate-600">⌘N</span>
+             </button>
+
+             {/* Command Palette Hint */}
              <button 
                onClick={() => setIsCmdKOpen(true)}
                className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"
@@ -310,8 +335,13 @@ function App() {
 
       </main>
 
-      {/* Command Palette Modal */}
+      {/* Overlays */}
       <CommandPalette isOpen={isCmdKOpen} onClose={() => setIsCmdKOpen(false)} />
+      <CreateTaskModal 
+        isOpen={isCreateTaskOpen} 
+        onClose={() => setIsCreateTaskOpen(false)} 
+        onCreate={handleTaskCreate}
+      />
       
     </div>
   );

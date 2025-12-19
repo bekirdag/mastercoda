@@ -2,7 +2,7 @@ import React from 'react';
 import { MOCK_TASKS, MOCK_METRICS } from '../constants';
 import Button from './Button';
 import Badge from './Badge';
-import { GitBranchIcon, CheckCircleIcon, AlertCircleIcon, ActivityIcon, ChevronRightIcon } from './Icons';
+import { GitBranchIcon, CheckCircleIcon, AlertCircleIcon, ActivityIcon, PlusIcon } from './Icons';
 import { BarChart, Bar, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
 // Simple mock data for chart
@@ -16,7 +16,11 @@ const CHART_DATA = [
   { name: 'Sun', tasks: 2 },
 ];
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  onCreateTask?: () => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ onCreateTask }) => {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
       
@@ -28,6 +32,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="flex items-center space-x-3">
           <Button variant="secondary" icon={<GitBranchIcon size={16} />}>feature/ui-refresh</Button>
+          <Button variant="secondary" icon={<PlusIcon size={16} />} onClick={onCreateTask}>New Task</Button>
           <Button variant="primary" icon={<ActivityIcon size={16} />}>Deploy Staging</Button>
         </div>
       </div>

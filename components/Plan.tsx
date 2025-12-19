@@ -18,7 +18,11 @@ import {
   CalendarIcon
 } from './Icons';
 
-const Plan: React.FC = () => {
+interface PlanProps {
+  onCreateTask?: () => void;
+}
+
+const Plan: React.FC<PlanProps> = ({ onCreateTask }) => {
   const [view, setView] = useState<PlanViewType>('list');
   const [tasks] = useState<Task[]>(MOCK_TASKS);
   const [searchQuery, setSearchQuery] = useState('');
@@ -143,7 +147,14 @@ const Plan: React.FC = () => {
                      <CalendarIcon size={14} />
                    </button>
                </div>
-               <Button variant="primary" size="sm" icon={<PlusIcon size={14} />}>New Item</Button>
+               <Button 
+                 variant="primary" 
+                 size="sm" 
+                 icon={<PlusIcon size={14} />}
+                 onClick={onCreateTask}
+               >
+                 New Item
+               </Button>
              </>
           )}
         </div>
