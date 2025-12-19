@@ -1,5 +1,7 @@
+
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon } from './Icons';
+import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -9,8 +11,11 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath, setActivePath }) => {
+  const unreadCount = MOCK_NOTIFICATIONS.filter(n => n.status === 'unread').length;
+
   const navItems = [
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
+    { id: 'inbox', label: 'Inbox', icon: <InboxIcon size={20} />, path: '/inbox', badge: unreadCount },
     { id: 'plan', label: 'Plan', icon: <LayoutGridIcon size={20} />, path: '/plan' },
     { id: 'execution', label: 'Execution', icon: <TerminalIcon size={20} />, path: '/exec' },
     { id: 'review', label: 'Review', icon: <EyeIcon size={20} />, path: '/review' },
@@ -48,13 +53,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
             }`}
             title={!isExpanded ? item.label : undefined}
           >
-            <span className="shrink-0">{item.icon}</span>
+            <span className="shrink-0 relative">
+              {item.icon}
+              {item.badge !== undefined && item.badge > 0 && !isExpanded && (
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" />
+              )}
+            </span>
             <span 
-              className={`ml-3 text-sm font-medium transition-all duration-300 whitespace-nowrap overflow-hidden ${
+              className={`ml-3 text-sm font-medium transition-all duration-300 whitespace-nowrap overflow-hidden flex-1 flex justify-between items-center ${
                 isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
               }`}
             >
               {item.label}
+              {item.badge !== undefined && item.badge > 0 && (
+                <span className="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold ml-2">
+                  {item.badge}
+                </span>
+              )}
             </span>
           </button>
         ))}

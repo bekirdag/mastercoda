@@ -154,3 +154,19 @@ export interface AgentPersona {
     avgLatency: string;
   };
 }
+
+// WS-14 Notification Types
+export type NotificationCategory = 'agent' | 'system' | 'mention';
+export type NotificationStatus = 'unread' | 'read' | 'archived';
+
+export interface AppNotification {
+  id: string;
+  category: NotificationCategory;
+  status: NotificationStatus;
+  title: string;
+  body: string;
+  timestamp: string;
+  taskId?: string;
+  tokens?: number;
+  error?: boolean;
+}

@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -121,6 +121,56 @@ export const MOCK_METRICS: Metric[] = [
   { label: 'Test Coverage', value: '84.3%', change: '+1.2%', trend: 'up', color: 'indigo' },
   { label: 'Open Issues', value: '12', change: '+2', trend: 'down', color: 'amber' },
   { label: 'API Latency', value: '45ms', change: 'stable', trend: 'neutral', color: 'blue' },
+];
+
+export const MOCK_NOTIFICATIONS: AppNotification[] = [
+  {
+    id: 'n1',
+    category: 'agent',
+    status: 'unread',
+    title: 'Agent completed MC-1001',
+    body: 'Implemented updated button styles and loader component. 4 files modified. All tests passed.',
+    timestamp: '2 mins ago',
+    taskId: 'MC-1001',
+    tokens: 450
+  },
+  {
+    id: 'n2',
+    category: 'agent',
+    status: 'unread',
+    title: 'Agent stuck on MC-2001',
+    body: 'Error: API Rate Limit exceeded during streaming implementation. Reasoning paused.',
+    timestamp: '15 mins ago',
+    taskId: 'MC-2001',
+    error: true
+  },
+  {
+    id: 'n3',
+    category: 'system',
+    status: 'read',
+    title: 'Update Available',
+    body: 'Master Coda v0.3.6 contains performance improvements for the Dependency Graph.',
+    timestamp: '2 hours ago'
+  },
+  {
+    id: 'n4',
+    category: 'mention',
+    status: 'unread',
+    title: 'Sarah mentioned you',
+    body: 'Check the review for MC-1028. I think the logic for the graph sync might need a debounce.',
+    timestamp: '3 hours ago',
+    taskId: 'MC-1028'
+  },
+  {
+    id: 'n5',
+    category: 'agent',
+    status: 'archived',
+    title: 'Agent completed MC-1027',
+    body: 'Fixed CSS overflow bug in the sidebar. Verified in dark/light modes.',
+    timestamp: 'Yesterday',
+    taskId: 'MC-1027',
+    tokens: 120
+  }
 ];
 
 export const MOCK_AGENT_LOGS: AgentLogEntry[] = [
