@@ -1,6 +1,5 @@
 
-
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -9,6 +8,85 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_SKILLS: Skill[] = [
+  {
+    id: 's-fs-read',
+    name: 'fs.read_file',
+    category: 'system',
+    language: 'typescript',
+    description: 'Reads the content of a specific file from the workspace.',
+    code: `export const read_file = async (path: string) => {\n  const content = await fs.promises.readFile(path, 'utf-8');\n  return content;\n};`,
+    schema: {
+      name: "fs.read_file",
+      description: "Reads the content of a specific file from the workspace.",
+      parameters: {
+        type: "object",
+        properties: {
+          path: { type: "string", description: "Absolute or relative path to the file." }
+        },
+        required: ["path"]
+      }
+    },
+    parameters: [
+      { name: 'path', type: 'string', description: 'Path to file', required: true, example: 'src/App.tsx' }
+    ],
+    source: 'Built-in',
+    usedBy: ['ag-primary', 'ag-coder'],
+    isLocked: true,
+    updatedAt: '1 month ago'
+  },
+  {
+    id: 's-db-reset',
+    name: 'db.reset_staging',
+    category: 'custom',
+    language: 'python',
+    description: 'Wipes and re-seeds the staging database. Dangerous operation.',
+    code: `def reset_staging(confirm: bool):\n    """Resets the staging DB. Requires confirmation."""\n    if not confirm:\n        return "Cancelled"\n    # Logic to drop tables and run seeds\n    return {"status": "success", "message": "Database re-seeded."}`,
+    schema: {
+      name: "db.reset_staging",
+      description: "Wipes and re-seeds the staging database. Dangerous operation.",
+      parameters: {
+        type: "object",
+        properties: {
+          confirm: { type: "boolean", description: "Required confirmation toggle to execute wipe." }
+        },
+        required: ["confirm"]
+      }
+    },
+    parameters: [
+      { name: 'confirm', type: 'boolean', description: 'Mandatory confirmation', required: true, example: true }
+    ],
+    source: 'Project-specific',
+    usedBy: ['ag-qa'],
+    updatedAt: '2 days ago'
+  },
+  {
+    id: 's-slack-post',
+    name: 'slack.post_message',
+    category: 'integration',
+    language: 'http',
+    description: 'Sends a payload to a configured Slack webhook.',
+    code: `POST https://hooks.slack.com/services/{{SLACK_WEBHOOK_ID}}\nContent-Type: application/json\n\n{\n  "text": "{{message}}"\n}`,
+    schema: {
+      name: "slack.post_message",
+      description: "Sends a payload to a configured Slack webhook.",
+      parameters: {
+        type: "object",
+        properties: {
+          message: { type: "string", description: "The content of the slack message." }
+        },
+        required: ["message"]
+      }
+    },
+    parameters: [
+      { name: 'message', type: 'string', description: 'Message body', required: true, example: 'Task completed!' }
+    ],
+    source: 'Slack Extension',
+    usedBy: ['ag-primary'],
+    updatedAt: '1 week ago'
+  }
+];
 
 export const MOCK_RAG_COLLECTIONS: RagCollection[] = [
   { id: 'rag-1', name: 'Master Coda Core', type: 'git', status: 'synced', vectorCount: 842000, lastIndexed: '2 mins ago', description: 'Auto-synced repository chunks covering src/ and docs/.' },
@@ -1722,6 +1800,7 @@ export const MOCK_TEST_RESULTS: TestResult[] = [
 
 export const MOCK_COVERAGE: CoverageMetric[] = [
   { id: 'c1', path: 'src/components/Dashboard.tsx', percentage: 92, lines: 450 },
+  /* Fix: Corrected typo in MOCK_COVERAGE array where 'id' property was incorrectly defined twice on one line. */
   { id: 'c2', path: 'src/auth/middleware.ts', percentage: 74, lines: 120, uncoveredRegions: ['L42-L55', 'L88'] },
   { id: 'c3', path: 'src/utils/helpers.ts', percentage: 100, lines: 85 },
   { id: 'c4', path: 'src/utils/payment.ts', percentage: 32, lines: 210, uncoveredRegions: ['L10-L150'] },

@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 // Fix: Added missing CrownIcon to the imports
 import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon } from './Icons';
@@ -21,6 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'missions', label: 'Mission Control', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/missions' }, // AG-07
     { id: 'knowledge', label: 'Knowledge Base', icon: <DatabaseIcon size={20} className="text-indigo-400" />, path: '/agents/knowledge' }, // AG-08
+    { id: 'skills', label: 'Skill Studio', icon: <div className="flex space-x-0.5"><div className="w-1.5 h-4 bg-indigo-500 rounded-sm"/><div className="w-1.5 h-3 bg-slate-500 rounded-sm"/><div className="w-1.5 h-5 bg-indigo-500 rounded-sm"/></div>, path: '/agents/skills' }, // AG-09
     { id: 'orchestrator', label: 'Orchestrator', icon: <div className="relative"><ActivityIcon size={20} className="text-indigo-400" /><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full" /></div>, path: '/extensions/orchestrator' }, // EX-15
     { id: 'guardrails', label: 'Safety Hub', icon: <ShieldIcon size={20} className="text-red-400" />, path: '/agents/governance' }, // AG-06
     { id: 'gym', label: 'The Gymnasium', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/evals' }, // AG-04

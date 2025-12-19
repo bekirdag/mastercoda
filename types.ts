@@ -20,6 +20,33 @@ export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type RagSourceType = 'git' | 'pdf' | 'wiki' | 'web' | 'api';
 export type RagSyncStatus = 'synced' | 'indexing' | 'stale' | 'error';
 
+// Skill Studio Types (AG-09)
+export type SkillCategory = 'system' | 'integration' | 'custom';
+export type SkillLanguage = 'python' | 'typescript' | 'http';
+
+export interface SkillArgument {
+  name: string;
+  type: string;
+  description: string;
+  required: boolean;
+  example?: any;
+}
+
+export interface Skill {
+  id: string;
+  name: string;
+  category: SkillCategory;
+  language: SkillLanguage;
+  description: string;
+  code: string;
+  schema: any;
+  parameters: SkillArgument[];
+  source: string;
+  usedBy: string[]; // Agent IDs
+  isLocked?: boolean;
+  updatedAt: string;
+}
+
 export interface RagCollection {
   id: string;
   name: string;

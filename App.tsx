@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -48,6 +47,7 @@ import SquadComposer from './components/SquadComposer'; // AG-05
 import AgentGuardrails from './components/AgentGuardrails'; // AG-06
 import MissionControl from './components/MissionControl'; // AG-07
 import KnowledgeManager from './components/KnowledgeManager'; // AG-08
+import SkillStudio from './components/SkillStudio'; // AG-09
 import Inbox from './components/Inbox';
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -231,6 +231,7 @@ function App() {
     if (activePath === '/agents/governance') return <AgentGuardrails />; // AG-06
     if (activePath === '/agents/missions') return <MissionControl />; // AG-07
     if (activePath === '/agents/knowledge') return <KnowledgeManager />; // AG-08
+    if (activePath === '/agents/skills') return <SkillStudio />; // AG-09
     if (activePath === '/agents/evals') return <AgentGym />; // AG-04
     if (activePath === '/agents/squads') return <SquadComposer />; // AG-05
     if (activePath === '/extensions/firewall') return <NetworkFirewall />;
@@ -294,6 +295,7 @@ function App() {
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
     if (activePath === '/agents/knowledge') return 'Workspace / Knowledge Base';
+    if (activePath === '/agents/skills') return 'Agents / Skill Studio';
     if (activePath === '/agents/evals') return 'Workspace / Gymnasium';
     if (activePath === '/agents/squads') return 'Workspace / Squad Composer';
     if (activePath === '/quality') return 'Workspace / Quality Hub';
