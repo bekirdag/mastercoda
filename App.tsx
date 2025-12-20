@@ -62,6 +62,8 @@ import PluginMarketplace from './components/PluginMarketplace';
 import DiscoveryWizard from './components/DiscoveryWizard'; // AG-13
 import TraceabilityMatrix from './components/TraceabilityMatrix'; // AG-14
 import MilestoneApproval from './components/MilestoneApproval'; // AG-15
+import DocStructuralTemplates from './components/DocStructuralTemplates'; // AG-16
+import ConflictDetector from './components/ConflictDetector'; // AG-17
 import NotificationCenter from './components/NotificationCenter'; // SY-04
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -126,7 +128,6 @@ function App() {
         setIsCmdKOpen(prev => !prev);
       }
       // Cmd+Shift+N: Notifications
-      // Fix: Added missing 'e.' prefix to shiftKey
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'n') {
         e.preventDefault();
         setActivePath('/notifications');
@@ -244,7 +245,6 @@ function App() {
   if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
   if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
   if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details: any) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
-  /* Fix: Corrected typo where 'details' was used instead of 'defaults' in the onNext callback. */
   if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults: any) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
   if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
   if (currentStep === 'workspace-ready') { return <WorkspaceReady workspacePath={newProjectData.path} onNext={() => setCurrentStep('dashboard')} />; }
@@ -264,23 +264,25 @@ function App() {
     if (activePath === '/notifications') return <NotificationCenter />; 
     if (activePath === '/help') return <HelpSupport />; 
     if (activePath === '/system/about') return <AboutUpdates />; 
-    if (activePath === '/system/security') return <SecurityAudit />; // SY-07
-    if (activePath === '/organization/admin') return <OrgAdminConsole />; // SY-08
-    if (activePath === '/system/health') return <SystemHealth />; // SY-09
-    if (activePath === '/system/storage') return <StorageManager />; // SY-10
-    if (activePath === '/system/privacy') return <PrivacyCenter isZeroRetention={isZeroRetentionActive} setIsZeroRetention={setIsZeroRetentionActive} />; // SY-11
+    if (activePath === '/system/security') return <SecurityAudit />; 
+    if (activePath === '/organization/admin') return <OrgAdminConsole />; 
+    if (activePath === '/system/health') return <SystemHealth />; 
+    if (activePath === '/system/storage') return <StorageManager />; 
+    if (activePath === '/system/privacy') return <PrivacyCenter isZeroRetention={isZeroRetentionActive} setIsZeroRetention={setIsZeroRetentionActive} />; 
     if (activePath === '/inbox') return <NotificationCenter />; 
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
     if (activePath === '/agents/traceability') return <TraceabilityMatrix />;
-    if (activePath === '/agents/signoff') return <MilestoneApproval />; // AG-15
+    if (activePath === '/agents/signoff') return <MilestoneApproval />; 
+    if (activePath === '/agents/structural-templates') return <DocStructuralTemplates />;
+    if (activePath === '/agents/conflicts') return <ConflictDetector />;
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
     if (activePath === '/agents/governance') return <AgentGuardrails />; 
     if (activePath === '/agents/missions') return <MissionControl />; 
     if (activePath === '/agents/training') return <AgentTraining />; 
     if (activePath === '/agents/plugins') return <PluginMarketplace />; 
-    if (activePath === '/agents/discovery') return <DiscoveryWizard />; // AG-13
+    if (activePath === '/agents/discovery') return <DiscoveryWizard />; 
     if (activePath === '/agents/knowledge') return <KnowledgeManager />; 
     if (activePath === '/agents/skills') return <SkillStudio />; 
     if (activePath === '/agents/evals') return <AgentGym />; 
@@ -354,6 +356,8 @@ function App() {
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
     if (activePath === '/agents/traceability') return 'Agents / Traceability Matrix';
     if (activePath === '/agents/signoff') return 'Agents / Milestone Approval';
+    if (activePath === '/agents/structural-templates') return 'Agents / Doc Skeletons';
+    if (activePath === '/agents/conflicts') return 'Agents / Gap Radar';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
@@ -404,7 +408,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff', '/agents/structural-templates', '/agents/conflicts'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

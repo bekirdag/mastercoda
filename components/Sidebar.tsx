@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon, HardDriveIcon, LockIcon, CheckCircleIcon, ListTreeIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon, HardDriveIcon, LockIcon, CheckCircleIcon, ListTreeIcon, AlertTriangleIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -17,6 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'notifications', label: 'Notifications', icon: <BellIcon size={20} />, path: '/notifications', badge: unreadCount },
     { id: 'structural_templates', label: 'Doc Skeletons', icon: <ListTreeIcon size={20} className="text-indigo-400" />, path: '/agents/structural-templates' },
+    { id: 'conflicts', label: 'Gap Radar', icon: <AlertTriangleIcon size={20} className="text-red-400" />, path: '/agents/conflicts' },
     { id: 'signoff', label: 'Sign-off Gate', icon: <CheckCircleIcon size={20} className="text-emerald-400" />, path: '/agents/signoff' },
     { id: 'traceability', label: 'Logic Lineage', icon: <GitBranchIcon size={20} className="text-indigo-400" />, path: '/agents/traceability' },
     { id: 'system_health', label: 'System Health', icon: <ActivityIcon size={20} className="text-emerald-400" />, path: '/system/health' },

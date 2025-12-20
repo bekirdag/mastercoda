@@ -1,4 +1,5 @@
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData, DocTemplate } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData, DocTemplate, ArchitectureIssue } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -7,6 +8,49 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_ARCHITECTURE_ISSUES: ArchitectureIssue[] = [
+  {
+    id: 'ISS-101',
+    title: 'High Availability vs Single Instance',
+    category: 'conflict',
+    severity: 'critical',
+    description: 'RFP R-105 requires "High Availability" for the database, but PDR P-302 describes a single-region PostgreSQL instance. This represents a risk to availability requirements.',
+    problemStatement: 'RFP R-105 requires "High Availability," but PDR P-302 uses a single AWS instance. This is a conflict.',
+    affectedPath: 'R-105 ➔ P-302',
+    status: 'unresolved',
+    aiSuggestions: [
+      { id: 'opt-a', label: 'Option A (Infrastructure)', description: 'Upgrade PDR to a Multi-AZ RDS Cluster.', impact: 'Adds ~$200/mo to infrastructure cost.' },
+      { id: 'opt-b', label: 'Option B (Requirements)', description: 'Update RFP to accept "Standard Availability" to save costs.', impact: 'Requires business sign-off on lower SLA.' }
+    ]
+  },
+  {
+    id: 'ISS-102',
+    title: 'Missing API Schema',
+    category: 'gap',
+    severity: 'warning',
+    description: 'The SDS S-401 for the User Profile Endpoint requires a detailed JSON schema that was never specified or bounded in the PDR phase.',
+    problemStatement: 'SDS requires a validation schema not present in PDR documentation.',
+    affectedPath: 'PDR ➔ SDS S-401',
+    status: 'unresolved',
+    aiSuggestions: [
+      { id: 'opt-c', label: 'Option A (Auto-Gen)', description: 'Let Architect Prime generate a best-practice schema based on RFP entities.', impact: 'May require minor code refactors if changed later.' }
+    ]
+  },
+  {
+    id: 'ISS-103',
+    title: 'Peak Load Ambiguity',
+    category: 'ambiguity',
+    severity: 'optimization',
+    description: 'Technical specs in PDR P-112 mention "Scaling for peak traffic" without defining numerical bounds for concurrent users.',
+    problemStatement: 'Scaling parameters lack concrete numerical metrics.',
+    affectedPath: 'P-112',
+    status: 'unresolved',
+    aiSuggestions: [
+      { id: 'opt-d', label: 'Option A (Assumption)', description: 'Assume 10k concurrent users based on industry averages for this project type.', impact: 'Safest baseline for infrastructure sizing.' }
+    ]
+  }
+];
 
 export const MOCK_DOC_TEMPLATES: DocTemplate[] = [
   {

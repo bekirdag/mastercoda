@@ -16,6 +16,27 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-17 Conflict Detector Types
+export type IssueSeverity = 'critical' | 'warning' | 'optimization';
+export type IssueCategory = 'gap' | 'conflict' | 'ambiguity';
+
+export interface ArchitectureIssue {
+  id: string;
+  title: string;
+  category: IssueCategory;
+  severity: IssueSeverity;
+  description: string;
+  problemStatement: string;
+  affectedPath: string;
+  aiSuggestions: {
+    id: string;
+    label: string;
+    description: string;
+    impact: string;
+  }[];
+  status: 'unresolved' | 'resolved';
+}
+
 // AG-16 Document Template Types
 export type DocTemplateType = 'rfp' | 'pdr' | 'sds' | 'custom';
 export type DocOutputFormat = 'markdown' | 'latex' | 'json';
