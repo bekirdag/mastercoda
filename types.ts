@@ -16,6 +16,23 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-13 Discovery Types
+export type DiscoveryStep = 'context' | 'scope' | 'technical' | 'finalization';
+
+export interface RfpSection {
+  id: string;
+  title: string;
+  content: string;
+  status: 'empty' | 'drafting' | 'locked';
+}
+
+export interface RfpDraft {
+  overview: RfpSection;
+  functional: RfpSection;
+  technical: RfpSection;
+  budget: RfpSection;
+}
+
 // SY-03 Billing Types
 export type InvoiceStatus = 'paid' | 'pending' | 'failed';
 
