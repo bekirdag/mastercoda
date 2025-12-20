@@ -1,6 +1,5 @@
 
-
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +7,40 @@ const formatDate = (daysOffset: number) => {
   const d = new Date(today);
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
+};
+
+export const MOCK_MILESTONE: MilestoneData = {
+  id: 'ms-402',
+  stage: 'rfp_pdr',
+  title: 'RFP ➔ PDR Transition',
+  status: 'pending',
+  agentPersona: 'Architect Prime',
+  lastUpdated: '10 mins ago',
+  assumptions: [
+    { id: 'a1', text: 'Targeting a SaaS subscription model with multi-tenant isolation.', isVerified: true },
+    { id: 'a2', text: 'Authentication must support RS256 JWT rotation for enterprise compliance.', isVerified: true },
+    { id: 'a3', text: 'Database selection is PostgreSQL with Citus for horizontal scaling needs.', isVerified: false },
+    { id: 'a4', text: 'Real-time features will utilize AWS AppSync (GraphQL) over raw WebSockets.', isVerified: false },
+    { id: 'a5', text: 'Infrastructure is defined via Terraform with deployment to AWS us-east-1.', isVerified: true }
+  ],
+  proposedOutline: [
+    { 
+      id: 'o1', label: '1. Technical Architecture Overview', 
+      children: [
+        { id: 'o1.1', label: '1.1 System Context Diagram' },
+        { id: 'o1.2', label: '1.2 High-Level Component Map' }
+      ]
+    },
+    { 
+      id: 'o2', label: '2. Identity & Access Management (IAM)',
+      children: [
+        { id: 'o2.1', label: '2.1 OAuth2 Provider Selection' },
+        { id: 'o2.2', label: '2.2 Scope & Permission Mapping' }
+      ]
+    },
+    { id: 'o3', label: '3. Data Persistence Layer' },
+    { id: 'o4', label: '4. API Design Specification' }
+  ]
 };
 
 export const MOCK_TRACE_NODES: TraceNode[] = [

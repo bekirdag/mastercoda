@@ -16,6 +16,33 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-15 Milestone Types
+export type MilestoneStage = 'rfp_pdr' | 'pdr_sds' | 'sds_exec';
+export type MilestoneStatus = 'pending' | 'approved' | 'rejected';
+
+export interface MilestoneAssumption {
+  id: string;
+  text: string;
+  isVerified: boolean;
+}
+
+export interface MilestoneOutlineItem {
+  id: string;
+  label: string;
+  children?: MilestoneOutlineItem[];
+}
+
+export interface MilestoneData {
+  id: string;
+  stage: MilestoneStage;
+  title: string;
+  status: MilestoneStatus;
+  assumptions: MilestoneAssumption[];
+  proposedOutline: MilestoneOutlineItem[];
+  agentPersona: string;
+  lastUpdated: string;
+}
+
 // AG-14 Traceability Types
 export type TraceNodeType = 'rfp' | 'pdr' | 'sds';
 export type TraceNodeStatus = 'synced' | 'stale' | 'orphaned' | 'mismatch';
