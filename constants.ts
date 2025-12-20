@@ -1,5 +1,4 @@
-
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData, DocTemplate } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +7,71 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_DOC_TEMPLATES: DocTemplate[] = [
+  {
+    id: 'tpl-sds-web',
+    title: 'Standard Web SDS',
+    type: 'sds',
+    category: 'REST API',
+    description: 'Structural baseline for web-based Software Design Specifications.',
+    outputFormat: 'markdown',
+    isDefault: true,
+    lastUpdated: '2 days ago',
+    sections: [
+      {
+        id: 's1', label: '1.0 System Architecture', isRequired: true, isConditional: false,
+        aiInstruction: 'Provide a high-level overview of the component interaction. Suggest using a Mermaid.js C4 diagram.',
+        children: [
+          { id: 's1.1', label: '1.1 Component Breakdown', isRequired: true, isConditional: false }
+        ]
+      },
+      {
+        id: 's2', label: '2.0 Data Models', isRequired: true, isConditional: false,
+        aiInstruction: 'List all SQL and Vector entities. Map RFP requirements to specific table schemas.'
+      },
+      {
+        id: 's3', label: '3.0 API Reference', isRequired: true, isConditional: true,
+        condition: 'Discovery.type == "web"',
+        aiInstruction: 'Generate OpenAPI-compliant descriptions for all REST endpoints identified in Discovery.'
+      },
+      {
+        id: 's4', label: '4.0 Security Design', isRequired: true, isConditional: false,
+        aiInstruction: 'Analyze the RFP for PII requirements and suggest an encryption strategy using AES-256.'
+      }
+    ]
+  },
+  {
+    id: 'tpl-pdr-startup',
+    title: 'Startup Lean PDR',
+    type: 'pdr',
+    category: 'Startup Lean',
+    description: 'High-speed, low-ceremony Preliminary Design Review template.',
+    outputFormat: 'markdown',
+    isDefault: false,
+    lastUpdated: '1 week ago',
+    sections: [
+      { id: 'p1', label: 'Problem Statement', isRequired: true, isConditional: false },
+      { id: 'p2', label: 'Technical Vision', isRequired: true, isConditional: false },
+      { id: 'p3', label: 'MVP Scope', isRequired: true, isConditional: false }
+    ]
+  },
+  {
+    id: 'tpl-rfp-enterprise',
+    title: 'Enterprise Business RFP',
+    type: 'rfp',
+    category: 'Standard Business',
+    description: 'Formal Request for Proposal for enterprise-grade projects.',
+    outputFormat: 'markdown',
+    isDefault: true,
+    lastUpdated: '3 days ago',
+    sections: [
+      { id: 'r1', label: 'Company Overview', isRequired: true, isConditional: false },
+      { id: 'r2', label: 'Project Goals', isRequired: true, isConditional: false },
+      { id: 'r3', label: 'Procurement Timeline', isRequired: true, isConditional: false }
+    ]
+  }
+];
 
 export const MOCK_MILESTONE: MilestoneData = {
   id: 'ms-402',
@@ -2083,7 +2147,6 @@ export const MOCK_TEST_RESULTS: TestResult[] = [
 
 export const MOCK_COVERAGE: CoverageMetric[] = [
   { id: 'c1', path: 'src/components/Dashboard.tsx', percentage: 92, lines: 450 },
-  /* Fix: Corrected typo in MOCK_COVERAGE array where 'id' property was incorrectly defined twice on one line. */
   { id: 'c2', path: 'src/auth/middleware.ts', percentage: 74, lines: 120, uncoveredRegions: ['L42-L55', 'L88'] },
   { id: 'c3', path: 'src/utils/helpers.ts', percentage: 100, lines: 85 },
   { id: 'c4', path: 'src/utils/payment.ts', percentage: 32, lines: 210, uncoveredRegions: ['L10-L150'] },
@@ -2354,7 +2417,7 @@ export const MOCK_THEMES: ThemeDefinition[] = [
 
 export const MOCK_ICON_SETS: IconPack[] = [
   { id: 'material', name: 'Material Icons', author: 'Google', iconMap: { 'ts': 'TypeScript', 'js': 'JavaScript', 'json': 'JSON' } },
-  { id: 'material', name: 'VSCode Default', author: 'Microsoft', iconMap: { 'ts': 'TS', 'js': 'JS', 'json': '{}' } },
+  { id: 'vsc', name: 'VSCode Default', author: 'Microsoft', iconMap: { 'ts': 'TS', 'js': 'JS', 'json': '{}' } },
 ];
 
 export const MOCK_SNIPPETS: Snippet[] = [
@@ -2412,7 +2475,6 @@ export const MOCK_KEYBINDINGS: Keybinding[] = [
   { id: 'kb-7', commandId: 'conflict.demo', commandLabel: 'Conflicting Command', key: 'meta+k', source: 'AI Agent', when: 'global', hasConflict: true },
   { id: 'kb-8', commandId: 'editor.action.save', commandLabel: 'Save File', key: 'meta+s', source: 'System', when: 'global', isDefault: true },
   { id: 'kb-9', commandId: 'editor.action.copy', commandLabel: 'Copy', key: 'meta+c', source: 'System', when: 'global', isDefault: true },
-  // Fix: Removed 'font' property as it is not part of the Keybinding type
   { id: 'kb-10', commandId: 'editor.action.paste', commandLabel: 'Paste', key: 'meta+v', source: 'System', when: 'global', isDefault: true },
 ];
 

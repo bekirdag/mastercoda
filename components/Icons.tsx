@@ -23,6 +23,24 @@ const BaseIcon: React.FC<IconProps> = ({ size = 20, strokeWidth = 1.5, children,
   </svg>
 );
 
+export const FileStackIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M4 10c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h7c1.1 0 2-.9 2-2v-7c0-1.1-.9-2-2-2H4Z" />
+    <path d="M21 7V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v3" />
+    <path d="M21 14v3a2 2 0 0 1-2 2h-3" />
+  </BaseIcon>
+);
+
+export const ListTreeIcon: React.FC<IconProps> = (props) => (
+  <BaseIcon {...props}>
+    <path d="M21 12h-8" />
+    <path d="M21 6h-8" />
+    <path d="M21 18h-8" />
+    <path d="M3 6v4c0 1.1.9 2 2 2h3" />
+    <path d="M3 10v6c0 1.1.9 2 2 2h3" />
+  </BaseIcon>
+);
+
 export const BellIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
     <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -217,7 +235,7 @@ export const CpuIcon: React.FC<IconProps> = (props) => (
 
 export const ShieldIcon: React.FC<IconProps> = (props) => (
   <BaseIcon {...props}>
-    <path d="M12 222s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
   </BaseIcon>
 );
 

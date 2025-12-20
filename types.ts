@@ -16,6 +16,33 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-16 Document Template Types
+export type DocTemplateType = 'rfp' | 'pdr' | 'sds' | 'custom';
+export type DocOutputFormat = 'markdown' | 'latex' | 'json';
+
+export interface TemplateSection {
+  id: string;
+  label: string;
+  isRequired: boolean;
+  isConditional: boolean;
+  condition?: string;
+  aiInstruction?: string;
+  children?: TemplateSection[];
+}
+
+export interface DocTemplate {
+  id: string;
+  title: string;
+  type: DocTemplateType;
+  category: string;
+  description: string;
+  outputFormat: DocOutputFormat;
+  isDefault: boolean;
+  sections: TemplateSection[];
+  inheritance?: string; // ID of parent template
+  lastUpdated: string;
+}
+
 // AG-15 Milestone Types
 export type MilestoneStage = 'rfp_pdr' | 'pdr_sds' | 'sds_exec';
 export type MilestoneStatus = 'pending' | 'approved' | 'rejected';
