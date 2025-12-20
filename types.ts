@@ -16,6 +16,52 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-19 Milestone & Sprint Types
+export type MilestoneStatusType = 'draft' | 'active' | 'completed';
+export type SprintStatusType = 'planning' | 'active' | 'completed' | 'archived';
+
+export interface Milestone {
+  id: string;
+  title: string;
+  description: string;
+  targetDate: string;
+  status: MilestoneStatusType;
+  sprintIds: string[];
+}
+
+export interface Sprint {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  status: SprintStatusType;
+  capacity: number; // In points
+  taskIds: string[];
+}
+
+// AG-18 Task Decomposition Types
+export type DraftCategory = 'Frontend' | 'Backend' | 'DevOps' | 'Test';
+
+export interface SdsSectionRef {
+  id: string;
+  title: string;
+  isDecomposed: boolean;
+  content: string;
+}
+
+export interface TaskDraft {
+  id: string;
+  title: string;
+  category: DraftCategory;
+  parentId: string; // Links to SdsSectionRef.id
+  confidence: number;
+  status: 'draft' | 'approved' | 'stale';
+  points: number;
+  technicalInstructions: string;
+  acceptanceCriteria: { id: string; label: string; checked: boolean }[];
+  dependencies: string[];
+}
+
 // AG-17 Conflict Detector Types
 export type IssueSeverity = 'critical' | 'warning' | 'optimization';
 export type IssueCategory = 'gap' | 'conflict' | 'ambiguity';
@@ -366,6 +412,10 @@ export interface Task {
   // Execution Context
   description?: string;
   acceptanceCriteria?: { id: string; label: string; checked: boolean }[];
+  
+  // Sprint Management (AG-19)
+  sprintId?: string | null;
+  milestoneId?: string | null;
 }
 
 export interface LogEntry {

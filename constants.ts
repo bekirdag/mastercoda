@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData, DocTemplate, ArchitectureIssue } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge, MilestoneData, DocTemplate, ArchitectureIssue, SdsSectionRef, TaskDraft, Milestone, Sprint } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,110 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_MILESTONES: Milestone[] = [
+  {
+    id: 'm-mvp',
+    title: 'MVP Launch',
+    description: 'Minimum Viable Product with core authentication and task tracking.',
+    targetDate: formatDate(30),
+    status: 'active',
+    sprintIds: ['s-1', 's-2']
+  },
+  {
+    id: 'm-v1',
+    title: 'v1.0 Professional',
+    description: 'Full feature set including AI integrations and analytics.',
+    targetDate: formatDate(60),
+    status: 'draft',
+    sprintIds: ['s-3', 's-4']
+  }
+];
+
+export const MOCK_SPRINTS: Sprint[] = [
+  {
+    id: 's-1',
+    title: 'Sprint 1: Foundation',
+    startDate: formatDate(-14),
+    endDate: formatDate(0),
+    status: 'completed',
+    capacity: 40,
+    taskIds: ['MC-1001', 'MC-1021', 'MC-1027']
+  },
+  {
+    id: 's-2',
+    title: 'Sprint 2: Auth Flow',
+    startDate: formatDate(1),
+    endDate: formatDate(15),
+    status: 'active',
+    capacity: 45,
+    taskIds: ['MC-1002', 'MC-1024', 'MC-1023']
+  },
+  {
+    id: 's-3',
+    title: 'Sprint 3: AI Core',
+    startDate: formatDate(16),
+    endDate: formatDate(30),
+    status: 'planning',
+    capacity: 50,
+    taskIds: ['MC-2001', 'MC-1022']
+  }
+];
+
+export const MOCK_SDS_SECTIONS: SdsSectionRef[] = [
+  { id: 's1', title: '1.0 System Architecture', isDecomposed: true, content: 'Microservices architecture with an API gateway. Services communicate via gRPC. Frontend is React/Tailwind.' },
+  { id: 's2', title: '2.0 Data Models', isDecomposed: false, content: 'SQL Schema: Users (id, email, password_hash, role), Workspaces (id, name, owner_id), Tasks (id, title, status, parent_id). Vector DB for RAG.' },
+  { id: 's3', title: '3.0 API Reference', isDecomposed: false, content: 'REST endpoints for CRUD on tasks. WebSocket for real-time mission updates. gRPC for internal service sync.' },
+  { id: 's4', title: '4.0 Security Design', isDecomposed: true, content: 'JWT-based authentication with RS256. Argon2 hashing for passwords. Zero-retention proxy for LLM calls.' }
+];
+
+export const MOCK_TASK_DRAFTS: TaskDraft[] = [
+  {
+    id: 'td-1',
+    title: 'Design Database Schema for User Roles',
+    category: 'Backend',
+    parentId: 's2',
+    confidence: 94,
+    status: 'draft',
+    points: 3,
+    technicalInstructions: 'Create a migration adding a "role" enum to the User table. Implement RBAC middleware.',
+    acceptanceCriteria: [
+      { id: 'ac1', label: 'Migration successfully applied', checked: false },
+      { id: 'ac2', label: 'User entity includes role field', checked: false }
+    ],
+    dependencies: []
+  },
+  {
+    id: 'td-2',
+    title: 'Implement Vector Ingestion Worker',
+    category: 'Backend',
+    parentId: 's2',
+    confidence: 88,
+    status: 'draft',
+    points: 5,
+    technicalInstructions: 'Use LanceDB for local vector storage. Implement chunking logic with 512 token size.',
+    acceptanceCriteria: [
+      { id: 'ac1', label: 'Can index a 10MB markdown file', checked: false },
+      { id: 'ac2', label: 'Retrieval returns relevant chunks', checked: false }
+    ],
+    dependencies: ['td-1']
+  },
+  {
+    id: 'td-3',
+    title: 'Build RAG Management Dashboard',
+    category: 'Frontend',
+    parentId: 's2',
+    confidence: 82,
+    status: 'draft',
+    points: 5,
+    technicalInstructions: 'Create React components for collection browsing and 2D TSNE visualization.',
+    acceptanceCriteria: [
+      { id: 'ac1', label: 'Lists all vector collections', checked: false },
+      { id: 'ac2', label: 'Displays scatter chart of chunks', checked: false }
+    ],
+    dependencies: ['td-2']
+  }
+];
 
 export const MOCK_ARCHITECTURE_ISSUES: ArchitectureIssue[] = [
   {
@@ -1131,10 +1235,12 @@ export const MOCK_TASKS: Task[] = [
     points: 5, 
     assignee: 'Sarah', 
     updatedAt: '1 day ago',
-    description: "Migrate all legacy CSS components to the new Tailwind-based design system."
+    description: "Migrate all legacy CSS components to the new Tailwind-based design system.",
+    sprintId: 's-1',
+    milestoneId: 'm-mvp'
   },
-  { id: 'MC-1021', title: 'Typography Audit', status: 'completed', priority: 'low', type: 'task', parentId: 'MC-1001', points: 2, updatedAt: '1 day ago', dependencies: ['MC-1027'] },
-  { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'completed', priority: 'low', type: 'bug', parentId: 'MC-1001', points: 1, updatedAt: '2 hours ago' },
+  { id: 'MC-1021', title: 'Typography Audit', status: 'completed', priority: 'low', type: 'task', parentId: 'MC-1001', points: 2, updatedAt: '1 day ago', dependencies: ['MC-1027'], sprintId: 's-1' },
+  { id: 'MC-1027', title: 'Fix CSS overflow in sidebar', status: 'completed', priority: 'low', type: 'bug', parentId: 'MC-1001', points: 1, updatedAt: '2 hours ago', sprintId: 's-1' },
   
   { 
     id: 'MC-1002', 
@@ -1154,10 +1260,12 @@ export const MOCK_TASKS: Task[] = [
       { id: 'ac3', label: 'Inject user context into request object', checked: false },
       { id: 'ac4', label: 'Handle 401/403 errors with standard JSON response', checked: false },
       { id: 'ac5', label: 'Unit tests covering valid/invalid/expired tokens', checked: false }
-    ]
+    ],
+    sprintId: 's-2',
+    milestoneId: 'm-mvp'
   },
-  { id: 'MC-1024', title: 'Refactor JWT validation', status: 'in-progress', priority: 'high', type: 'task', parentId: 'MC-1002', points: 3, assignee: 'Alex', updatedAt: '10:42 AM' },
-  { id: 'MC-1023', title: 'Security Patch Dependencies', status: 'review', priority: 'high', type: 'task', parentId: 'MC-1002', points: 2, assignee: 'Sarah', updatedAt: '09:15 AM' },
+  { id: 'MC-1024', title: 'Refactor JWT validation', status: 'in-progress', priority: 'high', type: 'task', parentId: 'MC-1002', points: 3, assignee: 'Alex', updatedAt: '10:42 AM', sprintId: 's-2' },
+  { id: 'MC-1023', title: 'Security Patch Dependencies', status: 'review', priority: 'high', type: 'task', parentId: 'MC-1002', points: 2, assignee: 'Sarah', updatedAt: '09:15 AM', sprintId: 's-2' },
   
   // Epic 2
   { 
@@ -1188,9 +1296,11 @@ export const MOCK_TASKS: Task[] = [
       { id: 'ac1', label: 'Connect to Vertex AI / Gemini API', checked: true },
       { id: 'ac2', label: 'Implement Server-Sent Events (SSE) for stream', checked: false },
       { id: 'ac3', label: 'Handle rate limiting and backoff', checked: false }
-    ]
+    ],
+    sprintId: 's-3',
+    milestoneId: 'm-v1'
   },
-  { id: 'MC-1022', title: 'Implement stream handler', status: 'failed', priority: 'high', type: 'task', parentId: 'MC-2001', points: 5, assignee: 'Alex', updatedAt: 'Yesterday' },
+  { id: 'MC-1022', title: 'Implement stream handler', status: 'failed', priority: 'high', type: 'task', parentId: 'MC-2001', points: 5, assignee: 'Alex', updatedAt: 'Yesterday', sprintId: 's-3' },
   
   { id: 'MC-2002', title: 'Agent Context Window', status: 'pending', priority: 'medium', type: 'story', parentId: 'MC-2000', points: 8, updatedAt: '2 days ago', dependencies: ['MC-2001'] },
   { id: 'MC-1020', title: 'Optimize docker build cache', status: 'completed', priority: 'medium', type: 'task', parentId: 'MC-2002', points: 3, updatedAt: '2 days ago' },

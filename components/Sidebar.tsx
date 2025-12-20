@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon, HardDriveIcon, LockIcon, CheckCircleIcon, ListTreeIcon, AlertTriangleIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon, HardDriveIcon, LockIcon, CheckCircleIcon, ListTreeIcon, AlertTriangleIcon, CalendarIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -16,6 +16,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
   const navItems = [
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'notifications', label: 'Notifications', icon: <BellIcon size={20} />, path: '/notifications', badge: unreadCount },
+    { id: 'backlog_gen', label: 'Backlog Gen', icon: <div className="relative"><ListTreeIcon size={20} className="text-emerald-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full animate-pulse" /></div>, path: '/project/backlog/generator' },
+    { id: 'sprint_planner', label: 'Sprint Planner', icon: <CalendarIcon size={20} className="text-amber-400" />, path: '/project/sprints' },
     { id: 'structural_templates', label: 'Doc Skeletons', icon: <ListTreeIcon size={20} className="text-indigo-400" />, path: '/agents/structural-templates' },
     { id: 'conflicts', label: 'Gap Radar', icon: <AlertTriangleIcon size={20} className="text-red-400" />, path: '/agents/conflicts' },
     { id: 'signoff', label: 'Sign-off Gate', icon: <CheckCircleIcon size={20} className="text-emerald-400" />, path: '/agents/signoff' },

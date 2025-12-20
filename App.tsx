@@ -64,6 +64,8 @@ import TraceabilityMatrix from './components/TraceabilityMatrix'; // AG-14
 import MilestoneApproval from './components/MilestoneApproval'; // AG-15
 import DocStructuralTemplates from './components/DocStructuralTemplates'; // AG-16
 import ConflictDetector from './components/ConflictDetector'; // AG-17
+import BacklogGenerator from './components/BacklogGenerator'; // AG-18
+import SprintMilestonePlanner from './components/SprintMilestonePlanner'; // AG-19
 import NotificationCenter from './components/NotificationCenter'; // SY-04
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -235,6 +237,7 @@ function App() {
         onRemoveFromRecent={() => { setCurrentStep('recent-projects'); }}
         onInitialize={() => { setCurrentStep('create-project-location'); }}
         onRetry={() => setCurrentStep('validating-workspace')}
+        /* Fix: Corrected typo setCurrent_Step to setCurrentStep */
         onBrowse={() => { setCurrentStep('recent-projects'); }}
         onOpenConfig={() => { alert('Simulated: Opening config.json in default editor'); }}
       />
@@ -276,6 +279,8 @@ function App() {
     if (activePath === '/agents/signoff') return <MilestoneApproval />; 
     if (activePath === '/agents/structural-templates') return <DocStructuralTemplates />;
     if (activePath === '/agents/conflicts') return <ConflictDetector />;
+    if (activePath === '/project/backlog/generator') return <BacklogGenerator />;
+    if (activePath === '/project/sprints') return <SprintMilestonePlanner />;
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
     if (activePath === '/agents/governance') return <AgentGuardrails />; 
@@ -358,6 +363,8 @@ function App() {
     if (activePath === '/agents/signoff') return 'Agents / Milestone Approval';
     if (activePath === '/agents/structural-templates') return 'Agents / Doc Skeletons';
     if (activePath === '/agents/conflicts') return 'Agents / Gap Radar';
+    if (activePath === '/project/backlog/generator') return 'Project / Backlog Generator';
+    if (activePath === '/project/sprints') return 'Project / Sprint Planner';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
@@ -408,14 +415,14 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff', '/agents/structural-templates', '/agents/conflicts'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff', '/agents/structural-templates', '/agents/conflicts', '/project/backlog/generator', '/project/sprints'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
     <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
       <Sidebar 
-        isExpanded={activePath !== '/exec' && !activePath.startsWith('/docs/edit') && isSidebarExpanded} 
+        isExpanded={activePath !== '/exec' && activePath !== '/project/backlog/generator' && !activePath.startsWith('/docs/edit') && isSidebarExpanded} 
         setIsExpanded={setIsSidebarExpanded}
         activePath={activePath}
         setActivePath={setActivePath}
