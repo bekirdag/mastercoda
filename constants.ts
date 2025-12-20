@@ -1,5 +1,5 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession } from './types';
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +8,35 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_SYSTEM_PROCESSES: SystemProcess[] = [
+  { id: 'p1', name: 'Vector Database (LanceDB)', status: 'running', latency: '12ms', uptime: '12d 4h', cpu: 12, memory: '450MB' },
+  { id: 'p2', name: 'Local LLM Engine (Ollama)', status: 'idle', vram: '8GB free', cpu: 2, memory: '1.2GB' },
+  { id: 'p3', name: 'TypeScript LSP Server', status: 'running', uptime: '2h 15m', cpu: 45, memory: '890MB' },
+  { id: 'p4', name: 'Git Sync Worker', status: 'running', uptime: '4d 12h', cpu: 5, memory: '120MB' },
+  { id: 'p5', name: 'Cloud Gateway Proxy', status: 'running', latency: '45ms', uptime: '12d 4h', cpu: 1, memory: '45MB' },
+  { id: 'p6', name: 'Extension Host Isolate', status: 'running', uptime: '2h 15m', cpu: 15, memory: '340MB' },
+  { id: 'p7', name: 'Python Runtime Manager', status: 'stopped', cpu: 0, memory: '0MB' },
+  { id: 'p8', name: 'Metrics Collector', status: 'error', cpu: 0, memory: '0MB' },
+];
+
+export const INITIAL_TELEMETRY: TelemetryPoint[] = Array.from({ length: 20 }).map((_, i) => ({
+  time: `${i}:00`,
+  cpu: 20 + Math.random() * 30,
+  memory: 40 + Math.random() * 10,
+  disk: Math.random() * 5
+}));
+
+export const MOCK_ORG_MEMBERS: OrgMember[] = [
+  { id: 'u1', name: 'Alex Dev', email: 'alex@company.com', role: 'Owner', status: 'Active', twoFactorEnabled: true, lastLogin: '2h ago' },
+  { id: 'u2', name: 'Sarah Chen', email: 'sarah@company.com', role: 'Admin', status: 'Active', twoFactorEnabled: true, lastLogin: '5h ago' },
+  { id: 'u3', name: 'John Smith', email: 'john@company.com', role: 'Member', status: 'Active', twoFactorEnabled: false, lastLogin: '1d ago' },
+  { id: 'u4', name: 'Grace Hopper', email: 'grace@pioneer.ai', role: 'Admin', status: 'Active', twoFactorEnabled: true, lastLogin: '10m ago' },
+  { id: 'u5', name: 'New Hire', email: 'recruit@company.com', role: 'Guest', status: 'Invited', twoFactorEnabled: false, lastLogin: 'Never' },
+  { id: 'u6', name: 'Bob Wilson', email: 'bob@company.com', role: 'Member', status: 'Suspended', twoFactorEnabled: true, lastLogin: '1w ago' },
+  { id: 'u7', name: 'Alice Wong', email: 'alice@company.com', role: 'Member', status: 'Active', twoFactorEnabled: true, lastLogin: '3h ago' },
+  { id: 'u8', name: 'Charlie Day', email: 'charlie@company.com', role: 'Member', status: 'Active', twoFactorEnabled: false, lastLogin: '5d ago' },
+];
 
 export const MOCK_INVOICES: Invoice[] = [
   { id: 'inv_102', date: 'Oct 12, 2025', description: 'Pro Plan + Overage (2GB)', amount: 34.00, status: 'paid' },

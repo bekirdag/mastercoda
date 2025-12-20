@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -32,6 +31,9 @@ import GlobalPreferences from './components/GlobalPreferences';
 import BillingSettings from './components/BillingSettings'; 
 import AboutUpdates from './components/AboutUpdates'; // SY-06
 import SecurityAudit from './components/SecurityAudit'; // SY-07
+import OrgAdminConsole from './components/OrgAdminConsole'; // SY-08
+import SystemHealth from './components/SystemHealth'; // SY-09
+import StorageManager from './components/StorageManager'; // SY-10
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; 
 import DocEditor from './components/DocEditor'; 
@@ -118,7 +120,7 @@ function App() {
         setIsCmdKOpen(prev => !prev);
       }
       // Cmd+Shift+N: Notifications
-      if ((e.metaKey || e.ctrlKey) && shiftKey && e.key === 'n') {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'n') {
         e.preventDefault();
         setActivePath('/notifications');
       }
@@ -255,6 +257,9 @@ function App() {
     if (activePath === '/help') return <HelpSupport />; 
     if (activePath === '/system/about') return <AboutUpdates />; 
     if (activePath === '/system/security') return <SecurityAudit />; // SY-07
+    if (activePath === '/organization/admin') return <OrgAdminConsole />; // SY-08
+    if (activePath === '/system/health') return <SystemHealth />; // SY-09
+    if (activePath === '/system/storage') return <StorageManager />; // SY-10
     if (activePath === '/inbox') return <NotificationCenter />; 
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
@@ -329,6 +334,9 @@ function App() {
     if (activePath === '/help') return 'System / Help & Support';
     if (activePath === '/system/about') return 'System / About Master Coda';
     if (activePath === '/system/security') return 'System / Security & Audit';
+    if (activePath === '/system/health') return 'System / Health & Diagnostics';
+    if (activePath === '/system/storage') return 'System / Storage Manager';
+    if (activePath === '/organization/admin') return 'Organization / Administration';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
@@ -368,7 +376,7 @@ function App() {
     if (activePath === '/agents/fleet') return 'Workspace / Agent Fleet';
     if (activePath.includes('/profile')) return 'Workspace / Agent Profile';
     if (activePath.includes('/manage')) return 'Workspace / Agent Studio';
-    if (activePath === '/agents') return 'Workspace / Agents';
+    if (activePath === '/agents') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/docs') return 'Workspace / Documentation Hub';
     if (activePath.startsWith('/docs/edit')) return 'Workspace / Document Editor';
     if (activePath === '/docs/manage/site-config') return 'Workspace / Documentation / Site Manager';
@@ -380,7 +388,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
@@ -403,6 +411,23 @@ function App() {
                <span className="text-slate-200">{getBreadcrumb()}</span>
             </div>
             <div className="ml-auto flex items-center space-x-3">
+               {/* Quick Telemetry Summary */}
+               <button 
+                 onClick={() => setActivePath('/system/health')}
+                 className="flex items-center space-x-4 px-3 py-1 rounded bg-slate-800/40 border border-slate-800 hover:border-indigo-500/30 transition-all text-[10px] font-mono"
+               >
+                  <div className="flex items-center">
+                    <span className="text-slate-500 mr-1.5 uppercase font-bold">CPU</span>
+                    <span className="text-indigo-400">24%</span>
+                  </div>
+                  <div className="flex items-center">
+                    <span className="text-slate-500 mr-1.5 uppercase font-bold">RAM</span>
+                    <span className="text-emerald-400">4.2GB</span>
+                  </div>
+               </button>
+
+               <div className="h-4 w-px bg-slate-800 mx-1" />
+
                <button 
                  onClick={() => setIsCreateTaskOpen(true)}
                  className="flex items-center space-x-1.5 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors text-xs text-slate-400"

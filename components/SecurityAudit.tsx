@@ -4,6 +4,7 @@ import { AuditLogEntry, UserSession, AuditCategory } from '../types';
 import { MOCK_AUDIT_LOG, MOCK_SESSIONS } from '../constants';
 import Button from './Button';
 import Badge from './Badge';
+// Import missing icons: SparklesIcon, UserIcon, and PlusIcon
 import { 
   ShieldIcon, 
   LockIcon, 
@@ -20,7 +21,10 @@ import {
   HardDriveIcon,
   CheckCircleIcon,
   AlertTriangleIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  SparklesIcon,
+  UserIcon,
+  PlusIcon
 } from './Icons';
 
 // Proxy icons
@@ -50,7 +54,7 @@ const MonitorIconProxy: React.FC<any> = (props) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
+    strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
     {...props}
@@ -216,7 +220,7 @@ const SecurityAudit: React.FC = () => {
                        <React.Fragment key={log.id}>
                           <tr 
                              onClick={() => setExpandedLogId(expandedLogId === log.id ? null : log.id)}
-                             className={`group border-b border-slate-800/40 hover:bg-slate-800/60 transition-all cursor-pointer ${log.isSuspicious ? 'bg-amber-950/10' : ''}`}
+                             className={`group hover:bg-slate-800/60 transition-all cursor-pointer ${log.isSuspicious ? 'bg-amber-950/10' : ''}`}
                           >
                              <td className="px-6 py-4 text-[10px] font-mono text-slate-500">{log.timestamp}</td>
                              <td className="px-6 py-4">

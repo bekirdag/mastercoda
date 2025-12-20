@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon } from './Icons';
+import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon, HardDriveIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
 
 interface SidebarProps {
@@ -16,6 +15,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
   const navItems = [
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'notifications', label: 'Notifications', icon: <BellIcon size={20} />, path: '/notifications', badge: unreadCount },
+    { id: 'system_health', label: 'System Health', icon: <ActivityIcon size={20} className="text-emerald-400" />, path: '/system/health' },
+    { id: 'storage', label: 'Storage Manager', icon: <HardDriveIcon size={20} className="text-indigo-400" />, path: '/system/storage' },
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'roi', label: 'Agent ROI', icon: <div className="relative"><ZapIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /></div>, path: '/agents/analytics' }, 
     { id: 'missions', label: 'Mission Control', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/missions' }, 
@@ -118,6 +119,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
 
       {/* Bottom Actions */}
       <div className="p-2 border-t border-slate-700">
+        <button 
+          onClick={() => setActivePath('/organization/admin')}
+          className={`flex items-center w-full px-2 py-2 rounded-md transition-colors mb-1 ${
+            activePath === '/organization/admin' 
+              ? 'text-purple-400 bg-purple-600/10 border-l-2 border-purple-500' 
+              : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700/50 border-l-2 border-transparent'
+          }`}
+        >
+          <div className="relative">
+             <ShieldIcon size={20} />
+             <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
+          </div>
+          <span className={`ml-3 text-sm font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0'}`}>
+            Org Admin
+          </span>
+        </button>
         <button 
           onClick={() => setActivePath('/system/security')}
           className={`flex items-center w-full px-2 py-2 rounded-md transition-colors mb-1 ${

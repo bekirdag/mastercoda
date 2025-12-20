@@ -35,8 +35,31 @@ export interface PaymentMethod {
   isPrimary: boolean;
 }
 
+// SY-08 Organization Admin Types
+export type OrgRole = 'Owner' | 'Admin' | 'Member' | 'Guest';
+export type OrgMemberStatus = 'Active' | 'Invited' | 'Suspended';
+
+export interface OrgMember {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role: OrgRole;
+  status: OrgMemberStatus;
+  twoFactorEnabled: boolean;
+  lastLogin: string;
+}
+
+export interface OrgSsoConfig {
+  provider: 'Okta' | 'Azure AD' | 'Google Workspace' | 'None';
+  clientId: string;
+  clientSecret: string;
+  metadataUrl: string;
+  isEnabled: boolean;
+}
+
 // SY-07 Security Types
-export type AuditCategory = 'login' | 'billing' | 'deletion' | 'api' | 'system';
+export type AuditCategory = 'login' | 'billing' | 'deletion' | 'api' | 'system' | 'org_change';
 
 export interface AuditLogEntry {
   id: string;
@@ -58,6 +81,27 @@ export interface UserSession {
   lastActive: string;
   isCurrent: boolean;
   type: 'desktop' | 'mobile';
+}
+
+// SY-09 System Health Types
+export type ProcessStatus = 'running' | 'idle' | 'stopped' | 'error' | 'restarting';
+
+export interface SystemProcess {
+  id: string;
+  name: string;
+  status: ProcessStatus;
+  latency?: string;
+  uptime?: string;
+  vram?: string;
+  cpu: number;
+  memory: string;
+}
+
+export interface TelemetryPoint {
+  time: string;
+  cpu: number;
+  memory: number;
+  disk: number;
 }
 
 // RAG Manager Types (AG-08)
@@ -371,10 +415,7 @@ export interface DocSiteConfig {
 }
 
 export interface DocSiteNavItem {
-  id: string;
-  label: string;
-  type: 'file' | 'folder';
-  children?: DocSiteNavItem[];
+  id: string; label: string; type: 'file' | 'folder'; children?: DocSiteNavItem[];
 }
 
 // DO-10 Health & Insights
