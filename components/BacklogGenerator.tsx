@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { SdsSectionRef, TaskDraft, DraftCategory } from '../types';
+import { SdsSectionRef, TaskDraft, DraftCategory, RfpSection } from '../types';
 import { MOCK_SDS_SECTIONS, MOCK_TASK_DRAFTS } from '../constants';
 import Button from './Button';
 import Badge from './Badge';
@@ -18,14 +18,12 @@ import {
   CodeIcon, 
   ArrowRightIcon, 
   SearchIcon, 
-  PlusIcon as AddIcon,
-  XIcon,
-  TrashIcon,
-  SettingsIcon,
-  ZapIcon,
-  AlertTriangleIcon,
+  XIcon, 
+  TrashIcon, 
+  SettingsIcon, 
+  ZapIcon, 
+  AlertTriangleIcon, 
   HelpCircleIcon,
-  /* Added FilterIcon, GlobeIcon, and CloudIcon to fix "Cannot find name" errors on lines 231, 483, and 485 */
   FilterIcon,
   GlobeIcon,
   CloudIcon
@@ -464,22 +462,20 @@ const BacklogGenerator: React.FC = () => {
          </div>
       </footer>
 
+   <RfpSectionDisplay section={{} as RfpSection} icon={<ActivityIcon size={16}/>} />
+
     </div>
   );
 };
 
-// Sub-components
-
-const HudMiniStat: React.FC<{ label: string; value: number; color: string }> = ({ label, value, color }) => (
-   <div className="flex items-baseline space-x-2">
-      <span className="text-[10px] font-bold text-slate-500 uppercase">{label}:</span>
-      <span className={`text-sm font-bold font-mono ${color}`}>{value}</span>
-   </div>
-);
-
-const SeverityIcon: React.FC<{ severity: string }> = ({ severity }) => {
-   // Reusing logic for scannability icons
-   return <ActivityIcon size={14} className="text-indigo-400" />;
+const RfpSectionDisplay: React.FC<{ section: RfpSection; icon: React.ReactNode }> = ({ section, icon }) => {
+   const isEmpty = !section || section.status === 'empty';
+   
+   return (
+      <section className={`hidden space-y-6 transition-all duration-1000 ${isEmpty ? 'opacity-30 blur-[1px]' : 'opacity-100 blur-0'}`}>
+         {icon}
+      </section>
+   );
 };
 
 const getCategoryIcon = (cat: string) => {

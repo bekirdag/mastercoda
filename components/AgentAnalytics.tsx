@@ -15,8 +15,6 @@ import {
   ZapIcon, 
   CloudIcon, 
   ShieldIcon, 
-  // Fix: Removed TrendingUpIconProxy from import as it is defined locally and not exported from Icons.tsx
-  // Fix: Added ChevronRightIcon to imports from Icons.tsx
   ChevronRightIcon,
   SparklesIcon,
   ChevronDownIcon,
@@ -136,217 +134,230 @@ const AgentAnalytics: React.FC = () => {
                   <div className="flex items-center space-x-4">
                      <h2 className="text-sm font-bold text-white uppercase tracking-widest flex items-center">
                         <ActivityIcon size={16} className="mr-2 text-indigo-400" />
-                        Usage Trends
+                        Usage Distribution
                      </h2>
-                     <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-700">
-                        {(['tokens', 'requests', 'cost'] as const).map(m => (
-                           <button
-                              key={m}
-                              onClick={() => setActiveMetric(m)}
-                              className={`px-3 py-1 rounded text-[10px] font-bold uppercase transition-all ${
-                                 activeMetric === m ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'
-                              }`}
-                           >
-                              {m}
-                           </button>
-                        ))}
-                     </div>
                   </div>
-                  <div className="text-[10px] font-mono text-slate-500 uppercase">Data current as of 10 mins ago</div>
+                  <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
+                     {(['cost', 'tokens', 'requests'] as const).map(m => (
+                        <button
+                           key={m}
+                           onClick={() => setActiveMetric(m)}
+                           className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all ${
+                              activeMetric === m ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'
+                           }`}
+                        >
+                           {m}
+                        </button>
+                     ))}
+                  </div>
                </div>
                
                <div className="flex-1 min-h-0">
                   <ResponsiveContainer width="100%" height="100%">
-                     <AreaChart data={MOCK_DAILY_COSTS} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                     <AreaChart data={MOCK_DAILY_COSTS}>
                         <defs>
-                           <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
+                           <linearGradient id="colorCost" x1="0" y1="0" x2="0" y2="1">
                               <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
                               <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
                            </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
                         <XAxis dataKey="date" stroke="#475569" fontSize={10} axisLine={false} tickLine={false} />
                         <YAxis stroke="#475569" fontSize={10} axisLine={false} tickLine={false} />
-                        <Tooltip 
-                           contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px' }}
-                           itemStyle={{ color: '#fff' }}
-                        />
-                        <Area type="monotone" dataKey={activeMetric} stroke="#6366f1" fillOpacity={1} fill="url(#colorMetric)" strokeWidth={3} />
+                        <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px' }} />
+                        <Area type="monotone" dataKey={activeMetric} stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorCost)" />
                      </AreaChart>
                   </ResponsiveContainer>
                </div>
             </section>
 
-            {/* Cost Breakdown Table */}
-            <section className="bg-slate-800/40 border border-slate-700 rounded-3xl overflow-hidden shadow-xl">
-               <header className="p-6 border-b border-slate-700 bg-slate-900/50 flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center">
-                     <HardDriveIcon size={16} className="mr-2 text-indigo-400" />
-                     Cost Breakdown by Agent
-                  </h3>
-                  <div className="relative">
-                     <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={12} />
+            {/* Detailed Table */}
+            <section className="bg-slate-800/40 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl">
+               <header className="px-8 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">Fleet Expenditure Breakdown</h3>
+                  <div className="relative group">
+                     <SearchIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600" />
                      <input 
                         type="text" 
+                        placeholder="Filter agents..." 
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search fleet..."
-                        className="bg-slate-950 border border-slate-700 rounded-lg pl-8 pr-3 py-1 text-xs text-white focus:border-indigo-500 outline-none w-48"
+                        className="bg-slate-950 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-white focus:border-indigo-500 outline-none w-48 transition-all"
                      />
                   </div>
                </header>
-               <div className="overflow-x-auto custom-scrollbar">
-                  <table className="w-full text-left border-collapse">
-                     <thead>
-                        <tr className="bg-slate-950/50 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-800">
-                           <th className="px-6 py-3">Agent Entity</th>
-                           <th className="px-6 py-3">Model</th>
-                           <th className="px-6 py-3 text-right">Calls</th>
-                           <th className="px-6 py-3 text-right">Tokens (In/Out)</th>
-                           <th className="px-6 py-3 text-right">Cost</th>
-                           <th className="px-6 py-3 text-right">Avg Latency</th>
-                        </tr>
-                     </thead>
-                     <tbody className="divide-y divide-slate-800/50">
-                        {filteredUsage.map(agent => (
-                           <tr key={agent.id} className="group hover:bg-slate-800/50 transition-colors">
-                              <td className="px-6 py-4">
-                                 <div className="flex items-center space-x-3">
-                                    <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                                    <span className="text-xs font-bold text-slate-200">{agent.agentName}</span>
+               <table className="w-full text-left border-collapse">
+                  <thead className="bg-slate-900/50 border-b border-slate-800 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                     <tr>
+                        <th className="px-8 py-3">Agent Persona</th>
+                        <th className="px-6 py-3">Model</th>
+                        <th className="px-6 py-3 text-right">Tokens Out</th>
+                        <th className="px-6 py-3 text-right">Avg Latency</th>
+                        <th className="px-8 py-3 text-right">Cost</th>
+                     </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/50">
+                     {filteredUsage.map(agent => (
+                        <tr key={agent.id} className="group hover:bg-slate-800/60 transition-colors cursor-default">
+                           <td className="px-8 py-4">
+                              <div className="flex items-center">
+                                 <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-700 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform mr-3">
+                                    <SparklesIcon size={14} />
                                  </div>
-                              </td>
-                              <td className="px-6 py-4">
-                                 <Badge variant="neutral">{agent.model}</Badge>
-                              </td>
-                              <td className="px-6 py-4 text-right font-mono text-xs text-slate-400">{agent.calls}</td>
-                              <td className="px-6 py-4 text-right font-mono text-[10px] text-slate-500">
-                                 {Math.round(agent.tokensIn/1000000)}M / {Math.round(agent.tokensOut/1000000)}M
-                              </td>
-                              <td className="px-6 py-4 text-right">
-                                 <span className={`text-xs font-bold font-mono ${agent.cost > 10 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                                    ${agent.cost.toFixed(2)}
-                                 </span>
-                              </td>
-                              <td className="px-6 py-4 text-right font-mono text-[10px] text-slate-500">{agent.avgLatency}</td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </table>
-               </div>
+                                 <span className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">{agent.agentName}</span>
+                              </div>
+                           </td>
+                           <td className="px-6 py-4">
+                              <Badge variant="neutral">{agent.model}</Badge>
+                           </td>
+                           <td className="px-6 py-4 text-right font-mono text-xs text-slate-400">
+                              {(agent.tokensOut / 1000).toFixed(1)}k
+                           </td>
+                           <td className="px-6 py-4 text-right font-mono text-xs text-slate-500">
+                              {agent.avgLatency}
+                           </td>
+                           <td className="px-8 py-4 text-right">
+                              <span className="text-sm font-bold text-white font-mono">${agent.cost.toFixed(2)}</span>
+                           </td>
+                        </tr>
+                     ))}
+                  </tbody>
+               </table>
             </section>
          </div>
 
-         {/* 4. Optimization Tips Sidebar (Right) */}
-         <aside className="space-y-6">
-            <div className="bg-slate-800 border border-slate-700 rounded-3xl p-6 shadow-2xl flex flex-col h-full sticky top-24">
-               <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center">
-                     <SparklesIcon size={16} className="mr-2 text-indigo-400" />
-                     Optimization Enclave
+         {/* 4. Optimization Recommendations (Right) */}
+         <aside className="space-y-8">
+            <section className="bg-indigo-900/10 border border-indigo-500/20 rounded-3xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                  <SparklesIcon size={120} className="text-indigo-400" />
+               </div>
+               
+               <div className="flex items-center justify-between relative z-10">
+                  <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center">
+                     <SparklesIcon size={16} className="mr-2 animate-pulse" />
+                     Optimization Audit
                   </h3>
-                  <button 
-                     onClick={handleAiAnalyze}
-                     disabled={isAnalyzing}
-                     className="p-1.5 hover:bg-slate-700 rounded transition-colors text-indigo-400"
-                  >
-                     <RotateCwIcon size={16} className={isAnalyzing ? 'animate-spin' : ''} />
+                  <button onClick={handleAiAnalyze} disabled={isAnalyzing} className="text-indigo-500 hover:text-white transition-colors">
+                     <RotateCwIcon size={14} className={isAnalyzing ? 'animate-spin' : ''} />
                   </button>
                </div>
 
-               <div className="space-y-4 flex-1">
-                  {aiTips.map((tip, i) => (
-                     <div key={i} className="p-4 bg-slate-900 border border-slate-800 rounded-2xl group hover:border-indigo-500/30 transition-all animate-in slide-in-from-right-4" style={{ animationDelay: `${i * 150}ms` }}>
-                        <div className="flex items-start gap-4">
-                           <div className="mt-1 shrink-0">
-                              <ZapIcon size={16} className="text-amber-400 group-hover:scale-110 transition-transform" />
-                           </div>
-                           <p className="text-xs text-slate-300 leading-relaxed font-light italic">"{tip}"</p>
+               <div className="space-y-4 relative z-10">
+                  {aiTips.map((tip, idx) => (
+                     <div key={idx} className="flex items-start p-4 bg-slate-900/60 rounded-2xl border border-indigo-500/10 group hover:border-indigo-500/30 transition-all cursor-pointer">
+                        <div className="w-6 h-6 rounded-full bg-indigo-600/20 flex items-center justify-center shrink-0 mr-4 text-indigo-400 font-bold text-[10px]">
+                           {idx + 1}
                         </div>
-                        <div className="mt-4 flex justify-end">
-                           <button className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-widest flex items-center">
-                              Implement Fix <ChevronRightIcon size={12} className="ml-1" />
-                           </button>
-                        </div>
+                        <p className="text-xs text-indigo-100/80 leading-relaxed font-light">{tip}</p>
                      </div>
                   ))}
                </div>
 
-               <div className="mt-8 pt-6 border-t border-slate-700 space-y-4">
-                  <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                     <span>Estimated Savings</span>
-                     <span className="text-emerald-400">~$12.50 / mo</span>
-                  </div>
-                  <Button variant="primary" className="w-full text-[10px] uppercase font-bold tracking-widest shadow-lg shadow-indigo-900/20" onClick={handleAiAnalyze}>
-                     {isAnalyzing ? 'Reasoning...' : 'Deep Audit Performance'}
-                  </Button>
+               <Button variant="primary" className="w-full h-12 bg-indigo-600 border-none shadow-lg shadow-indigo-900/40 uppercase font-bold tracking-widest">
+                  Apply Recommendations
+               </Button>
+            </section>
+
+            <section className="bg-slate-800/40 border border-slate-700 rounded-3xl p-8 space-y-6">
+               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center">
+                  <ActivityIcon size={16} className="mr-2 text-indigo-400" />
+                  Efficiency Heatmap
+               </h3>
+               <div className="grid grid-cols-2 gap-4">
+                  <HeatCard label="Model Efficiency" value="HIGH" color="text-emerald-400" />
+                  <HeatCard label="Parallelism" value="OPT" color="text-emerald-400" />
+                  <HeatCard label="Context Usage" value="HIGH" color="text-amber-400" />
+                  <HeatCard label="Latency" value="MED" color="text-amber-400" />
                </div>
-            </div>
+               <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                  <div className="text-[10px] font-bold text-slate-600 uppercase mb-4 tracking-widest">Provider distribution</div>
+                  <div className="flex h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                     <div className="h-full bg-indigo-500 w-[65%]" title="Google Vertex" />
+                     <div className="h-full bg-emerald-500 w-[20%]" title="Anthropic" />
+                     <div className="h-full bg-blue-500 w-[10%]" title="OpenAI" />
+                     <div className="h-full bg-slate-600 w-[5%]" title="Other" />
+                  </div>
+                  <div className="mt-4 flex items-center justify-between text-[8px] font-bold text-slate-500 uppercase">
+                     <div className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5"/> GOOGLE</div>
+                     <div className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"/> ANTHROPIC</div>
+                     <div className="flex items-center"><div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"/> OPENAI</div>
+                  </div>
+               </div>
+            </section>
          </aside>
+
       </div>
 
-      {/* Global Status Footer */}
-      <footer className="h-10 bg-slate-900 border-t border-slate-800 shrink-0 px-8 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 right-0">
+      {/* Global Status Bar Overlay */}
+      <footer className="h-10 shrink-0 bg-slate-900 border-t border-slate-800 px-8 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 z-30 fixed bottom-0 left-0 right-0">
          <div className="flex items-center space-x-12">
             <div className="flex items-center">
-               <ActivityIcon size={12} className="mr-2 text-indigo-400" />
-               COST_PRECISION: <span className="ml-2 text-emerald-500">EXACT_MATCH</span>
+               <ShieldIcon size={14} className="mr-2 text-indigo-400" />
+               FISCAL_GOVERNANCE: <span className="ml-2 text-emerald-500">ENFORCED</span>
             </div>
             <div className="flex items-center">
-               <RotateCwIcon size={12} className="mr-2 text-indigo-400" />
-               UPDATE_LATENCY: <span className="ml-2 text-slate-300 font-mono">10 MINS</span>
+               <RotateCwIcon size={14} className="mr-2 text-indigo-400" />
+               LAST_UPDATE: <span className="ml-2 text-slate-300 font-mono">10:45:01 AM</span>
             </div>
          </div>
          <div className="flex items-center space-x-6">
-            <div className="flex items-center text-indigo-400">
-               <ShieldIcon size={12} className="mr-2" />
-               ENCLAVE_PROXY_PROTECTION: ACTIVE
-            </div>
-            <div className="h-3 w-px bg-slate-800" />
-            <span className="text-slate-700 font-mono">v4.2.1-stable</span>
+            <span className="text-slate-700 font-mono italic">AG-10_v4.2.1-ROI</span>
          </div>
       </footer>
     </div>
   );
 };
 
-// Internal Sub-components
-
 const HeroCard: React.FC<{ 
-  label: string; 
-  value: string; 
-  sub: React.ReactNode; 
-  icon: React.ReactNode; 
-  trend?: string; 
-  trendPositive?: boolean;
-  progress?: number;
-  progressColor?: string;
-  highlight?: 'indigo' | 'emerald' | 'amber';
-}> = ({ label, value, sub, icon, trend, trendPositive, progress, progressColor = 'bg-indigo-500', highlight }) => (
-   <div className={`bg-slate-800 border-2 rounded-3xl p-8 shadow-sm relative overflow-hidden group transition-all duration-300 ${highlight === 'indigo' ? 'border-indigo-500/20' : 'border-slate-700 hover:border-slate-600'}`}>
-      <div className="flex items-start justify-between mb-6">
-         <div className="flex items-center text-slate-500 text-[10px] font-bold uppercase tracking-widest">
-            <span className="mr-3 p-2 rounded-xl bg-slate-900 border border-slate-700 group-hover:scale-110 transition-transform">
-               {icon}
-            </span>
-            {label}
+   label: string; 
+   value: string; 
+   trend?: string; 
+   trendPositive?: boolean; 
+   sub: React.ReactNode; 
+   icon: React.ReactNode; 
+   highlight?: string;
+   progress?: number;
+   progressColor?: string;
+}> = ({ label, value, trend, trendPositive, sub, icon, highlight, progress, progressColor }) => (
+   <div className={`p-6 rounded-3xl border transition-all duration-300 group hover:-translate-y-1 shadow-sm hover:shadow-2xl relative overflow-hidden ${
+      highlight === 'indigo' ? 'bg-indigo-600 text-white border-indigo-500 shadow-indigo-900/30' : 'bg-slate-800 border-slate-700 hover:border-slate-600'
+   }`}>
+      {highlight !== 'indigo' && (
+         <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-bl-full -mr-8 -mt-8" />
+      )}
+      <div className="flex items-start justify-between mb-4">
+         <div className={`p-2.5 rounded-xl border transition-transform group-hover:scale-110 ${
+            highlight === 'indigo' ? 'bg-white/10 border-white/20 text-white' : 'bg-slate-900 border-slate-700'
+         }`}>
+            {icon}
          </div>
          {trend && (
-            <div className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono border ${
-               trendPositive ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+               trendPositive ? 'text-emerald-400 bg-emerald-400/5 border-emerald-400/20' : 'text-red-400 bg-red-400/5 border-red-400/20'
             }`}>
                {trend}
-            </div>
+            </span>
          )}
       </div>
-      <div className="text-4xl font-bold text-white tracking-tight mb-2">{value}</div>
-      <div className="text-xs text-slate-500 font-medium uppercase tracking-tight">{sub}</div>
-      
+      <div className="space-y-1">
+         <div className={`text-[10px] font-bold uppercase tracking-widest ${highlight === 'indigo' ? 'text-indigo-200' : 'text-slate-500'}`}>{label}</div>
+         <div className="text-3xl font-bold tracking-tight">{value}</div>
+         <div className={`text-[10px] mt-2 font-medium ${highlight === 'indigo' ? 'text-indigo-100/70' : 'text-slate-500'}`}>{sub}</div>
+      </div>
       {progress !== undefined && (
-         <div className="mt-6 h-1 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
-            <div className={`h-full transition-all duration-1000 ${progressColor} ${progress > 80 ? 'animate-pulse' : ''}`} style={{ width: `${progress}%` }} />
+         <div className="mt-6 space-y-1.5">
+            <div className="h-1 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-700/50">
+               <div className={`h-full transition-all duration-1000 ${progressColor || 'bg-indigo-500'}`} style={{ width: `${progress}%` }} />
+            </div>
          </div>
       )}
+   </div>
+);
+
+const HeatCard: React.FC<{ label: string; value: string; color: string }> = ({ label, value, color }) => (
+   <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl flex flex-col items-center justify-center space-y-1 group hover:border-slate-600 transition-all">
+      <span className="text-[8px] font-bold text-slate-600 uppercase tracking-tighter">{label}</span>
+      <span className={`text-xs font-black font-mono ${color}`}>{value}</span>
    </div>
 );
 

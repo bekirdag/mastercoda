@@ -66,6 +66,7 @@ import DocStructuralTemplates from './components/DocStructuralTemplates'; // AG-
 import ConflictDetector from './components/ConflictDetector'; // AG-17
 import BacklogGenerator from './components/BacklogGenerator'; // AG-18
 import SprintMilestonePlanner from './components/SprintMilestonePlanner'; // AG-19
+import DebtRefactorLog from './components/DebtRefactorLog'; // AG-20
 import NotificationCenter from './components/NotificationCenter'; // SY-04
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -279,6 +280,7 @@ function App() {
     if (activePath === '/agents/signoff') return <MilestoneApproval />; 
     if (activePath === '/agents/structural-templates') return <DocStructuralTemplates />;
     if (activePath === '/agents/conflicts') return <ConflictDetector />;
+    if (activePath === '/agents/debt') return <DebtRefactorLog />;
     if (activePath === '/project/backlog/generator') return <BacklogGenerator />;
     if (activePath === '/project/sprints') return <SprintMilestonePlanner />;
     if (activePath === '/quality') return <QualityHub />;
@@ -363,6 +365,7 @@ function App() {
     if (activePath === '/agents/signoff') return 'Agents / Milestone Approval';
     if (activePath === '/agents/structural-templates') return 'Agents / Doc Skeletons';
     if (activePath === '/agents/conflicts') return 'Agents / Gap Radar';
+    if (activePath === '/agents/debt') return 'Agents / Technical Debt';
     if (activePath === '/project/backlog/generator') return 'Project / Backlog Generator';
     if (activePath === '/project/sprints') return 'Project / Sprint Planner';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
@@ -415,7 +418,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff', '/agents/structural-templates', '/agents/conflicts', '/project/backlog/generator', '/project/sprints'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff', '/agents/structural-templates', '/agents/conflicts', '/agents/debt', '/project/backlog/generator', '/project/sprints'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

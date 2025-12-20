@@ -20,6 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'sprint_planner', label: 'Sprint Planner', icon: <CalendarIcon size={20} className="text-amber-400" />, path: '/project/sprints' },
     { id: 'structural_templates', label: 'Doc Skeletons', icon: <ListTreeIcon size={20} className="text-indigo-400" />, path: '/agents/structural-templates' },
     { id: 'conflicts', label: 'Gap Radar', icon: <AlertTriangleIcon size={20} className="text-red-400" />, path: '/agents/conflicts' },
+    { id: 'debt_log', label: 'Debt Radar', icon: <HistoryIcon size={20} className="text-amber-500" />, path: '/agents/debt' },
     { id: 'signoff', label: 'Sign-off Gate', icon: <CheckCircleIcon size={20} className="text-emerald-400" />, path: '/agents/signoff' },
     { id: 'traceability', label: 'Logic Lineage', icon: <GitBranchIcon size={20} className="text-indigo-400" />, path: '/agents/traceability' },
     { id: 'system_health', label: 'System Health', icon: <ActivityIcon size={20} className="text-emerald-400" />, path: '/system/health' },

@@ -21,7 +21,6 @@ import {
   LockIcon,
   ActivityIcon,
   RotateCwIcon,
-  /* Fix: Added missing ShieldIcon import */
   ShieldIcon
 } from './Icons';
 import { GoogleGenAI } from "@google/genai";

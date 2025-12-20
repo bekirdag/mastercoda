@@ -16,6 +16,27 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-20 Technical Debt Types
+export type DebtSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type DebtCategory = 'security' | 'scalability' | 'smell' | 'deprecated';
+export type DebtStatus = 'unresolved' | 'ignored' | 'refactored';
+
+export interface TechnicalDebtItem {
+  id: string;
+  title: string;
+  category: DebtCategory;
+  severity: DebtSeverity;
+  origin: string; // Commit hash or Playbook ID
+  filePath: string;
+  context: string;
+  status: DebtStatus;
+  codeBefore: string;
+  codeAfter: string;
+  agentAnalysis: string;
+  effortPoints: number;
+  interestScore: number; // 0-100 impact on other modules
+}
+
 // AG-19 Milestone & Sprint Types
 export type MilestoneStatusType = 'draft' | 'active' | 'completed';
 export type SprintStatusType = 'planning' | 'active' | 'completed' | 'archived';

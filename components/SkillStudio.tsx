@@ -529,14 +529,4 @@ const WorkspaceTab: React.FC<{ active: boolean; onClick: () => void; label: stri
    </button>
 );
 
-const StatItem: React.FC<{ label: string; value: string; icon: React.ReactNode }> = ({ label, value, icon }) => (
-   <div className="flex flex-col">
-      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1 flex items-center">
-         <span className="mr-1.5">{icon}</span>
-         {label}
-      </span>
-      <span className="text-xs font-bold text-slate-200 font-mono">{value}</span>
-   </div>
-);
-
 export default SkillStudio;

@@ -4,7 +4,6 @@ import { RagCollection, RagChunk, ClusterPoint } from '../types';
 import { MOCK_RAG_COLLECTIONS, MOCK_RAG_CHUNKS, MOCK_CLUSTER_DATA } from '../constants';
 import Button from './Button';
 import Badge from './Badge';
-// Added SettingsIcon to imports to fix the error on line 277.
 import { 
   DatabaseIcon, 
   SearchIcon, 
@@ -373,7 +372,7 @@ const KnowledgeManager: React.FC = () => {
       </div>
 
       {/* 3. Global Status Bar (Footer) */}
-      <footer className="h-10 bg-slate-900 border-t border-slate-800 shrink-0 px-8 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+      <footer className="h-10 bg-slate-900 border-t border-slate-800 shrink-0 px-8 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] fixed bottom-0 left-0 right-0">
          <div className="flex items-center space-x-12">
             <div className="flex items-center">
                <TerminalIcon size={12} className="mr-2 text-indigo-400" />
