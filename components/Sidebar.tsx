@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { LayoutGridIcon, TerminalIcon, FileTextIcon, SparklesIcon, SettingsIcon, GitBranchIcon, ChevronRightIcon, ActivityIcon, EyeIcon, InboxIcon, BookOpenIcon, ShieldIcon, RocketIcon, GridIcon, CodeIcon, PackageIcon, ScissorsIcon, CpuIcon, UserIcon, GlobeIcon, ZapIcon, HistoryIcon, BeakerIcon, CrownIcon, DatabaseIcon, LinkIcon, CreditCardIcon, BellIcon, HelpCircleIcon, RotateCwIcon, HardDriveIcon, LockIcon } from './Icons';
 import { MOCK_NOTIFICATIONS } from '../constants';
@@ -16,6 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
   const navItems = [
     { id: 'workspace', label: 'Workspace', icon: <ActivityIcon size={20} />, path: '/' },
     { id: 'notifications', label: 'Notifications', icon: <BellIcon size={20} />, path: '/notifications', badge: unreadCount },
+    { id: 'traceability', label: 'Logic Lineage', icon: <GitBranchIcon size={20} className="text-indigo-400" />, path: '/agents/traceability' },
     { id: 'system_health', label: 'System Health', icon: <ActivityIcon size={20} className="text-emerald-400" />, path: '/system/health' },
     { id: 'privacy', label: 'Privacy Center', icon: <LockIcon size={20} className="text-emerald-400" />, path: '/system/privacy' },
     { id: 'storage', label: 'Storage Manager', icon: <HardDriveIcon size={20} className="text-indigo-400" />, path: '/system/storage' },

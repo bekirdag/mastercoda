@@ -1,5 +1,6 @@
 
-import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint } from './types';
+
+import { Task, LogEntry, Metric, AgentLogEntry, FileChange, GitCommit, GitRef, ConflictedFile, DocPage, DocFolder, AgentPersona, AppNotification, Playbook, TestResult, CoverageMetric, FlakyTest, Release, EnvironmentStatus, Extension, ExtensionStack, ThemeDefinition, IconPack, Snippet, Keybinding, KeymapProfile, AIProvider, ServiceAccount, DocSet, NetworkRequest, FirewallRule, OrchestratorNode, OrchestratorEdge, DocSource, DocComment, ApiEndpoint, TopologyNode, TopologyEdge, AdrRecord, LearningPath, DictionaryTerm, DriftRecord, SearchGap, DocFeedbackItem, FleetActivity, MemoryItem, ToolUsageRecord, ThoughtStep, AgentTemplate, EvalSuite, Squad, GuardrailRule, InterventionLogEntry, Mission, RagCollection, RagChunk, ClusterPoint, Skill, AgentUsageData, DailyUsageStat, TrainingExample, ModelVersion, Plugin, Invoice, PaymentMethod, AuditLogEntry, UserSession, OrgMember, SystemProcess, TelemetryPoint, TraceNode, TraceEdge } from './types';
 
 // Helper to get dates relative to now for dynamic mock data
 const today = new Date();
@@ -8,6 +9,31 @@ const formatDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+export const MOCK_TRACE_NODES: TraceNode[] = [
+  // RFP Column
+  { id: 'R-101', type: 'rfp', title: 'User Authentication', status: 'synced', version: 'v2.0', description: 'System must provide secure login and registration.' },
+  { id: 'R-102', type: 'rfp', title: 'Real-time Dashboards', status: 'mismatch', version: 'v2.0', description: 'Analytics must update in sub-second intervals.' },
+  { id: 'R-103', type: 'rfp', title: 'Export API', status: 'orphaned', version: 'v2.0', description: 'Allow third-party tools to pull sanitized project data.' },
+  
+  // PDR Column
+  { id: 'P-201', type: 'pdr', title: 'OAuth2 Provider', status: 'synced', version: 'v1.4', description: 'Implementation of standard OAuth2 using internal identity service.' },
+  { id: 'P-202', type: 'pdr', title: 'Websocket Gateway', status: 'stale', version: 'v1.2', description: 'Central hub for low-latency event broadcasting.' },
+  { id: 'P-203', type: 'pdr', title: 'Vector DB Indexer', status: 'synced', version: 'v1.5', description: 'Background worker for RAG ingestion.' },
+
+  // SDS Column
+  { id: 'S-301', type: 'sds', title: '/auth/login Endpoint', status: 'synced', version: 'v1.0', description: 'POST route for session initiation.' },
+  { id: 'S-302', type: 'sds', title: 'Redis Pub/Sub Layer', status: 'synced', version: 'v1.1', description: 'Shared memory layer for multi-node event sync.' },
+  { id: 'S-303', type: 'sds', title: 'User Table Schema', status: 'synced', version: 'v1.0', description: 'SQL schema for persistent identities.' },
+];
+
+export const MOCK_TRACE_EDGES: TraceEdge[] = [
+  { id: 'e1', source: 'R-101', target: 'P-201', status: 'verified' },
+  { id: 'e2', source: 'P-201', target: 'S-301', status: 'verified' },
+  { id: 'e3', source: 'P-201', target: 'S-303', status: 'verified' },
+  { id: 'e4', source: 'R-102', target: 'P-202', status: 'broken' },
+  { id: 'e5', source: 'P-202', target: 'S-302', status: 'verified' },
+];
 
 export const MOCK_SYSTEM_PROCESSES: SystemProcess[] = [
   { id: 'p1', name: 'Vector Database (LanceDB)', status: 'running', latency: '12ms', uptime: '12d 4h', cpu: 12, memory: '450MB' },
@@ -159,7 +185,7 @@ export const MOCK_PLUGINS: Plugin[] = [
     tools: [
       { name: 'sql.run_query', description: 'Execute read-only query' },
       { name: 'sql.get_schema', description: 'Introspect table structure' }
-    ]
+   ]
   }
 ];
 

@@ -60,6 +60,7 @@ import SkillStudio from './components/SkillStudio';
 import AgentTraining from './components/AgentTraining'; 
 import PluginMarketplace from './components/PluginMarketplace'; 
 import DiscoveryWizard from './components/DiscoveryWizard'; // AG-13
+import TraceabilityMatrix from './components/TraceabilityMatrix'; // AG-14
 import NotificationCenter from './components/NotificationCenter'; // SY-04
 import Analytics from './components/Analytics';
 import Playbooks from './components/Playbooks';
@@ -124,6 +125,7 @@ function App() {
         setIsCmdKOpen(prev => !prev);
       }
       // Cmd+Shift+N: Notifications
+      // Fix: Added missing 'e.' prefix to shiftKey
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'n') {
         e.preventDefault();
         setActivePath('/notifications');
@@ -269,6 +271,7 @@ function App() {
     if (activePath === '/inbox') return <NotificationCenter />; 
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
+    if (activePath === '/agents/traceability') return <TraceabilityMatrix />;
     if (activePath === '/quality') return <QualityHub />;
     if (activePath === '/extensions/orchestrator') return <AgentOrchestrator />;
     if (activePath === '/agents/governance') return <AgentGuardrails />; 
@@ -347,6 +350,7 @@ function App() {
     if (activePath === '/organization/admin') return 'Organization / Administration';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
+    if (activePath === '/agents/traceability') return 'Agents / Traceability Matrix';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
@@ -385,7 +389,7 @@ function App() {
     if (activePath === '/agents/fleet') return 'Workspace / Agent Fleet';
     if (activePath.includes('/profile')) return 'Workspace / Agent Profile';
     if (activePath.includes('/manage')) return 'Workspace / Agent Studio';
-    if (activePath === '/agents') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
+    if (activePath === '/agents') return 'Workspace / Agents';
     if (activePath === '/docs') return 'Workspace / Documentation Hub';
     if (activePath.startsWith('/docs/edit')) return 'Workspace / Document Editor';
     if (activePath === '/docs/manage/site-config') return 'Workspace / Documentation / Site Manager';
@@ -397,7 +401,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (

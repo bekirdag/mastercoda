@@ -16,6 +16,27 @@ export type FileChangeStatus = 'modified' | 'added' | 'deleted';
 export type MissionStatus = 'queued' | 'in-progress' | 'blocked' | 'completed' | 'failed';
 export type MissionPriority = 'low' | 'medium' | 'high' | 'urgent';
 
+// AG-14 Traceability Types
+export type TraceNodeType = 'rfp' | 'pdr' | 'sds';
+export type TraceNodeStatus = 'synced' | 'stale' | 'orphaned' | 'mismatch';
+
+export interface TraceNode {
+  id: string;
+  type: TraceNodeType;
+  title: string;
+  status: TraceNodeStatus;
+  version: string;
+  description: string;
+  metadata?: Record<string, any>;
+}
+
+export interface TraceEdge {
+  id: string;
+  source: string;
+  target: string;
+  status: 'verified' | 'broken';
+}
+
 // AG-13 Discovery Types
 export type DiscoveryStep = 'context' | 'scope' | 'technical' | 'finalization';
 
