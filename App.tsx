@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import OmniDrawer from './components/OmniDrawer';
@@ -34,6 +35,7 @@ import SecurityAudit from './components/SecurityAudit'; // SY-07
 import OrgAdminConsole from './components/OrgAdminConsole'; // SY-08
 import SystemHealth from './components/SystemHealth'; // SY-09
 import StorageManager from './components/StorageManager'; // SY-10
+import PrivacyCenter from './components/PrivacyCenter'; // SY-11
 import Documentation from './components/Documentation';
 import DocsHub from './components/DocsHub'; 
 import DocEditor from './components/DocEditor'; 
@@ -78,7 +80,7 @@ import KeymapManager from './components/KeymapManager';
 import PromptPlayground from './components/PromptPlayground'; 
 import HelpSupport from './components/HelpSupport'; // SY-05
 import { OmniDrawerState } from './types';
-import { CommandIcon, BellIcon } from './components/Icons';
+import { CommandIcon, BellIcon, ShieldIcon } from './components/Icons';
 import { MOCK_NOTIFICATIONS } from './constants';
 
 type AppStep = 'intro' | 'system-check' | 'cli-config' | 'secure-storage' | 'connect-agent' | 'privacy-settings' | 'recent-projects' | 'update-required' | 'create-project-location' | 'create-project-details' | 'create-project-defaults' | 'initializing-workspace' | 'workspace-ready' | 'validating-workspace' | 'database-migration' | 'invalid-workspace' | 'dashboard';
@@ -91,6 +93,7 @@ function App() {
   const [isCmdKOpen, setIsCmdKOpen] = useState(false);
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [taskDetailId, setTaskDetailId] = useState<string | null>(null);
+  const [isZeroRetentionActive, setIsZeroRetentionActive] = useState(false);
   
   const unreadCount = MOCK_NOTIFICATIONS.filter(n => n.status === 'unread').length;
 
@@ -260,6 +263,7 @@ function App() {
     if (activePath === '/organization/admin') return <OrgAdminConsole />; // SY-08
     if (activePath === '/system/health') return <SystemHealth />; // SY-09
     if (activePath === '/system/storage') return <StorageManager />; // SY-10
+    if (activePath === '/system/privacy') return <PrivacyCenter isZeroRetention={isZeroRetentionActive} setIsZeroRetention={setIsZeroRetentionActive} />; // SY-11
     if (activePath === '/inbox') return <NotificationCenter />; 
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
@@ -336,6 +340,7 @@ function App() {
     if (activePath === '/system/security') return 'System / Security & Audit';
     if (activePath === '/system/health') return 'System / Health & Diagnostics';
     if (activePath === '/system/storage') return 'System / Storage Manager';
+    if (activePath === '/system/privacy') return 'System / Privacy & AI Governance';
     if (activePath === '/organization/admin') return 'Organization / Administration';
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
@@ -388,7 +393,7 @@ function App() {
     return `Workspace ${activePath}`;
   };
 
-  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage'];
+  const skipDrawerPaths = ['/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
   return (
@@ -427,6 +432,17 @@ function App() {
                </button>
 
                <div className="h-4 w-px bg-slate-800 mx-1" />
+
+               {/* SY-11 Shield Glow */}
+               {isZeroRetentionActive && (
+                  <button 
+                    onClick={() => setActivePath('/system/privacy')}
+                    className="p-1.5 rounded-full bg-emerald-500/10 text-emerald-500 animate-pulse border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                    title="Zero-Retention Privacy Mode Active"
+                  >
+                     <ShieldIcon size={14} />
+                  </button>
+               )}
 
                <button 
                  onClick={() => setIsCreateTaskOpen(true)}
