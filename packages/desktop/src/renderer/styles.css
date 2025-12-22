@@ -10,6 +10,26 @@ body,
 
 body {
   margin: 0;
+  background: #0f172a;
+}
+
+.app-titlebar {
+  -webkit-app-region: drag;
+}
+
+.app-content {
+  position: relative;
+  transform: translateZ(0);
+}
+
+.app-titlebar .app-titlebar-controls,
+.app-titlebar button,
+.app-titlebar a,
+.app-titlebar input,
+.app-titlebar select,
+.app-titlebar textarea,
+.app-titlebar [role="button"] {
+  -webkit-app-region: no-drag;
 }
 
 /* Custom scrollbar */

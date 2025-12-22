@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     { id: 'insights', label: 'Insights', icon: <ActivityIcon size={20} />, path: '/analytics' },
     { id: 'roi', label: 'Agent ROI', icon: <div className="relative"><ZapIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /></div>, path: '/agents/analytics' }, 
     { id: 'missions', label: 'Mission Control', icon: <div className="relative"><ActivityIcon size={20} className="text-amber-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" /></div>, path: '/agents/missions' }, 
-    { id: 'discovery', label: 'Discovery Wizard', icon: <div className="relative"><SparklesIcon size={20} className="text-indigo-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full animate-pulse" /></div>, path: '/agents/discovery' }, 
+    { id: 'discovery', label: 'RFP', icon: <div className="relative"><SparklesIcon size={20} className="text-indigo-400" /><div className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full animate-pulse" /></div>, path: '/agents/discovery' }, 
     { id: 'plugins', label: 'Integrations', icon: <LinkIcon size={20} className="text-indigo-400" />, path: '/agents/plugins' }, 
     { id: 'training', label: 'Fine-Tuning', icon: <div className="relative"><SparklesIcon size={20} className="text-indigo-400" /><div className="absolute -bottom-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" /></div>, path: '/agents/training' }, 
     { id: 'knowledge', label: 'Knowledge Base', icon: <DatabaseIcon size={20} className="text-indigo-400" />, path: '/agents/knowledge' }, 

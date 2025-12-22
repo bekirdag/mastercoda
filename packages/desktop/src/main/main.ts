@@ -6,12 +6,24 @@ import { ipcChannels } from '../shared/ipc';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const createWindow = () => {
+  const isMac = process.platform === 'darwin';
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 960,
     minHeight: 600,
     show: false,
+    backgroundColor: '#0f172a',
+    titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
+    ...(isMac
+      ? {}
+      : {
+          titleBarOverlay: {
+            color: '#0f172a',
+            symbolColor: '#e2e8f0',
+            height: 36
+          }
+        }),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

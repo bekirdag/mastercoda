@@ -371,7 +371,7 @@ function App() {
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
-    if (activePath === '/agents/discovery') return 'Workspace / Discovery Wizard';
+    if (activePath === '/agents/discovery') return 'Workspace / RFP';
     if (activePath === '/agents/training') return 'Workspace / Fine-Tuning';
     if (activePath === '/agents/plugins') return 'Agents / Integrations';
     if (activePath === '/agents/knowledge') return 'Workspace / Knowledge Base';

@@ -67,27 +67,39 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
       items: [
         {
           id: 'workflow-workspace',
-          label: 'Workspace Setup',
+          label: 'Workspaces',
           path: '/workspace',
           icon: <HardDriveIcon size={18} className="text-indigo-300" />
         },
         {
+          id: 'workflow-project-design',
+          label: 'Project Design',
+          path: '/workspace/design',
+          icon: <FileTextIcon size={18} className="text-indigo-300" />
+        },
+        {
           id: 'workflow-rfp',
-          label: 'Find / Create RFP',
+          label: 'RFP',
           path: '/agents/discovery',
           icon: <SparklesIcon size={18} className="text-indigo-300" />
         },
         {
           id: 'workflow-pdr',
-          label: 'RFP -> PDR',
+          label: 'PDR',
           path: '/agents/signoff',
           icon: <CheckCircleIcon size={18} className="text-emerald-400" />
         },
         {
           id: 'workflow-sds',
-          label: 'PDR -> SDS',
+          label: 'SDS',
           path: '/agents/structural-templates',
           icon: <ListTreeIcon size={18} className="text-indigo-300" />
+        },
+        {
+          id: 'workflow-openyaml',
+          label: 'Openyaml',
+          path: '/agents/openyaml',
+          icon: <FileTextIcon size={18} className="text-indigo-300" />
         },
         {
           id: 'workflow-openapi',

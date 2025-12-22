@@ -3,8 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI } from "@google/genai";
 /* Fix: Added missing RfpSection import to resolve compilation error on line 307. */
 import { DiscoveryStep, RfpDraft, RfpSection } from '../types';
-import Button from './Button';
-import Badge from './Badge';
 import { 
   SparklesIcon, 
   SendIcon, 
@@ -13,7 +11,6 @@ import {
   ShieldIcon, 
   ActivityIcon, 
   ZapIcon, 
-  ChevronRightIcon, 
   FileTextIcon, 
   TerminalIcon,
   MicIcon,
@@ -30,16 +27,30 @@ const INITIAL_RFP: RfpDraft = {
   budget: { id: 'budg', title: 'Budget & Timeline', content: '', status: 'empty' }
 };
 
-const DiscoveryWizard: React.FC = () => {
+type DiscoveryWizardProps = {
+  onRfpReady?: (payload: { content: string }) => void;
+  onBack?: () => void;
+};
+
+const buildRfpMarkdown = (draft: RfpDraft) => {
+  const sections = [draft.overview, draft.functional, draft.technical, draft.budget];
+  return [
+    '# Request for Proposal (RFP)',
+    ...sections.map((section) => `\n## ${section.title}\n${section.content.trim() || 'TBD'}`)
+  ].join('\n');
+};
+
+const DiscoveryWizard: React.FC<DiscoveryWizardProps> = ({ onRfpReady, onBack }) => {
   const [step, setStep] = useState<DiscoveryStep>('context');
   const [messages, setMessages] = useState<{ role: 'user' | 'agent' | 'thought', text: string }[]>([
-    { role: 'agent', text: "Welcome to the Discovery Wizard. I'm your Senior Solutions Architect. Let's turn your vision into a formal RFP. \n\nTo start, can you describe the core problem this project solves and who the primary users are?" }
+    { role: 'agent', text: "Welcome to the RFP creation chat. I'm your Senior Solutions Architect. Share as much detail as you can and I will ask follow-up questions until we have a complete RFP.\n\nTo start, can you describe the core problem this project solves and who the primary users are?" }
   ]);
   const [inputText, setInputText] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [rfp, setRfp] = useState<RfpDraft>(INITIAL_RFP);
   const [completeness, setCompleteness] = useState(15);
   const [conflicts, setConflicts] = useState<string[]>([]);
+  const isRfpReady = completeness >= 90;
   
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +76,7 @@ const DiscoveryWizard: React.FC = () => {
         config: {
             systemInstruction: `You are a Senior Solutions Architect interviewing a user to build a professional RFP. 
             Goal: Identify core project context, scope, and technical constraints.
+            Ask focused follow-up questions until the RFP has enough detail to finalize.
             Tone: Professional, consultative, identifies "Ambiguity Debt".
             If a user gives conflicting info, flag it.
             Output: Return a JSON object with 'architect_response' (string), 'thought' (string), and 'rfp_updates' (object mapping rfp sections to new content if any).`,
@@ -113,6 +125,11 @@ const DiscoveryWizard: React.FC = () => {
     }
   };
 
+  const handleRfpReady = () => {
+    if (!onRfpReady || !isRfpReady) return;
+    onRfpReady({ content: buildRfpMarkdown(rfp) });
+  };
+
   const currentStepIndex = ['context', 'scope', 'technical', 'finalization'].indexOf(step);
 
   return (
@@ -120,14 +137,25 @@ const DiscoveryWizard: React.FC = () => {
       
       {/* 1. Progress Stepper */}
       <header className="h-[60px] border-b border-slate-800 bg-slate-900 flex items-center px-8 shrink-0 z-30 justify-between">
-         <div className="flex items-center space-x-8">
-            <StepItem active={step === 'context'} completed={currentStepIndex > 0} label="Context" />
-            <StepDivider />
-            <StepItem active={step === 'scope'} completed={currentStepIndex > 1} label="Scope" />
-            <StepDivider />
-            <StepItem active={step === 'technical'} completed={currentStepIndex > 2} label="Technical" />
-            <StepDivider />
-            <StepItem active={step === 'finalization'} completed={currentStepIndex > 3} label="Finalization" />
+         <div className="flex items-center space-x-6">
+            {onBack && (
+               <button
+                  onClick={onBack}
+                  className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors"
+               >
+                  <XIcon size={12} />
+                  <span>Back</span>
+               </button>
+            )}
+            <div className="flex items-center space-x-8">
+               <StepItem active={step === 'context'} completed={currentStepIndex > 0} label="Context" />
+               <StepDivider />
+               <StepItem active={step === 'scope'} completed={currentStepIndex > 1} label="Scope" />
+               <StepDivider />
+               <StepItem active={step === 'technical'} completed={currentStepIndex > 2} label="Technical" />
+               <StepDivider />
+               <StepItem active={step === 'finalization'} completed={currentStepIndex > 3} label="Finalization" />
+            </div>
          </div>
 
          <div className="flex items-center space-x-4">
@@ -140,11 +168,6 @@ const DiscoveryWizard: React.FC = () => {
                   <span className="text-xs font-mono font-bold text-white">{completeness}%</span>
                </div>
             </div>
-            {completeness >= 90 && (
-               <Button variant="primary" size="sm" className="animate-pulse bg-indigo-600 shadow-[0_0_20px_rgba(99,102,241,0.4)]">
-                  Generate PDR
-               </Button>
-            )}
          </div>
       </header>
 
@@ -162,6 +185,19 @@ const DiscoveryWizard: React.FC = () => {
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2" />
                   <span className="text-[9px] font-bold uppercase">Ready</span>
                </div>
+            </div>
+
+            <div className="border-b border-slate-800 bg-slate-900/60 px-6 py-4 space-y-3">
+               <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">How this page works</div>
+               <p className="text-xs text-slate-400 leading-relaxed">
+                  This is the RFP creation chat. Share as much information as possible and the agent
+                  will ask follow-up questions until the RFP is complete.
+               </p>
+               <ul className="text-[11px] text-slate-500 space-y-1">
+                  <li>Include goals, users, scope, timeline, and budget.</li>
+                  <li>Call out technical constraints, security, or compliance needs.</li>
+                  <li>Answer follow-up questions so the draft can be finalized.</li>
+               </ul>
             </div>
 
             {/* Chat History */}
@@ -280,6 +316,19 @@ const DiscoveryWizard: React.FC = () => {
             </div>
          </div>
          <div className="flex items-center space-x-4">
+            {onRfpReady && (
+               <button
+                  onClick={handleRfpReady}
+                  disabled={!isRfpReady}
+                  className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest transition-all ${
+                     isRfpReady
+                        ? 'bg-emerald-500 text-slate-900 shadow-[0_0_16px_rgba(16,185,129,0.35)]'
+                        : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                  }`}
+               >
+                  RFP file is ready
+               </button>
+            )}
             <span className="text-slate-600 font-mono italic">AG-13_v4.2.1</span>
          </div>
       </footer>

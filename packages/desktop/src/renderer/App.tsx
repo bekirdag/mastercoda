@@ -18,6 +18,8 @@ import SecureStorage from './components/SecureStorage';
 import ConnectAgent from './components/ConnectAgent';
 import PrivacySettings from './components/PrivacySettings';
 import RecentProjects from './components/RecentProjects';
+import Workspaces from './components/Workspaces';
+import ProjectDesign from './components/ProjectDesign';
 import UpdateRequired from './components/UpdateRequired';
 import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
 import CreateWorkspaceDetails from './components/CreateWorkspaceDetails';
@@ -61,10 +63,11 @@ import KnowledgeManager from './components/KnowledgeManager';
 import SkillStudio from './components/SkillStudio'; 
 import AgentTraining from './components/AgentTraining'; 
 import PluginMarketplace from './components/PluginMarketplace'; 
-import DiscoveryWizard from './components/DiscoveryWizard'; // AG-13
+import RfpHub from './components/RfpHub'; // AG-13
 import TraceabilityMatrix from './components/TraceabilityMatrix'; // AG-14
-import MilestoneApproval from './components/MilestoneApproval'; // AG-15
-import DocStructuralTemplates from './components/DocStructuralTemplates'; // AG-16
+import PdrHub from './components/PdrHub';
+import SdsHub from './components/SdsHub';
+import OpenyamlHub from './components/OpenyamlHub';
 import ConflictDetector from './components/ConflictDetector'; // AG-17
 import BacklogGenerator from './components/BacklogGenerator'; // AG-18
 import SprintMilestonePlanner from './components/SprintMilestonePlanner'; // AG-19
@@ -189,8 +192,20 @@ function App() {
     setActivePath('/exec');
   };
 
+  const renderShell = (children: React.ReactNode) => (
+    <div className="flex h-screen w-screen flex-col bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+      <div
+        className="app-titlebar h-[38px] shrink-0 w-full bg-gradient-to-b from-slate-950 to-slate-900 border-b border-slate-800/80"
+        aria-hidden="true"
+      />
+      <div className="app-content flex-1 overflow-hidden">
+        {children}
+      </div>
+    </div>
+  );
+
   if (currentStep === 'intro') {
-    return (
+    return renderShell(
       <IntroCarousel 
         onFinish={() => setCurrentStep('system-check')} 
         onSkip={() => setCurrentStep('dashboard')} 
@@ -198,14 +213,14 @@ function App() {
     );
   }
 
-  if (currentStep === 'system-check') { return <SystemCheck onBack={() => setCurrentStep('intro')} onNext={() => setCurrentStep('cli-config')} />; }
-  if (currentStep === 'cli-config') { return <CliConfig onBack={() => setCurrentStep('system-check')} onNext={() => setCurrentStep('secure-storage')} />; }
-  if (currentStep === 'secure-storage') { return <SecureStorage onBack={() => setCurrentStep('cli-config')} onNext={() => setCurrentStep('connect-agent')} />; }
-  if (currentStep === 'connect-agent') { return <ConnectAgent onBack={() => setCurrentStep('secure-storage')} onNext={() => setCurrentStep('privacy-settings')} />; }
-  if (currentStep === 'privacy-settings') { return <PrivacySettings onBack={() => setCurrentStep('connect-agent')} onNext={() => setCurrentStep('recent-projects')} />; }
+  if (currentStep === 'system-check') { return renderShell(<SystemCheck onBack={() => setCurrentStep('intro')} onNext={() => setCurrentStep('cli-config')} />); }
+  if (currentStep === 'cli-config') { return renderShell(<CliConfig onBack={() => setCurrentStep('system-check')} onNext={() => setCurrentStep('secure-storage')} />); }
+  if (currentStep === 'secure-storage') { return renderShell(<SecureStorage onBack={() => setCurrentStep('cli-config')} onNext={() => setCurrentStep('connect-agent')} />); }
+  if (currentStep === 'connect-agent') { return renderShell(<ConnectAgent onBack={() => setCurrentStep('secure-storage')} onNext={() => setCurrentStep('privacy-settings')} />); }
+  if (currentStep === 'privacy-settings') { return renderShell(<PrivacySettings onBack={() => setCurrentStep('connect-agent')} onNext={() => setCurrentStep('recent-projects')} />); }
   
   if (currentStep === 'recent-projects') {
-    return (
+    return renderShell(
       <RecentProjects 
         onOpenProject={(path) => {
           setNewProjectData({ path }); 
@@ -218,7 +233,7 @@ function App() {
   }
 
   if (currentStep === 'validating-workspace') {
-    return (
+    return renderShell(
       <ValidatingWorkspace
         path={newProjectData.path || '~/unknown/project'}
         onComplete={() => {
@@ -229,14 +244,14 @@ function App() {
         onMigrationNeeded={() => setCurrentStep('database-migration')}
         onError={(type) => {
            setValidationError({ type, path: newProjectData.path || '' });
-           setCurrentStep('invalid-workspace');
+          setCurrentStep('invalid-workspace');
         }}
       />
     );
   }
 
   if (currentStep === 'invalid-workspace') {
-    return (
+    return renderShell(
       <InvalidWorkspace 
         errorType={validationError?.type || 'not_workspace'}
         path={validationError?.path || ''}
@@ -252,7 +267,7 @@ function App() {
   }
 
   if (currentStep === 'database-migration') {
-    return (
+    return renderShell(
       <DatabaseMigration
         onComplete={() => {
           setCurrentStep('dashboard');
@@ -262,13 +277,13 @@ function App() {
       />
     );
   }
-  if (currentStep === 'update-required') { return <UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />; }
-  if (currentStep === 'create-project-location') { return <CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />; }
-  if (currentStep === 'create-project-details') { return <CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details: any) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />; }
-  if (currentStep === 'create-project-defaults') { return <CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults: any) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />; }
-  if (currentStep === 'initializing-workspace') { return <InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />; }
+  if (currentStep === 'update-required') { return renderShell(<UpdateRequired onFixed={() => setCurrentStep('recent-projects')} />); }
+  if (currentStep === 'create-project-location') { return renderShell(<CreateWorkspaceLocation onBack={() => setCurrentStep('recent-projects')} onNext={(path) => { setNewProjectData(prev => ({ ...prev, path })); setCurrentStep('create-project-details'); }} />); }
+  if (currentStep === 'create-project-details') { return renderShell(<CreateWorkspaceDetails onBack={() => setCurrentStep('create-project-location')} onNext={(details: any) => { setNewProjectData(prev => ({ ...prev, ...details })); setCurrentStep('create-project-defaults'); }} />); }
+  if (currentStep === 'create-project-defaults') { return renderShell(<CreateWorkspaceDefaults onBack={() => setCurrentStep('create-project-details')} onNext={(defaults: any) => { setNewProjectData(prev => ({ ...prev, ...defaults })); setCurrentStep('initializing-workspace'); }} projectSummary={newProjectData} />); }
+  if (currentStep === 'initializing-workspace') { return renderShell(<InitializingWorkspace config={newProjectData} onNext={() => setCurrentStep('workspace-ready')} onCancel={() => setCurrentStep('create-project-defaults')} />); }
   if (currentStep === 'workspace-ready') {
-    return (
+    return renderShell(
       <WorkspaceReady
         workspacePath={newProjectData.path}
         onNext={() => {
@@ -280,7 +295,7 @@ function App() {
   }
 
   if (activePath === '/conflict') {
-    return <ConflictResolver onBack={() => setActivePath('/source')} />;
+    return renderShell(<ConflictResolver onBack={() => setActivePath('/source')} />);
   }
 
   const contentPaddingClass = 
@@ -293,16 +308,17 @@ function App() {
     if (activePath === '/') return <Dashboard onCreateTask={() => setIsCreateTaskOpen(true)} />;
     if (activePath === '/workspace') {
       return (
-        <RecentProjects 
-          onOpenProject={(path) => {
-            setNewProjectData({ path }); 
-            setCurrentStep('validating-workspace');
+        <Workspaces
+          onOpenWorkspace={(path) => {
+            setNewProjectData({ path });
+            setCurrentStep('dashboard');
+            setActivePath('/');
           }}
-          onCreateNew={() => setCurrentStep('create-project-location')}
-          onVersionMismatch={() => setCurrentStep('update-required')}
+          onAddWorkspace={() => setCurrentStep('recent-projects')}
         />
       );
     }
+    if (activePath === '/workspace/design') return <ProjectDesign />;
     if (activePath === '/notifications') return <NotificationCenter />; 
     if (activePath === '/help') return <HelpSupport />; 
     if (activePath === '/system/about') return <AboutUpdates />; 
@@ -315,8 +331,9 @@ function App() {
     if (activePath === '/analytics') return <Analytics />;
     if (activePath === '/agents/analytics') return <AgentAnalytics />;
     if (activePath === '/agents/traceability') return <TraceabilityMatrix />;
-    if (activePath === '/agents/signoff') return <MilestoneApproval />; 
-    if (activePath === '/agents/structural-templates') return <DocStructuralTemplates />;
+    if (activePath === '/agents/signoff') return <PdrHub />; 
+    if (activePath === '/agents/structural-templates') return <SdsHub />;
+    if (activePath === '/agents/openyaml') return <OpenyamlHub />;
     if (activePath === '/agents/conflicts') return <ConflictDetector />;
     if (activePath === '/agents/debt') return <DebtRefactorLog />;
     if (activePath === '/project/backlog/generator') return <BacklogGenerator />;
@@ -327,7 +344,7 @@ function App() {
     if (activePath === '/agents/missions') return <MissionControl />; 
     if (activePath === '/agents/training') return <AgentTraining />; 
     if (activePath === '/agents/plugins') return <PluginMarketplace />; 
-    if (activePath === '/agents/discovery') return <DiscoveryWizard />; 
+    if (activePath === '/agents/discovery') return <RfpHub />; 
     if (activePath === '/agents/knowledge') return <KnowledgeManager />; 
     if (activePath === '/agents/skills') return <SkillStudio />; 
     if (activePath === '/agents/evals') return <AgentGym />; 
@@ -401,7 +418,8 @@ function App() {
 
   const getBreadcrumb = () => {
     if (activePath === '/') return 'Workspace / Dashboard';
-    if (activePath === '/workspace') return 'Primary Flow / Workspace Setup';
+    if (activePath === '/workspace') return 'Primary Flow / Workspaces';
+    if (activePath === '/workspace/design') return 'Primary Flow / Project Design';
     if (activePath === '/notifications' || activePath === '/inbox') return 'System / Notification Center';
     if (activePath === '/help') return 'System / Help & Support';
     if (activePath === '/system/about') return 'System / About Master Coda';
@@ -413,8 +431,9 @@ function App() {
     if (activePath === '/analytics') return 'Workspace / Insights';
     if (activePath === '/agents/analytics') return 'Agents / ROI Analytics';
     if (activePath === '/agents/traceability') return 'Agents / Traceability Matrix';
-    if (activePath === '/agents/signoff') return 'Primary Flow / RFP to PDR';
-    if (activePath === '/agents/structural-templates') return 'Primary Flow / PDR to SDS';
+    if (activePath === '/agents/signoff') return 'Primary Flow / PDR';
+    if (activePath === '/agents/structural-templates') return 'Primary Flow / SDS';
+    if (activePath === '/agents/openyaml') return 'Primary Flow / Openyaml';
     if (activePath === '/agents/conflicts') return 'Agents / Gap Radar';
     if (activePath === '/agents/debt') return 'Agents / Technical Debt';
     if (activePath === '/project/backlog/generator') return 'Primary Flow / Create Tasks';
@@ -422,7 +441,7 @@ function App() {
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
     if (activePath === '/agents/missions') return 'Workspace / Mission Control';
-    if (activePath === '/agents/discovery') return 'Primary Flow / RFP Discovery';
+    if (activePath === '/agents/discovery') return 'Primary Flow / RFP';
     if (activePath === '/agents/training') return 'Workspace / Fine-Tuning';
     if (activePath === '/agents/plugins') return 'Agents / Integrations';
     if (activePath === '/agents/knowledge') return 'Workspace / Knowledge Base';
@@ -474,26 +493,26 @@ function App() {
   const skipDrawerPaths = ['/workspace', '/settings', '/docs', '/exec', '/docs/view', '/docs/edit', '/agents', '/playbooks', '/quality', '/releases', '/extensions', '/playground', '/extensions/references', '/extensions/models', '/extensions/installed', '/extensions/builder', '/extensions/stacks', '/extensions/themes', '/extensions/snippets', '/extensions/keymaps', '/extensions/accounts', '/extensions/firewall', '/extensions/orchestrator', '/docs/manage/site-config', '/docs/api-explorer', '/docs/topology', '/docs/adrs', '/docs/learning', '/docs/glossary', '/docs/analytics', '/agents/training', '/agents/plugins', '/agents/discovery', '/settings/keybindings', '/notifications', '/help', '/system/about', '/system/security', '/organization/admin', '/system/health', '/system/storage', '/system/privacy', '/agents/traceability', '/agents/signoff', '/agents/structural-templates', '/agents/conflicts', '/agents/debt', '/project/backlog/generator', '/project/sprints'];
   const showHeader = !skipDrawerPaths.some(p => activePath.startsWith(p)) || activePath.startsWith('/extensions/settings/');
 
-  return (
-    <div className="flex h-screen w-screen bg-slate-900 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
-      
-      <Sidebar 
-        isExpanded={activePath !== '/exec' && activePath !== '/project/backlog/generator' && !activePath.startsWith('/docs/edit') && isSidebarExpanded} 
-        setIsExpanded={setIsSidebarExpanded}
-        activePath={activePath}
-        setActivePath={setActivePath}
-      />
+  return renderShell(
+    <>
+      <div className="flex h-full overflow-hidden">
+        <Sidebar 
+          isExpanded={activePath !== '/exec' && activePath !== '/project/backlog/generator' && !activePath.startsWith('/docs/edit') && isSidebarExpanded} 
+          setIsExpanded={setIsSidebarExpanded}
+          activePath={activePath}
+          setActivePath={setActivePath}
+        />
 
-      <main className="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
+        <main className="flex-1 flex flex-col relative overflow-hidden transition-all duration-300">
         
         {showHeader && ( 
-          <header className="h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
-            <div className="flex items-center text-xs text-slate-500 font-medium space-x-2">
+          <header className="app-titlebar h-10 flex items-center px-6 border-b border-slate-800 bg-slate-900/90 backdrop-blur z-10 shrink-0">
+            <div className="app-titlebar-controls flex items-center text-xs text-slate-500 font-medium space-x-2">
                <span className="hover:text-slate-300 cursor-pointer transition-colors" onClick={() => setActivePath('/')}>Master Coda</span>
                <span>/</span>
                <span className="text-slate-200">{getBreadcrumb()}</span>
             </div>
-            <div className="ml-auto flex items-center space-x-3">
+            <div className="app-titlebar-controls ml-auto flex items-center space-x-3">
                {/* Quick Telemetry Summary */}
                <button 
                  onClick={() => setActivePath('/system/health')}
@@ -555,13 +574,14 @@ function App() {
           </header>
         )}
 
-        <div className={`flex-1 overflow-auto custom-scrollbar ${showHeader ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
-           {renderContent()}
-        </div>
+          <div className={`flex-1 overflow-auto custom-scrollbar ${showHeader ? contentPaddingClass : ''} ${drawerState === 'maximized' ? 'overflow-hidden' : ''} transition-all duration-300`}>
+             {renderContent()}
+          </div>
 
-        {showHeader && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
+          {showHeader && <OmniDrawer state={drawerState} onStateChange={setDrawerState} />}
 
-      </main>
+        </main>
+      </div>
 
       <CommandPalette isOpen={isCmdKOpen} onClose={() => setIsCmdKOpen(false)} />
       <CreateTaskModal 
@@ -576,7 +596,7 @@ function App() {
         onExecute={handleExecuteTask}
       />
       
-    </div>
+    </>
   );
 }
 
