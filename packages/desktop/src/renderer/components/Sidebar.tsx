@@ -47,6 +47,9 @@ type NavItem = {
   icon: React.ReactNode;
   badge?: number;
   paths?: string[];
+  indent?: boolean;
+  children?: NavItem[];
+  defaultOpen?: boolean;
 };
 
 type NavSection = {
@@ -75,61 +78,59 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
           id: 'workflow-project-design',
           label: 'Project Design',
           path: '/workspace/design',
-          icon: <FileTextIcon size={18} className="text-indigo-300" />
-        },
-        {
-          id: 'workflow-rfp',
-          label: 'RFP',
-          path: '/agents/discovery',
-          icon: <SparklesIcon size={18} className="text-indigo-300" />
-        },
-        {
-          id: 'workflow-pdr',
-          label: 'PDR',
-          path: '/agents/signoff',
-          icon: <CheckCircleIcon size={18} className="text-emerald-400" />
-        },
-        {
-          id: 'workflow-sds',
-          label: 'SDS',
-          path: '/agents/structural-templates',
-          icon: <ListTreeIcon size={18} className="text-indigo-300" />
-        },
-        {
-          id: 'workflow-openyaml',
-          label: 'Openyaml',
-          path: '/agents/openyaml',
-          icon: <FileTextIcon size={18} className="text-indigo-300" />
-        },
-        {
-          id: 'workflow-openapi',
-          label: 'SDS -> OpenAPI',
-          path: '/docs/api-explorer',
-          icon: <ZapIcon size={18} className="text-amber-400" />
-        },
-        {
-          id: 'workflow-create-tasks',
-          label: 'Create Tasks',
-          path: '/project/backlog/generator',
-          icon: <ListTreeIcon size={18} className="text-emerald-400" />
-        },
-        {
-          id: 'workflow-order-tasks',
-          label: 'Order Tasks',
-          path: '/tasks/board',
-          icon: <LayoutGridIcon size={18} className="text-slate-300" />
-        },
-        {
-          id: 'workflow-refine-tasks',
-          label: 'Refine Tasks',
-          path: '/plan',
-          icon: <ActivityIcon size={18} className="text-indigo-300" />
-        },
-        {
-          id: 'workflow-list-tasks',
-          label: 'List Tasks',
-          path: '/tasks/list',
-          icon: <FileTextIcon size={18} className="text-slate-300" />
+          icon: <FileTextIcon size={18} className="text-indigo-300" />,
+          defaultOpen: true,
+          children: [
+            {
+              id: 'workflow-rfp',
+              label: 'RFP',
+              path: '/agents/discovery',
+              icon: <SparklesIcon size={18} className="text-indigo-300" />,
+              indent: true
+            },
+            {
+              id: 'workflow-pdr',
+              label: 'PDR',
+              path: '/agents/signoff',
+              icon: <CheckCircleIcon size={18} className="text-emerald-400" />,
+              indent: true
+            },
+            {
+              id: 'workflow-sds',
+              label: 'SDS',
+              path: '/agents/structural-templates',
+              icon: <ListTreeIcon size={18} className="text-indigo-300" />,
+              indent: true
+            },
+            {
+              id: 'workflow-openyaml',
+              label: 'OpenAPI',
+              path: '/agents/openyaml',
+              icon: <FileTextIcon size={18} className="text-indigo-300" />,
+              indent: true
+            },
+            {
+              id: 'workflow-project-tasks',
+              label: 'Tasks',
+              path: '/workspace/design/tasks',
+              icon: <ListTreeIcon size={18} className="text-emerald-400" />,
+              indent: true
+            },
+            {
+              id: 'workflow-order-tasks',
+              label: 'Order tasks',
+              path: '/project/tasks/order',
+              icon: <LayoutGridIcon size={18} className="text-slate-300" />,
+              indent: true
+            },
+            {
+              id: 'workflow-list-tasks',
+              label: 'List tasks',
+              path: '/plan',
+              icon: <ActivityIcon size={18} className="text-indigo-300" />,
+              indent: true
+            }
+          ]
         },
         {
           id: 'workflow-work',
@@ -501,6 +502,31 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
           icon: <HelpCircleIcon size={18} />
         }
       ]
+    },
+    {
+      id: 'archive',
+      label: 'ARCHIVE',
+      defaultOpen: false,
+      items: [
+        {
+          id: 'workflow-openapi',
+          label: 'SDS -> OpenAPI',
+          path: '/docs/api-explorer',
+          icon: <ZapIcon size={18} className="text-amber-400" />
+        },
+        {
+          id: 'workflow-create-tasks',
+          label: 'Create Tasks',
+          path: '/project/backlog/generator',
+          icon: <ListTreeIcon size={18} className="text-emerald-400" />
+        },
+        {
+          id: 'workflow-kanban',
+          label: 'Kanban Board',
+          path: '/tasks/board',
+          icon: <LayoutGridIcon size={18} className="text-slate-300" />
+        }
+      ]
     }
   ];
 
@@ -511,13 +537,31 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
     }, {})
   );
 
+  const [openItems, setOpenItems] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    sections.forEach((section) => {
+      section.items.forEach((item) => {
+        if (item.children?.length) {
+          initial[item.id] = item.defaultOpen ?? false;
+        }
+      });
+    });
+    return initial;
+  });
+
   const isItemActive = (item: NavItem) => {
     const paths = item.paths ?? [item.path];
-    return paths.some((path) => path === activePath);
+    const isActive = paths.some((path) => path === activePath);
+    const isChildActive = item.children?.some(isItemActive) ?? false;
+    return isActive || isChildActive;
   };
 
   const toggleSection = (id: string) => {
     setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleItem = (id: string) => {
+    setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
@@ -545,7 +589,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
               {isExpanded && (
                 <button
                   onClick={() => toggleSection(section.id)}
-                  className={`w-full flex items-center px-2 py-1 text-[10px] uppercase tracking-widest font-semibold transition-colors ${
+                  className={`w-full flex items-center justify-start text-left px-2 py-1 text-[10px] uppercase tracking-widest font-semibold transition-colors ${
                     isSectionActive ? 'text-indigo-300' : 'text-slate-500 hover:text-slate-300'
                   }`}
                 >
@@ -561,36 +605,91 @@ const Sidebar: React.FC<SidebarProps> = ({ isExpanded, setIsExpanded, activePath
                 <div className={`${isExpanded ? 'mt-2 space-y-1' : 'space-y-2'}`}>
                   {section.items.map((item) => {
                     const isActive = isItemActive(item);
+                    const hasChildren = Boolean(item.children?.length);
+                    const isOpen = isActive ? true : (openItems[item.id] ?? false);
                     return (
-                      <button
-                        key={item.id}
-                        onClick={() => setActivePath(item.path)}
-                        className={`group flex items-center w-full px-2 py-2 rounded-md transition-all ${
-                          isActive
-                            ? 'bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500'
-                            : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100 border-l-2 border-transparent'
-                        }`}
-                        title={!isExpanded ? item.label : undefined}
-                      >
-                        <span className="shrink-0 relative">
-                          {item.icon}
-                          {item.badge !== undefined && item.badge > 0 && !isExpanded && (
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" />
-                          )}
-                        </span>
-                        <span
-                          className={`ml-3 text-sm font-medium transition-all duration-300 whitespace-nowrap overflow-hidden flex-1 flex justify-between items-center ${
-                            isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+                      <div key={item.id} className={hasChildren ? 'space-y-1' : ''}>
+                        <button
+                          onClick={() => setActivePath(item.path)}
+                          className={`group flex items-center justify-start text-left w-full py-2 rounded-md transition-all ${item.indent ? 'pl-8 pr-2' : 'px-2'} ${
+                            isActive
+                              ? 'bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500'
+                              : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100 border-l-2 border-transparent'
                           }`}
+                          title={!isExpanded ? item.label : undefined}
                         >
-                          {item.label}
-                          {item.badge !== undefined && item.badge > 0 && (
-                            <span className="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold ml-2">
-                              {item.badge}
-                            </span>
-                          )}
-                        </span>
-                      </button>
+                          <span className="shrink-0 relative">
+                            {item.icon}
+                            {item.badge !== undefined && item.badge > 0 && !isExpanded && (
+                              <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" />
+                            )}
+                          </span>
+                          <span
+                            className={`ml-3 text-sm font-medium transition-all duration-300 whitespace-nowrap overflow-hidden flex-1 flex items-center ${
+                              isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+                            }`}
+                          >
+                            <span className="flex-1">{item.label}</span>
+                            {item.badge !== undefined && item.badge > 0 && (
+                              <span className="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold ml-2">
+                                {item.badge}
+                              </span>
+                            )}
+                            {hasChildren && isExpanded && (
+                              <span
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleItem(item.id);
+                                }}
+                                className="ml-2 text-slate-500 hover:text-slate-200 transition-colors"
+                              >
+                                <ChevronDownIcon
+                                  size={12}
+                                  className={`transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'}`}
+                                />
+                              </span>
+                            )}
+                          </span>
+                        </button>
+                        {hasChildren && isExpanded && isOpen && (
+                          <div className="space-y-1">
+                            {item.children?.map((child) => {
+                              const isChildActive = isItemActive(child);
+                              return (
+                                <button
+                                  key={child.id}
+                                  onClick={() => setActivePath(child.path)}
+                                  className={`group flex items-center justify-start text-left w-full py-2 rounded-md transition-all ${child.indent ? 'pl-8 pr-2' : 'px-2'} ${
+                                    isChildActive
+                                      ? 'bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500'
+                                      : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-100 border-l-2 border-transparent'
+                                  }`}
+                                  title={!isExpanded ? child.label : undefined}
+                                >
+                                  <span className="shrink-0 relative">
+                                    {child.icon}
+                                    {child.badge !== undefined && child.badge > 0 && !isExpanded && (
+                                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full border border-slate-800" />
+                                    )}
+                                  </span>
+                                  <span
+                                    className={`ml-3 text-sm font-medium transition-all duration-300 whitespace-nowrap overflow-hidden flex-1 flex items-center ${
+                                      isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+                                    }`}
+                                  >
+                                    <span className="flex-1">{child.label}</span>
+                                    {child.badge !== undefined && child.badge > 0 && (
+                                      <span className="bg-indigo-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold ml-2">
+                                        {child.badge}
+                                      </span>
+                                    )}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>

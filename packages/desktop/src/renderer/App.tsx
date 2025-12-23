@@ -9,7 +9,6 @@ import Execution from './components/Execution';
 import Review from './components/Review';
 import SourceControl from './components/SourceControl';
 import ConflictResolver from './components/ConflictResolver';
-import BacklogList from './components/BacklogList';
 import TaskBoard from './components/TaskBoard';
 import IntroCarousel from './components/IntroCarousel';
 import SystemCheck from './components/SystemCheck';
@@ -20,6 +19,8 @@ import PrivacySettings from './components/PrivacySettings';
 import RecentProjects from './components/RecentProjects';
 import Workspaces from './components/Workspaces';
 import ProjectDesign from './components/ProjectDesign';
+import ProjectDesignTasks from './components/ProjectDesignTasks';
+import OrderTasks from './components/OrderTasks';
 import UpdateRequired from './components/UpdateRequired';
 import CreateWorkspaceLocation from './components/CreateWorkspaceLocation';
 import CreateWorkspaceDetails from './components/CreateWorkspaceDetails';
@@ -107,7 +108,6 @@ function App() {
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [taskDetailId, setTaskDetailId] = useState<string | null>(null);
   const [isZeroRetentionActive, setIsZeroRetentionActive] = useState(false);
-  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set());
   
   const unreadCount = MOCK_NOTIFICATIONS.filter(n => n.status === 'unread').length;
 
@@ -319,6 +319,8 @@ function App() {
       );
     }
     if (activePath === '/workspace/design') return <ProjectDesign />;
+    if (activePath === '/workspace/design/tasks') return <ProjectDesignTasks />;
+    if (activePath === '/project/tasks/order') return <OrderTasks />;
     if (activePath === '/notifications') return <NotificationCenter />; 
     if (activePath === '/help') return <HelpSupport />; 
     if (activePath === '/system/about') return <AboutUpdates />; 
@@ -374,17 +376,6 @@ function App() {
     if (activePath === '/playbooks') return <Playbooks />;
     if (activePath === '/plan') return <Plan onCreateTask={() => setIsCreateTaskOpen(true)} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
     if (activePath === '/tasks/board') return <TaskBoard tasks={MOCK_TASKS} onExecuteTask={handleExecuteTask} onTaskClick={setTaskDetailId} />;
-    if (activePath === '/tasks/list') {
-      return (
-        <BacklogList
-          tasks={MOCK_TASKS}
-          selectedIds={selectedTaskIds}
-          onSelectionChange={setSelectedTaskIds}
-          onExecuteTask={handleExecuteTask}
-          onTaskClick={setTaskDetailId}
-        />
-      );
-    }
     if (activePath === '/exec') return <Execution taskId={executionTaskId} onBack={() => setActivePath('/plan')} />;
     if (activePath === '/review') return <Review />;
     if (activePath === '/agents/fleet') return <AgentFleet />; 
@@ -420,6 +411,8 @@ function App() {
     if (activePath === '/') return 'Workspace / Dashboard';
     if (activePath === '/workspace') return 'Primary Flow / Workspaces';
     if (activePath === '/workspace/design') return 'Primary Flow / Project Design';
+    if (activePath === '/workspace/design/tasks') return 'Primary Flow / Project Design / Tasks';
+    if (activePath === '/project/tasks/order') return 'Primary Flow / Project Design / Order Tasks';
     if (activePath === '/notifications' || activePath === '/inbox') return 'System / Notification Center';
     if (activePath === '/help') return 'System / Help & Support';
     if (activePath === '/system/about') return 'System / About Master Coda';
@@ -436,7 +429,7 @@ function App() {
     if (activePath === '/agents/openyaml') return 'Primary Flow / Openyaml';
     if (activePath === '/agents/conflicts') return 'Agents / Gap Radar';
     if (activePath === '/agents/debt') return 'Agents / Technical Debt';
-    if (activePath === '/project/backlog/generator') return 'Primary Flow / Create Tasks';
+    if (activePath === '/project/backlog/generator') return 'Archive / Create Tasks';
     if (activePath === '/project/sprints') return 'Project / Sprint Planner';
     if (activePath === '/orchestrator') return 'Workspace / Orchestrator';
     if (activePath === '/agents/governance') return 'Workspace / Safety Hub';
@@ -470,9 +463,8 @@ function App() {
     if (activePath === '/extensions/builder') return 'Ecosystem / Extensions / Builder';
     if (activePath.startsWith('/extensions/settings/')) return 'Ecosystem / Extensions / Settings';
     if (activePath === '/playbooks') return 'Workspace / Playbooks';
-    if (activePath === '/plan') return 'Primary Flow / Refine Tasks';
-    if (activePath === '/tasks/board') return 'Primary Flow / Order Tasks';
-    if (activePath === '/tasks/list') return 'Primary Flow / List Tasks';
+    if (activePath === '/plan') return 'Primary Flow / Project Design / List tasks';
+    if (activePath === '/tasks/board') return 'Archive / Kanban Board';
     if (activePath === '/exec') return `Primary Flow / Work on Tasks / ${executionTaskId || 'Select Task'}`;
     if (activePath === '/review') return 'Primary Flow / Code Review';
     if (activePath === '/agents/fleet') return 'Workspace / Agent Fleet';
@@ -482,7 +474,7 @@ function App() {
     if (activePath === '/docs') return 'Workspace / Documentation Hub';
     if (activePath.startsWith('/docs/edit')) return 'Workspace / Document Editor';
     if (activePath === '/docs/manage/site-config') return 'Workspace / Documentation / Site Manager';
-    if (activePath === '/docs/api-explorer') return 'Primary Flow / SDS to OpenAPI';
+    if (activePath === '/docs/api-explorer') return 'Archive / SDS to OpenAPI';
     if (activePath === '/source') return 'Workspace / Source Control';
     if (activePath === '/settings') return 'User / Global Preferences';
     if (activePath === '/settings/billing') return 'Account / Billing & Subscription';

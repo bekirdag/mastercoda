@@ -12,11 +12,11 @@ type DesignItem = {
 };
 
 const DESIGN_ITEMS: DesignItem[] = [
-  { id: 'rfp', label: 'RFP file', exists: true, path: 'docs/rfp.md' },
+  { id: 'rfp', label: 'RFP file', exists: true, path: 'docs/rfp.md', actionPath: '/agents/discovery', actionLabel: 'Open' },
   { id: 'pdr', label: 'PDR file', exists: false, actionPath: '/agents/signoff', actionLabel: 'Open' },
   { id: 'sds', label: 'SDS file', exists: false, actionPath: '/agents/structural-templates', actionLabel: 'Open' },
   { id: 'openapi', label: 'OpenAPI YAML', exists: true, path: 'openapi/mcoda.yaml', actionPath: '/agents/openyaml', actionLabel: 'Open' },
-  { id: 'tasks', label: 'Tasks backlog', exists: false }
+  { id: 'tasks', label: 'Tasks backlog', exists: false, actionPath: '/workspace/design/tasks', actionLabel: 'Open' }
 ];
 
 const ProjectDesign: React.FC = () => {
